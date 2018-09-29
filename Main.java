@@ -24,7 +24,8 @@ import java.util.*;
  *  # #
  *    # #
  */
-public class Main {
+public class Main 
+{
     public static void main(String[] args) 
     {
         Scanner in = new Scanner(System.in);
@@ -40,11 +41,12 @@ public class Main {
         board.insertShape(one);
         board.printBoard();
         System.out.println();
+        
         //start game
         while(true)
         {
             board.clearboard(); // clear board
-            if(!board.movedown(one))
+            if(!board.movedown(one)) //default move down
             {
                 break;
             }
@@ -68,7 +70,6 @@ public class Main {
             board.printBoard(); // print board
             System.out.println();
         }
-
         in.close();
     }
 }
