@@ -73,7 +73,43 @@ public class Board
             int x = S.getarrofblock()[i].getX();
             x=x+1;
             int y = S.getarrofblock()[i].getY();
-            if(x==rows || y==cols)
+            if(x==rows)
+            {
+                return false;
+            }
+            S.getarrofblock()[i].setX(x);
+            S.getarrofblock()[i].setY(y);
+        }
+        return true;
+    }
+    //move right
+    public boolean moveright(Shape S)
+    {
+        for(int i=0;i<4;i++)
+        {
+            //generate new coords
+            int x = S.getarrofblock()[i].getX();
+            int y = S.getarrofblock()[i].getY();
+            y=y+1;
+            if(y==cols)
+            {
+                return false;
+            }
+            S.getarrofblock()[i].setX(x);
+            S.getarrofblock()[i].setY(y);
+        }
+        return true;
+    }
+    //move right
+    public boolean moveleft(Shape S)
+    {
+        for(int i=0;i<4;i++)
+        {
+            //generate new coords
+            int x = S.getarrofblock()[i].getX();
+            int y = S.getarrofblock()[i].getY();
+            y=y-1;
+            if(y==0)
             {
                 return false;
             }
