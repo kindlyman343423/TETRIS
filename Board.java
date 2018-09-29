@@ -5,10 +5,10 @@ public class Board
     private int cols;
     private char[][] arr;
 
-    public Board()
+    public Board(int rows,int cols)
     {
-        rows=60;
-        cols=40;
+        this.rows=rows;
+        this.cols=cols;
         arr = new char[rows][cols];
         for(int i=0;i<rows;i++)
         {
@@ -47,8 +47,8 @@ public class Board
     {
         for(int i=0;i<4;i++)
         {
-            int r = S.getshape()[0].getX();
-            int c = S.getshape()[1].getY();
+            int r = S.getshape()[i].getX();
+            int c = S.getshape()[i].getY();
             arr[r][c] = '#';
         }
     }

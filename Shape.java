@@ -1,24 +1,21 @@
 public class Shape
 {
-    private Block[] shape;
+    private Block[] arrofblock;
 
-    public Shape()
-    {
-        shape = new Block[4];
-    }
     public Shape(Block a,Block b,Block c,Block d)
     {
-        shape[0] = a;
-        shape[1] = b;
-        shape[2] = c;
-        shape[3] = d;
+        arrofblock = new Block[4];
+        this.arrofblock[0] = a;
+        this.arrofblock[1] = b;
+        this.arrofblock[2] = c;
+        this.arrofblock[3] = d;
     }
     public Block[] getshape()
     {
-        return shape;
+        return arrofblock;
     }
     public String toString()
     {
-        return "["+shape[0].toString()+shape[1].toString()+shape[2].toString()+shape[3].toString()+"]";
+        return "["+arrofblock[0].toString()+arrofblock[1].toString()+arrofblock[2].toString()+arrofblock[3].toString()+"]";
     }
 }
