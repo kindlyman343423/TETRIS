@@ -4,6 +4,7 @@ public class Board
     private int rows;
     private int cols;
     private char[][] arr;
+    private int[] count_block;
 
     public Board(int rows,int cols)
     {
@@ -42,14 +43,43 @@ public class Board
             System.out.println("|");
         }
     }
-
+    //clear board
+    public void clearboard()
+    {
+        for(int i=0;i<rows;i++)
+        {
+            for(int j=0;j<cols;j++)
+            {
+                arr[i][j]=' ';
+            }
+        }
+    }
+    //insert shape
     public void insertShape(Shape S) //get block array
     {
         for(int i=0;i<4;i++)
         {
-            int r = S.getshape()[i].getX();
-            int c = S.getshape()[i].getY();
+            int r = S.getarrofblock()[i].getX();
+            int c = S.getarrofblock()[i].getY();
             arr[r][c] = '#';
         }
+    }
+    //move down
+    public boolean movedown(Shape S)
+    {
+        for(int i=0;i<4;i++)
+        {
+            //generate new coords
+            int x = S.getarrofblock()[i].getX();
+            x=x+1;
+            int y = S.getarrofblock()[i].getY();
+            if(x==rows || y==cols)
+            {
+                return false;
+            }
+            S.getarrofblock()[i].setX(x);
+            S.getarrofblock()[i].setY(y);
+        }
+        return true;
     }
 }

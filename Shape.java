@@ -1,6 +1,7 @@
 public class Shape
 {
     private Block[] arrofblock;
+    private int currentstate;
 
     public Shape(Block a,Block b,Block c,Block d)
     {
@@ -9,8 +10,14 @@ public class Shape
         this.arrofblock[1] = b;
         this.arrofblock[2] = c;
         this.arrofblock[3] = d;
+        currentstate = 0;
     }
-    public Block[] getshape()
+    //getters
+    public int getcurrentstate()
+    {
+        return currentstate;
+    }
+    public Block[] getarrofblock()
     {
         return arrofblock;
     }
