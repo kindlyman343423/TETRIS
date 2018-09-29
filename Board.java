@@ -5,12 +5,11 @@ public class Board
     private int cols;
     private char[][] arr;
 
-    //constructors
-    public Board(int rows,int cols)
+    public Board()
     {
-        this.rows = rows;
-        this.cols = cols;
-        arr = new char[this.rows][this.cols];
+        rows=60;
+        cols=40;
+        arr = new char[rows][cols];
         for(int i=0;i<rows;i++)
         {
             for(int j=0;j<cols;j++)
@@ -19,6 +18,7 @@ public class Board
             }
         }
     }
+    //constructors
     //getters
     public char[][] getARR()
     {
