@@ -1,11 +1,15 @@
-//contains the board
+import RAINBOW.Rain;
+
+/*
+ *  BOARD CLASS CONTAINS ALL METHODS
+ * */
 public class Board
 {
     private int rows;
     private int cols;
     private char[][] arr;
     private int[] count_block;
-
+    //constructors
     public Board(int rows,int cols)
     {
         this.rows=rows;
@@ -19,7 +23,6 @@ public class Board
             }
         }
     }
-    //constructors
     //getters
     public char[][] getARR()
     {
@@ -31,19 +34,37 @@ public class Board
         this.arr=arr;
     }
     //functions
+    //print the board
     public void printBoard()
     {
+        Rain R = new Rain();
+        System.out.print(R.BYELLOW);
+        for(int i=0;i<cols+2;i++)
+        {
+            System.out.print("=");
+        }
+        System.out.print(R.RESET);
+        System.out.println();
+        
         for(int i=0;i<rows;i++)
         {
-            System.out.print("|");
+            System.out.print(R.BYELLOW+"|"+R.RESET);
             for(int j=0;j<cols;j++)
             {
                 System.out.print(arr[i][j]);
             }
-            System.out.println("|");
+            System.out.println(R.BYELLOW+"|"+R.RESET);
         }
+
+        System.out.print(R.BYELLOW);
+        for(int i=0;i<cols+2;i++)
+        {
+            System.out.print("=");
+        }
+        System.out.print(R.RESET);
+        System.out.println();
     }
-    //clear board
+    //clear the earlier filled array
     public void clearboard()
     {
         for(int i=0;i<rows;i++)

@@ -1,3 +1,6 @@
+/*
+ *  BLOCK CLASS FOR MAKING COORDINATE BLOCK
+ * */
 public class Block
 {
     private int x;

@@ -21,6 +21,7 @@ public class Shape
     {
         return arrofblock;
     }
+    //for conversion
     public String toString()
     {
         return "["+arrofblock[0].toString()+arrofblock[1].toString()+arrofblock[2].toString()+arrofblock[3].toString()+"]";

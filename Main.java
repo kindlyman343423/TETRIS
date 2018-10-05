@@ -1,4 +1,7 @@
 import java.util.*;
+
+//USING RAINBOW 
+import RAINBOW.*;
 /*
  *  LINE  
  *  # # # #
@@ -9,18 +12,18 @@ import java.util.*;
  *  # #
  */
 /*
- *  L
+ *  LSHAPE
  *  #
  *  #
  *  # #
  */
 /*
- *  T
+ *  TSHAPE
  *  # # #
  *    #
  */
 /*
- *  Z
+ *  ZSHAPE
  *  # #
  *    # #
  */
@@ -29,17 +32,27 @@ public class Main
     public static void main(String[] args) 
     {
         Scanner in = new Scanner(System.in);
-        Board board = new Board(50, 40);
+        Board board = new Board(50, 40);    //initaize the board
+        boolean flag_shape_fixed = false; //initial shape is now fixed
 
-        Block a = new Block(2, 0);
-        Block b = new Block(2, 1);
-        Block c = new Block(2, 2);
-        Block d = new Block(2, 3);
+        //making the line blocks
+        Block a = new Block(2, 19);
+        Block b = new Block(2, 20);
+        Block c = new Block(2, 21);
+        Block d = new Block(2, 22);
+        Shape one = new Shape(a, b, c, d); // created line shape
 
-        Shape one = new Shape(a, b, c, d); // created a shape
+        Shape SQUARE = new Shape(a,b,c,d); //SQAURE SHAPE
 
-        board.insertShape(one);
-        board.printBoard();
+        Shape LSHAPE = new Shape(a,b,c,d); //LSHAPE
+        
+        Shape TSHAPE = new Shape(a,b,c,d); //TSHAPE
+
+        Shape ZSHAPE = new Shape(a,b,c,d); //ZSHAPE
+        
+        //intial position of the shape
+        board.insertShape(one); //insert initial shape 
+        board.printBoard(); //print the board
         System.out.println();
         
         //start game
