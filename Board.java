@@ -71,11 +71,14 @@ public class Board
         {
             for(int j=0;j<cols;j++)
             {
-                arr[i][j]=' ';
+                if(arr[i][j]!='@')
+                {
+                    arr[i][j]=' ';
+                }
             }
         }
     }
-    //insert shape
+    //insert shape for showing only
     public void insertShape(Shape S) //get block array
     {
         for(int i=0;i<4;i++)
@@ -85,23 +88,51 @@ public class Board
             arr[r][c] = '#';
         }
     }
+    //insert fixed shape
+    public void insertFixedShape(Shape S)
+    {
+        for(int i=0;i<4;i++)
+        {
+            int r = S.getarrofblock()[i].getX();
+            int c = S.getarrofblock()[i].getY();
+            arr[r][c] = '@';
+        }
+    }
     //move down
     public boolean movedown(Shape S)
     {
+        boolean flag_touched = false;
         for(int i=0;i<4;i++)
         {
             //generate new coords
             int x = S.getarrofblock()[i].getX();
-            x=x+1;
             int y = S.getarrofblock()[i].getY();
-            if(x==rows)
+
+            //new coords
+            x=x+1; //y unchanged
+            //checking next down coords
+            if(x==rows || arr[x][y]=='=' || arr[x][y]=='@')
             {
-                return false;
+                flag_touched=true; //shape touched
+                break;
             }
-            S.getarrofblock()[i].setX(x);
-            S.getarrofblock()[i].setY(y);
         }
-        return true;
+        if(!flag_touched)
+        {
+            for(int i=0;i<4;i++)
+            {
+                int x = S.getarrofblock()[i].getX();
+                int y = S.getarrofblock()[i].getY();
+                //generate new coords
+                S.getarrofblock()[i].setX(x+1);
+                S.getarrofblock()[i].setY(y);
+            }
+            return false;
+        }
+        else //flag touched
+        {
+            return true;
+        }
     }
     //move right
     public boolean moveright(Shape S)
