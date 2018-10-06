@@ -10,7 +10,58 @@ public class Main {
         Board board = new Board(50, 40); // initaize the board
         boolean flag_shape_fixed = false; // initial shape is now fixed
         int shape_counter = 0; //for different shapes
+        
+        //ROTATION OF A SHAPE
+        Shape[][] rotation = new Shape[7][4];
+        Block e = new Block(0,0);
+        Block f = new Block(0,0);
+        Block g = new Block(0,0);
+        Block h = new Block(0,0);
 
+        //LINE SHAPE 0
+        rotation[0][0] = new Shape(e,f,g,h);
+        rotation[0][2] = rotation[0][0];
+        e = new Block(0,0);
+        f = new Block(1,-1);
+        g = new Block(2,-1);
+        h = new Block(3,-1);
+        rotation[0][1] = new Shape(e,f,g,h);
+        rotation[0][3] = rotation[0][1];
+        
+        //SQUARE SHAPE 1
+        e = new Block(0,0);
+        f = new Block(0,0);
+        g = new Block(0,0);
+        h = new Block(0,0);
+        rotation[1][0] = new Shape(e,f,g,h);
+        rotation[1][1] = rotation[1][0];
+        rotation[1][2] = rotation[1][1];
+        rotation[1][3] = rotation[1][2];
+
+        //LR SHAPE 2
+        e = new Block(0,0);
+        f = new Block(0,0);
+        g = new Block(0,0);
+        h = new Block(0,0);
+        rotation[2][0] = new Shape(e,f,g,h);
+        e = new Block(1,2);
+        f = new Block(0,0);
+        g = new Block(0,0);
+        h = new Block(-1,0);
+        rotation[2][1] = new Shape(e,f,g,h);
+        e = new Block(3,1);
+        f = new Block(3,1);
+        g = new Block(0,0);
+        h = new Block(0,0);
+        rotation[2][2] = new Shape(e,f,g,h);
+        e = new Block(0,2);
+        f = new Block(0,0);
+        g = new Block(-1,1);
+        h = new Block(-1,1);
+        rotation[2][3] = new Shape(e,f,g,h);
+
+        //LL SHAPE 3
+        
         // making the line blocks
         Block a = new Block(2, 19);
         Block b = new Block(2, 20);
@@ -27,10 +78,9 @@ public class Main {
         // start game
         while (true) 
         {
-            // System.out.println(LINE);
             board.clearboard(); // clear board
             flag_shape_fixed = board.movedown(LINE); // default move down
-            System.out.println(shape_counter);
+
             if(flag_shape_fixed) 
             {
                 board.insertFixedShape(LINE);
@@ -81,38 +131,38 @@ public class Main {
     }
 
 /*
- *  LINE  
+ *  LINE  0
  *  # # # #
  */
 /*
- *  SQUARE 
+ *  SQUARE  1
  *  # # 
  *  # #
  */
 /*
- *  LR SHAPE
+ *  LR SHAPE 2
  *  #
  *  #
  *  # #
  */
 /*
- *  LL SHAPE
+ *  LL SHAPE 3
  *    #
  *    # 
  *  # #
 */
 /*
- *  TSHAPE
+ *  TSHAPE 4
  *  # # #
  *    #
  */
 /*
- *  ZL SHAPE
+ *  ZL SHAPE 5
  *  # #
  *    # #
  */
 /*
- *  ZR SHAPE
+ *  ZR SHAPE 6
  *    # #
  *  # #
  */
@@ -202,5 +252,10 @@ public class Main {
 
         }
         return sh;
+    }
+
+    public static void rotateShape(Shape S,int num)
+    {
+
     }
 }
