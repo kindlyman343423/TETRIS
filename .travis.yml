@@ -3,5 +3,5 @@ language: java
 jdk:
       - oraclejdk11
 
-before_install:
-      - cd java
+after_install:
+      - javac src/Main.java
