@@ -3,5 +3,5 @@ language: java
 jdk:
       - oraclejdk11
 
-after_install:
-      - javac src/Main.java
+scripts:
+      - bash conf/trav.bash

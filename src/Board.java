@@ -18,6 +18,7 @@ public class Board
         this.rows=rows;
         this.cols=cols;
         arr = new char[rows][cols];                                 // create dynamic array for printing board
+        count_block = new int[rows];
         for(int i=0;i<rows;i++)
         {
             for(int j=0;j<cols;j++)
@@ -71,7 +72,7 @@ public class Board
             {
                 System.out.print(arr[i][j]);
             }
-            System.out.println(R.BYELLOW+"|"+R.RESET);
+            System.out.println(R.BYELLOW+"|"+count_block[i]+R.RESET);
         }
 
         System.out.print(R.BYELLOW);
@@ -132,8 +133,21 @@ public class Board
         {
             int r = S.getarrofblock()[i].getX();                    // get x coordinate of the block
             int c = S.getarrofblock()[i].getY();                    // get y coordinate of the block
+            count_block[r]++;                                       // increment the line blocks counter
             arr[r][c] = '@';                                        // printing @ for fixed shape
         }
+        
+        deleteLine();                                               // check for line deletion
+    }
+
+    /**
+     * This function will delete the line if the line is full of fixed blocks or not
+     * 
+     * @return boolean whether the lines are deleted or not
+     **/
+    private boolean deleteLine()
+    {
+        return false;
     }
 
     /**
