@@ -147,7 +147,16 @@ public class Board
      **/
     private boolean deleteLine()
     {
-        return false;
+        boolean deleted = false;
+        for(int i=0;i<count_block.length;i++)
+        {
+            if(i>=cols)
+            {
+                //i line to delete
+                deleted=true;
+            }
+        }
+        return deleted;
     }
 
     /**

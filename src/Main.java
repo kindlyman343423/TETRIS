@@ -1,11 +1,23 @@
 import java.util.*;
-
+import RAINBOW.*;
 abstract class Main 
 {
     public static void main(String[] args) 
     {
         Scanner in = new Scanner(System.in);                        // scanner for input in tetris
-        Board board = new Board(50, 40);                            // initialize the board size
+        Rain color = new Rain();                                    // for using rainbow
+
+        System.out.println("Enter the size of the board");          // getting desired size from the user
+        int R = in.nextInt();                                       // input number of rows
+        int C = in.nextInt();                                       // input number of cols
+        while(R<10 || C<10 || R>100 || C>100)
+        {
+            System.out.println(color.BRED + "Wrong Input Enter again" + color.RESET);
+            R = in.nextInt();
+            C = in.nextInt();
+        }
+
+        Board board = new Board(R, C);                              // initialize the board size
         boolean flag_shape_fixed = false;                           // initial shape is now fixed
         int shape_counter = 0;                                      // for counting and changing different shapes
         
@@ -22,14 +34,14 @@ abstract class Main
          * 6 |
          **/
         // Shape[][] rotation = new Shape[7][4];
-        
         // rotation = makeRotationArray(rotation);
 
+        int pivot = C/2 - 1;                                        // value for setting initial position of the shape
         // building the line blocks
-        Block a = new Block(2, 19);
-        Block b = new Block(2, 20);
-        Block c = new Block(2, 21);
-        Block d = new Block(2, 22);
+        Block a = new Block(1, pivot);
+        Block b = new Block(1, pivot+1);
+        Block c = new Block(1, pivot+2);
+        Block d = new Block(1, pivot+3);
         Shape LINE = new Shape(a, b, c, d, 0);                      // created line shape
 
         board.insertShape(LINE);                                    // insert initial shape on board
@@ -57,7 +69,7 @@ abstract class Main
                 {
                     shape_counter++;
                 }
-                LINE = create_shape(LINE, shape_counter);           // creating new shape for second move
+                LINE = create_shape(LINE, shape_counter,pivot);     // creating new shape for second move
 
                 flag_shape_fixed=false;                             // set shape fixed to false for next shape
             }
@@ -67,7 +79,8 @@ abstract class Main
             System.out.println("A/a -- left");                      // left option
             System.out.println("W/w -- rotate");                    // rotate option
             System.out.println("S/s -- save");                      // save option
-            
+            System.out.println("Q/q -- quit");                      // quit game option
+
             char ans = in.next().charAt(0);
 
             if (ans == 'D' || ans == 'd')                           // move right
@@ -137,89 +150,90 @@ abstract class Main
      * 
      * @param sh for shape
      * @param num integer for shapeno
+     * @param pivot for initial position of the shape
      * 
      * @return the build shape
      **/
-    private static Shape create_shape(Shape sh,int num)
+    private static Shape create_shape(Shape sh,int num,int pivot)
     {
         switch(num)
         {
             case 0:
                 //LINE SHAPE
-                sh.getarrofblock()[0].setX(2);
-                sh.getarrofblock()[0].setY(19);
-                sh.getarrofblock()[1].setX(2);
-                sh.getarrofblock()[1].setY(20);
-                sh.getarrofblock()[2].setX(2);
-                sh.getarrofblock()[2].setY(21);
-                sh.getarrofblock()[3].setX(2);
-                sh.getarrofblock()[3].setY(22);
+                sh.getarrofblock()[0].setX(1);
+                sh.getarrofblock()[0].setY(pivot);
+                sh.getarrofblock()[1].setX(1);
+                sh.getarrofblock()[1].setY(pivot+1);
+                sh.getarrofblock()[2].setX(1);
+                sh.getarrofblock()[2].setY(pivot+2);
+                sh.getarrofblock()[3].setX(1);
+                sh.getarrofblock()[3].setY(pivot+3);
                 break;
             case 1:
                 //SQUARE SHAPE
-                sh.getarrofblock()[0].setX(2);
-                sh.getarrofblock()[0].setY(19);
-                sh.getarrofblock()[1].setX(2);
-                sh.getarrofblock()[1].setY(20);
-                sh.getarrofblock()[2].setX(3);
-                sh.getarrofblock()[2].setY(19);
-                sh.getarrofblock()[3].setX(3);
-                sh.getarrofblock()[3].setY(20);
+                sh.getarrofblock()[0].setX(1);
+                sh.getarrofblock()[0].setY(pivot);
+                sh.getarrofblock()[1].setX(1);
+                sh.getarrofblock()[1].setY(pivot+1);
+                sh.getarrofblock()[2].setX(2);
+                sh.getarrofblock()[2].setY(pivot);
+                sh.getarrofblock()[3].setX(2);
+                sh.getarrofblock()[3].setY(pivot+1);
                 break;
             case 2:
                 //LR SHAPE
-                sh.getarrofblock()[0].setX(3);
-                sh.getarrofblock()[0].setY(19);
-                sh.getarrofblock()[1].setX(4);
-                sh.getarrofblock()[1].setY(19);
-                sh.getarrofblock()[2].setX(5);
-                sh.getarrofblock()[2].setY(19);
-                sh.getarrofblock()[3].setX(5);
-                sh.getarrofblock()[3].setY(20);
+                sh.getarrofblock()[0].setX(2);
+                sh.getarrofblock()[0].setY(pivot);
+                sh.getarrofblock()[1].setX(3);
+                sh.getarrofblock()[1].setY(pivot);
+                sh.getarrofblock()[2].setX(4);
+                sh.getarrofblock()[2].setY(pivot);
+                sh.getarrofblock()[3].setX(4);
+                sh.getarrofblock()[3].setY(pivot+1);
                 break;
             case 3:
                 //LL SHAPE
-                sh.getarrofblock()[0].setX(3);
-                sh.getarrofblock()[0].setY(19);
-                sh.getarrofblock()[1].setX(4);
-                sh.getarrofblock()[1].setY(19);
-                sh.getarrofblock()[2].setX(5);
-                sh.getarrofblock()[2].setY(19);
-                sh.getarrofblock()[3].setX(5);
-                sh.getarrofblock()[3].setY(18);
+                sh.getarrofblock()[0].setX(2);
+                sh.getarrofblock()[0].setY(pivot);
+                sh.getarrofblock()[1].setX(3);
+                sh.getarrofblock()[1].setY(pivot);
+                sh.getarrofblock()[2].setX(4);
+                sh.getarrofblock()[2].setY(pivot);
+                sh.getarrofblock()[3].setX(4);
+                sh.getarrofblock()[3].setY(pivot-1);
                 break;
             case 4:
                 //T SHAPE
-                sh.getarrofblock()[0].setX(2);
-                sh.getarrofblock()[0].setY(19);
-                sh.getarrofblock()[1].setX(2);
-                sh.getarrofblock()[1].setY(20);
-                sh.getarrofblock()[2].setX(2);
-                sh.getarrofblock()[2].setY(21);
-                sh.getarrofblock()[3].setX(3);
-                sh.getarrofblock()[3].setY(20);
+                sh.getarrofblock()[0].setX(1);
+                sh.getarrofblock()[0].setY(pivot);
+                sh.getarrofblock()[1].setX(1);
+                sh.getarrofblock()[1].setY(pivot+1);
+                sh.getarrofblock()[2].setX(1);
+                sh.getarrofblock()[2].setY(pivot+2);
+                sh.getarrofblock()[3].setX(2);
+                sh.getarrofblock()[3].setY(pivot+1);
                 break;
             case 5:
                 //ZL SHAPE
-                sh.getarrofblock()[0].setX(2);
-                sh.getarrofblock()[0].setY(19);
-                sh.getarrofblock()[1].setX(2);
-                sh.getarrofblock()[1].setY(20);
-                sh.getarrofblock()[2].setX(3);
-                sh.getarrofblock()[2].setY(20);
-                sh.getarrofblock()[3].setX(3);
-                sh.getarrofblock()[3].setY(21);
+                sh.getarrofblock()[0].setX(1);
+                sh.getarrofblock()[0].setY(pivot);
+                sh.getarrofblock()[1].setX(1);
+                sh.getarrofblock()[1].setY(pivot+1);
+                sh.getarrofblock()[2].setX(2);
+                sh.getarrofblock()[2].setY(pivot+1);
+                sh.getarrofblock()[3].setX(2);
+                sh.getarrofblock()[3].setY(pivot+2);
                 break;
             case 6:
                 //ZR SHAPE
-                sh.getarrofblock()[0].setX(2);
-                sh.getarrofblock()[0].setY(19);
-                sh.getarrofblock()[1].setX(2);
-                sh.getarrofblock()[1].setY(20);
-                sh.getarrofblock()[2].setX(3);
-                sh.getarrofblock()[2].setY(18);
-                sh.getarrofblock()[3].setX(3);
-                sh.getarrofblock()[3].setY(19);
+                sh.getarrofblock()[0].setX(1);
+                sh.getarrofblock()[0].setY(pivot);
+                sh.getarrofblock()[1].setX(1);
+                sh.getarrofblock()[1].setY(pivot+1);
+                sh.getarrofblock()[2].setX(2);
+                sh.getarrofblock()[2].setY(pivot-1);
+                sh.getarrofblock()[3].setX(2);
+                sh.getarrofblock()[3].setY(pivot);
                 break;
             default:
                 System.exit(0);
