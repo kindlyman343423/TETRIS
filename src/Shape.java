@@ -17,6 +17,12 @@ public class Shape
     {
         return currentstate;
     }
+
+    /**
+     * This function will return the block array of a shape
+     * 
+     * @return blocks array
+     **/
     public Block[] getarrofblock()
     {
         return arrofblock;

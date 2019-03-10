@@ -1,4 +1,7 @@
-language: bash
+language: java
 
-script:
-      - bash conf/trav.bash
+jdk:
+      - oraclejdk11
+
+before_install:
+      - cd java

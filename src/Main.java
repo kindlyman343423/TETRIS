@@ -1,8 +1,5 @@
 import java.util.*;
 
-//USING RAINBOW 
-import RAINBOW.*;
-
 abstract class Main 
 {
     public static void main(String[] args) 
@@ -102,7 +99,7 @@ abstract class Main
                 flag_shape_fixed=false;
             }
 
-            System.out.println("ENTER THE OPTION");
+            System.out.println("ENTER THE OPTION\nD/d -- right\nA/a -- left");
             char ans = in.next().charAt(0);
             if (ans == 'D' || ans == 'd') // move right
             {

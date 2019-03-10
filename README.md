@@ -2,4 +2,4 @@
 
 This repository contains the code for tetris game in java
 
-great GAME
+[![Build Status](https://travis-ci.com/GauravWalia19/TETRIS.svg?token=BG8gK8FxkjPDgn2Gszpj&branch=master)](https://travis-ci.com/GauravWalia19/TETRIS)
