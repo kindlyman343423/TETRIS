@@ -2,118 +2,136 @@ import java.util.*;
 import RAINBOW.*;
 abstract class Main 
 {
-    public static void main(String[] args) 
+    public static void main(String[] args) throws IndexOutofBoardException
     {
         Scanner in = new Scanner(System.in);                        // scanner for input in tetris
         Rain color = new Rain();                                    // for using rainbow
-
-        System.out.println("Enter the size of the board");          // getting desired size from the user
-        int R = in.nextInt();                                       // input number of rows
-        int C = in.nextInt();                                       // input number of cols
-        while(R<10 || C<10 || R>100 || C>100)
+        
+        try
         {
-            System.out.println(color.BRED + "Wrong Input Enter again" + color.RESET);
-            R = in.nextInt();
-            C = in.nextInt();
-        }
-
-        Board board = new Board(R, C);                              // initialize the board size
-        boolean flag_shape_fixed = false;                           // initial shape is now fixed
-        int shape_counter = 0;                                      // for counting and changing different shapes
-        
-        /**
-         * MAKING 2D ARRAY FOR ROTATION
-         * storing the rotation of different shapes
-         *      0   1   2   3
-         * 0 |  
-         * 1 |
-         * 2 |
-         * 3 |
-         * 4 |
-         * 5 |
-         * 6 |
-         **/
-        // Shape[][] rotation = new Shape[7][4];
-        // rotation = makeRotationArray(rotation);
-
-        int pivot = C/2 - 1;                                        // value for setting initial position of the shape
-        // building the line blocks
-        Block a = new Block(1, pivot);
-        Block b = new Block(1, pivot+1);
-        Block c = new Block(1, pivot+2);
-        Block d = new Block(1, pivot+3);
-        Shape LINE = new Shape(a, b, c, d, 0);                      // created line shape
-
-        board.insertShape(LINE);                                    // insert initial shape on board
-        board.printBoard();                                         // print the initial board
-        System.out.println();
-        
-        flag_shape_fixed = false;                                   // shape is fixed or not
-        
-        // start game
-        while (true) 
-        {
-            board.clearboard();                                     // clear board for above
-            flag_shape_fixed = board.movedown(LINE);                // default move down
-
-            if(flag_shape_fixed)                                    // if flag shape cannot move down so making it fixed 
+            System.out.println("Enter the size of the board");          // getting desired size from the user
+            int R = in.nextInt();                                       // input number of rows
+            int C = in.nextInt();                                       // input number of cols
+            
+            if(R<10 || C<10 || R>100 || C>100)                       // input validation
             {
-                board.insertFixedShape(LINE);                       // insert the fixed shape on board
-                board.printBoard();                                 // print the board
-                
-                if(shape_counter==6)                                // set shape counter to 0 when it becomes 6
-                {
-                    shape_counter=0;
-                }
-                else
-                {
-                    shape_counter++;
-                }
-                LINE = create_shape(LINE, shape_counter,pivot);     // creating new shape for second move
-
-                flag_shape_fixed=false;                             // set shape fixed to false for next shape
+                // System.out.println(color.BRED + "Wrong Input Enter again" + color.RESET);
+                // R = in.nextInt();
+                // C = in.nextInt();
+                throw new IndexOutofBoardException("Wrong Input Valid size should be 0-100");
             }
 
-            System.out.println("ENTER THE OPTION");                 // displaying the options
-            System.out.println("D/d -- right");                     // right option
-            System.out.println("A/a -- left");                      // left option
-            System.out.println("W/w -- rotate");                    // rotate option
-            System.out.println("S/s -- save");                      // save option
-            System.out.println("Q/q -- quit");                      // quit game option
+            Board board = new Board(R, C);                              // initialize the board size
+            boolean flag_shape_fixed = false;                           // initial shape is now fixed
+            int shape_counter = 0;                                      // for counting and changing different shapes
+            
+            /**
+             * MAKING 2D ARRAY FOR ROTATION
+             * storing the rotation of different shapes
+             *      0   1   2   3
+             * 0 |  
+             * 1 |
+             * 2 |
+             * 3 |
+             * 4 |
+             * 5 |
+             * 6 |
+             **/
+            // Shape[][] rotation = new Shape[7][4];
+            // rotation = makeRotationArray(rotation);
 
-            char ans = in.next().charAt(0);
+            int pivot = C/2 - 1;                                        // value for setting initial position of the shape
+            // building the line blocks
+            Block a = new Block(1, pivot);
+            Block b = new Block(1, pivot+1);
+            Block c = new Block(1, pivot+2);
+            Block d = new Block(1, pivot+3);
+            Shape LINE = new Shape(a, b, c, d, 0);                      // created line shape
 
-            if (ans == 'D' || ans == 'd')                           // move right
+            if(!board.insertShape(LINE))                                // insert initial shape on board if it is possible
             {
-                if (!board.moveright(LINE)) 
-                {
-                    break;
-                }
-            } 
-            else if (ans == 'A' || ans == 'a')                      // moveleft
-            {
-                if (!board.moveleft(LINE)) 
-                {
-                    break;
-                }
-            }
-            else if(ans=='w' || ans=='W')                           // rotate shape
-            {
-                
-            }
-            else if(ans=='q' || ans=='Q')                           // EXIT GAME
-            {
+                System.out.println(color.BRED + "ERROR WHILE INSERTING THE SHAPE" + color.RESET);
                 System.exit(0);
-            }
-
-            // rotate shape
-            board.insertShape(LINE);                                // insert shape on board
-            board.printBoard();                                     // print board
+            }                                  
+            board.printBoard();                                         // print the initial board
             System.out.println();
-        }
-        in.close();
-    }
+            
+            flag_shape_fixed = false;                                   // shape is fixed or not
+            
+            // start game
+            while (true) 
+            {
+                board.clearboard();                                     // clear board for above
+                flag_shape_fixed = board.movedown(LINE);                // default move down
 
+                if(flag_shape_fixed)                                    // if flag shape cannot move down so making it fixed 
+                {
+                    board.insertFixedShape(LINE);                       // insert the fixed shape on board
+                    board.printBoard();                                 // print the board
+                    
+                    if(shape_counter==6)                                // set shape counter to 0 when it becomes 6
+                    {
+                        shape_counter=0;
+                    }
+                    else
+                    {
+                        shape_counter++;
+                    }
+                    LINE = create_shape(LINE, shape_counter,pivot);     // creating new shape for second move
+
+                    flag_shape_fixed=false;                             // set shape fixed to false for next shape
+                }
+
+                System.out.println("ENTER THE OPTION");                 // displaying the options
+                System.out.println("D/d -- right");                     // right option
+                System.out.println("A/a -- left");                      // left option
+                System.out.println("W/w -- rotate");                    // rotate option
+                System.out.println("S/s -- save");                      // save option
+                System.out.println("Q/q -- quit");                      // quit game option
+
+                char ans = in.next().charAt(0);
+
+                if (ans == 'D' || ans == 'd')                           // move right
+                {
+                    if (!board.moveright(LINE)) 
+                    {
+                        break;
+                    }
+                } 
+                else if (ans == 'A' || ans == 'a')                      // moveleft
+                {
+                    if (!board.moveleft(LINE)) 
+                    {
+                        break;
+                    }
+                }
+                else if(ans=='w' || ans=='W')                           // rotate shape
+                {
+                    
+                }
+                else if(ans=='q' || ans=='Q')                           // EXIT GAME
+                {
+                    System.exit(0);
+                }
+
+                // rotate shape
+                if(!board.insertShape(LINE))                            // insert initial shape on board if it is possible
+                {
+                    System.out.println(color.BRED + "GAME OVER !!!" + color.RESET);
+                }                                                       // insert shape on board
+                board.printBoard();                                     // print board
+                System.out.println();
+            }
+        }
+        catch(Exception e)
+        {
+            System.out.println(color.BRED + e + color.RESET);
+        }
+        finally
+        {
+            in.close();
+        }
+    }
     /**
     *  LINE  0
     *  # # # #

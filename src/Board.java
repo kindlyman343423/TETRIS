@@ -9,7 +9,9 @@ public class Board
     private int cols;                                               // cols of the board
     private char[][] arr;                                           // array for making board
     private int[] count_block;                                      // store count the number of fixed block in the line
-    
+    private int points;                                             // points of collecting during game play
+    private String[] ENV;
+
     /**
      * Parameterised Constructor for making new board
      **/
@@ -19,6 +21,7 @@ public class Board
         this.cols=cols;
         arr = new char[rows][cols];                                 // create dynamic array for printing board
         count_block = new int[rows];
+        points=0;
         for(int i=0;i<rows;i++)
         {
             for(int j=0;j<cols;j++)
@@ -47,6 +50,31 @@ public class Board
     public void setARR(char[][] arr)
     {
         this.arr=arr;
+    }
+    
+    /**
+     * It will check whether the coords are valid or not
+     * If it returns true then it will ensure that the block inserted in right coords
+     * 
+     * @param x for x coordinate
+     * @param y for y coordinate
+     * @return boolean 
+     **/
+    public boolean checkValidCoords(int x,int y)
+    {
+        if(x<0 || y<0 || x>rows || y>cols)
+        {
+            return false;
+        }
+        switch(arr[x][y])
+        {
+            case '#':
+            case '|':
+            case '@':
+            case '=':
+                return false;
+        }
+        return true;
     }
     
     /**
@@ -108,16 +136,24 @@ public class Board
      * 
      * @param S for getting Shape for printing
      * 
-     * @return void
+     * @return boolean
      **/
-    public void insertShape(Shape S)
+    public boolean insertShape(Shape S)
     {
         for(int i=0;i<4;i++)
         {
             int r = S.getarrofblock()[i].getX();                    // get x coordinate of the block
             int c = S.getarrofblock()[i].getY();                    // get y coordinate of the block
-            arr[r][c] = '#';                                        // printing the block with # block for runtime
+            if(checkValidCoords(r, c))
+            {
+                arr[r][c] = '#';                                    // printing the block with # block for runtime    
+            }
+            else                                                    // if shape cannot be inserted
+            {
+                return false;
+            }
         }
+        return true;
     }
 
     /**
@@ -125,7 +161,7 @@ public class Board
      * 
      * @param S for Shape to printed as fixed
      * 
-     * @return void
+     * @return boolean
      **/
     public void insertFixedShape(Shape S)
     {
@@ -138,6 +174,7 @@ public class Board
         }
         
         deleteLine();                                               // check for line deletion
+        System.out.println("POINTS: "+points);
     }
 
     /**
@@ -147,13 +184,41 @@ public class Board
      **/
     private boolean deleteLine()
     {
-        boolean deleted = false;
+        boolean deleted = false;                                    // boolean for whether the line is deleted or not
         for(int i=0;i<count_block.length;i++)
         {
-            if(i>=cols)
+            if(count_block[i]==cols)                                // if the line gets full
             {
-                //i line to delete
-                deleted=true;
+                deleted=true;                                       // set boolean to true as line is deleted
+
+                // DELETING THE LINE                 
+                for(int j=0;j<cols;j++)
+                {
+                    arr[i][j] = ' ';                                // reset the spaces
+                    count_block[i]--;                               // decrease the count
+                }
+
+                //SHIFTING THE 2D ARRAY DOWN
+                for(int j=rows-1;j>0;j--)
+                {
+                    for(int k=0;k<cols;k++)
+                    {
+                        arr[j][k] = arr[j-1][k];
+                    }
+                }
+
+                //SHIFTING THE COUNT BLOCK ARRAY
+                for(int j=count_block.length-1;j>0;j--)
+                {
+                    count_block[j] = count_block[j-1];
+                }
+
+                points++;                                           // increase the points by 1
+            }
+            else if(count_block[i]>cols)
+            {
+                System.out.println("ERROR DUE TO SIZE");
+                System.exit(0);
             }
         }
         return deleted;
@@ -269,7 +334,7 @@ public class Board
              **/
             y=y-1;
 
-            if(y==0)                                                // if y coordinate become 0
+            if(y<0)                                                 // if y coordinate become less than 0
             {
                 return false;                                       // return false as shape can't go left
             }
