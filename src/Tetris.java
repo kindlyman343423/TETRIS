@@ -1,42 +1,53 @@
 import java.util.*;
 import RAINBOW.*;
-abstract class Main 
+public class Tetris
 {
-    public static void main(String[] args) throws IndexOutofBoardException
+    public Tetris()
     {
-        startTetris();
+        Rain color = new Rain();
+        System.out.println(color.BCYAN);
+        System.out.println("#####  #####  #####  ####   #####  #####");
+        System.out.println("  #    #        #    #   #    #    #    ");
+        System.out.println("  #    ####     #    ####     #    #####");
+        System.out.println("  #    #        #    #  #     #        #");
+        System.out.println("  #    #####    #    #   #  #####  #####");
+        System.out.println(color.RESET);
+    }
 
+    public void tetrisMain()
+    {
         Scanner in = new Scanner(System.in);                            // scanner for input in tetris
         Rain color = new Rain();                                        // for using rainbow
-        
         System.out.println(color.BOLD);
         System.out.println("Select one option");
         System.out.println("0. Exit the game");
         System.out.println("1. Start new game");
         System.out.println("2. Start saved game");
-        System.out.print(color.RESET);
+        System.out.println(color.RESET);
         int option = in.nextInt();
         switch(option)
         {
             case 0:
                 System.exit(0);
             case 1:
+                playNewGame();
                 break;
             case 2:
+                playExistingGame();
                 break;
             default:
                 break;
         }
 
+        in.close();
+    }
+    
+    private void playNewGame()
+    {
+        Scanner in = new Scanner(System.in);                            // scanner for input in tetris
+        Rain color = new Rain();                                        // for using rainbow
         try
         {
-            System.out.println("GAME CONTROLS");
-            System.out.println("D/d -- right");                     // right option
-            System.out.println("A/a -- left");                      // left option
-            System.out.println("W/w -- rotate");                    // rotate option
-            System.out.println("S/s -- save");                      // save option
-            System.out.println("Q/q -- quit");                      // quit game option
-
             System.out.println("Enter the size of the board");          // getting desired size from the user
             int R = in.nextInt();                                       // input number of rows
             int C = in.nextInt();                                       // input number of cols
@@ -62,15 +73,15 @@ abstract class Main
              * 5 |
              * 6 |
              **/
-            Shape[][] rotation = new Shape[7][4];
-            rotation = makeRotationArray(rotation);
+            // Shape[][] rotation = new Shape[7][4];
+            // rotation = makeRotationArray(rotation);
 
             int pivot = C/2 - 1;                                        // value for setting initial position of the shape
             // building the line blocks
-            Block a = new Block(0, pivot);
-            Block b = new Block(0, pivot+1);
-            Block c = new Block(0, pivot+2);
-            Block d = new Block(0, pivot+3);
+            Block a = new Block(1, pivot);
+            Block b = new Block(1, pivot+1);
+            Block c = new Block(1, pivot+2);
+            Block d = new Block(1, pivot+3);
             Shape LINE = new Shape(a, b, c, d, 0);                      // created line shape
 
             if(!board.insertShape(LINE))                                // insert initial shape on board if it is possible
@@ -132,66 +143,17 @@ abstract class Main
                 }
                 else if(ans=='w' || ans=='W')                           // rotate shape
                 {
-                    //rotation of shape
-                    int currentstate = LINE.getcurrentstate();
-                    if(currentstate >= 3)
-                    {
-                        currentstate=0;
-                    }
-                    else
-                    {
-                        currentstate++;
-                    }
-                    System.out.println(LINE);
-                    System.out.println(currentstate);
-
-                    int ex = LINE.getarrofblock()[0].getX() + rotation[shape_counter][currentstate].getarrofblock()[0].getX();
-                    int ey = LINE.getarrofblock()[0].getY() + rotation[shape_counter][currentstate].getarrofblock()[0].getY();
-                    int fx = LINE.getarrofblock()[1].getX() + rotation[shape_counter][currentstate].getarrofblock()[1].getX();
-                    int fy = LINE.getarrofblock()[1].getY() + rotation[shape_counter][currentstate].getarrofblock()[1].getY();
-                    int gx = LINE.getarrofblock()[2].getX() + rotation[shape_counter][currentstate].getarrofblock()[2].getX();
-                    int gy = LINE.getarrofblock()[2].getY() + rotation[shape_counter][currentstate].getarrofblock()[2].getY();
-                    int hx = LINE.getarrofblock()[3].getX() + rotation[shape_counter][currentstate].getarrofblock()[3].getX();
-                    int hy = LINE.getarrofblock()[3].getY() + rotation[shape_counter][currentstate].getarrofblock()[3].getY();
-                    Block e = null;
-                    Block f = null;
-                    Block g = null;
-                    Block h = null;
                     
-                    if( board.checkValidCoords(ex, ey) && board.checkValidCoords(fx, fy) && board.checkValidCoords(gx, gy) && board.checkValidCoords(hx, hy))
-                    {
-                        e = new Block(ex,ey);
-                        f = new Block(fx,fy);
-                        g = new Block(gx,gy);
-                        h = new Block(hx,hy);
-                    }
-                    else
-                    {
-                        ex = LINE.getarrofblock()[0].getX();
-                        ey = LINE.getarrofblock()[0].getY();
-                        fx = LINE.getarrofblock()[1].getX();
-                        fy = LINE.getarrofblock()[1].getY();
-                        gx = LINE.getarrofblock()[2].getX();
-                        gy = LINE.getarrofblock()[2].getY();
-                        hx = LINE.getarrofblock()[3].getX();
-                        hy = LINE.getarrofblock()[3].getY();
-                        e = new Block(ex,ey);
-                        f = new Block(fx,fy);
-                        g = new Block(gx,gy);
-                        h = new Block(hx,hy);
-                        System.out.println("SORRY INVALID ROTATION !!!");
-                    }
-                    LINE = new Shape(e,f,g,h,currentstate);
                 }
                 else if(ans=='q' || ans=='Q')                           // EXIT GAME
                 {
                     System.exit(0);
                 }
-                System.out.println(LINE);
+
+                // rotate shape
                 if(!board.insertShape(LINE))                            // insert initial shape on board if it is possible
                 {
-                    System.out.println(color.BRED + "MAIN GAME OVER !!!" + color.RESET);
-                    System.exit(0);
+                    System.out.println(color.BRED + "GAME OVER !!!" + color.RESET);
                 }                                                       // insert shape on board
                 board.printBoard();                                     // print board
                 System.out.println();
@@ -207,17 +169,6 @@ abstract class Main
         }
     }
 
-    public static void startTetris()
-    {
-        Rain color = new Rain();
-        System.out.println(color.BCYAN);
-        System.out.println("#####  #####  #####  ####   #####  #####");
-        System.out.println("  #    #        #    #   #    #    #    ");
-        System.out.println("  #    ####     #    ####     #    #####");
-        System.out.println("  #    #        #    #  #     #        #");
-        System.out.println("  #    #####    #    #   #  #####  #####");
-        System.out.println(color.RESET);
-    }
     /**
     *  LINE  0
     *  # # # #
@@ -258,85 +209,85 @@ abstract class Main
      * 
      * @return the build shape
      **/
-    private static Shape create_shape(Shape sh,int num,int pivot)
+    private Shape create_shape(Shape sh,int num,int pivot)
     {
         switch(num)
         {
             case 0:
                 //LINE SHAPE
-                sh.getarrofblock()[0].setX(0);
+                sh.getarrofblock()[0].setX(1);
                 sh.getarrofblock()[0].setY(pivot);
-                sh.getarrofblock()[1].setX(0);
+                sh.getarrofblock()[1].setX(1);
                 sh.getarrofblock()[1].setY(pivot+1);
-                sh.getarrofblock()[2].setX(0);
+                sh.getarrofblock()[2].setX(1);
                 sh.getarrofblock()[2].setY(pivot+2);
-                sh.getarrofblock()[3].setX(0);
+                sh.getarrofblock()[3].setX(1);
                 sh.getarrofblock()[3].setY(pivot+3);
                 break;
             case 1:
                 //SQUARE SHAPE
-                sh.getarrofblock()[0].setX(0);
+                sh.getarrofblock()[0].setX(1);
                 sh.getarrofblock()[0].setY(pivot);
-                sh.getarrofblock()[1].setX(0);
+                sh.getarrofblock()[1].setX(1);
                 sh.getarrofblock()[1].setY(pivot+1);
-                sh.getarrofblock()[2].setX(1);
+                sh.getarrofblock()[2].setX(2);
                 sh.getarrofblock()[2].setY(pivot);
-                sh.getarrofblock()[3].setX(1);
+                sh.getarrofblock()[3].setX(2);
                 sh.getarrofblock()[3].setY(pivot+1);
                 break;
             case 2:
                 //LR SHAPE
-                sh.getarrofblock()[0].setX(0);
+                sh.getarrofblock()[0].setX(2);
                 sh.getarrofblock()[0].setY(pivot);
-                sh.getarrofblock()[1].setX(1);
+                sh.getarrofblock()[1].setX(3);
                 sh.getarrofblock()[1].setY(pivot);
-                sh.getarrofblock()[2].setX(2);
+                sh.getarrofblock()[2].setX(4);
                 sh.getarrofblock()[2].setY(pivot);
-                sh.getarrofblock()[3].setX(2);
+                sh.getarrofblock()[3].setX(4);
                 sh.getarrofblock()[3].setY(pivot+1);
                 break;
             case 3:
                 //LL SHAPE
-                sh.getarrofblock()[0].setX(0);
+                sh.getarrofblock()[0].setX(2);
                 sh.getarrofblock()[0].setY(pivot);
-                sh.getarrofblock()[1].setX(1);
+                sh.getarrofblock()[1].setX(3);
                 sh.getarrofblock()[1].setY(pivot);
-                sh.getarrofblock()[2].setX(2);
+                sh.getarrofblock()[2].setX(4);
                 sh.getarrofblock()[2].setY(pivot);
-                sh.getarrofblock()[3].setX(2);
+                sh.getarrofblock()[3].setX(4);
                 sh.getarrofblock()[3].setY(pivot-1);
                 break;
             case 4:
                 //T SHAPE
-                sh.getarrofblock()[0].setX(0);
+                sh.getarrofblock()[0].setX(1);
                 sh.getarrofblock()[0].setY(pivot);
-                sh.getarrofblock()[1].setX(0);
+                sh.getarrofblock()[1].setX(1);
                 sh.getarrofblock()[1].setY(pivot+1);
-                sh.getarrofblock()[2].setX(0);
+                sh.getarrofblock()[2].setX(1);
                 sh.getarrofblock()[2].setY(pivot+2);
-                sh.getarrofblock()[3].setX(1);
+                sh.getarrofblock()[3].setX(2);
                 sh.getarrofblock()[3].setY(pivot+1);
                 break;
             case 5:
                 //ZL SHAPE
-                sh.getarrofblock()[0].setX(0);
+                sh.getarrofblock()[0].setX(1);
                 sh.getarrofblock()[0].setY(pivot);
-                sh.getarrofblock()[1].setX(0);
+                sh.getarrofblock()[1].setX(1);
                 sh.getarrofblock()[1].setY(pivot+1);
-                sh.getarrofblock()[2].setX(1);
+                sh.getarrofblock()[2].setX(2);
                 sh.getarrofblock()[2].setY(pivot+1);
-                sh.getarrofblock()[3].setX(1);
+                sh.getarrofblock()[3].setX(2);
                 sh.getarrofblock()[3].setY(pivot+2);
                 break;
             case 6:
                 //ZR SHAPE
-                sh.getarrofblock()[0].setX(0);
+                sh.getarrofblock()[0].setX(1);
                 sh.getarrofblock()[0].setY(pivot);
-                sh.getarrofblock()[1].setX(0);
+                sh.getarrofblock()[1].setX(1);
                 sh.getarrofblock()[1].setY(pivot+1);
-                sh.getarrofblock()[2].setX(1);
+                sh.getarrofblock()[2].setX(2);
                 sh.getarrofblock()[2].setY(pivot-1);
-                sh.getarrofblock()[3].setX(1);
+                sh.getarrofblock()[3].setX(2);
                 sh.getarrofblock()[3].setY(pivot);
                 break;
             default:
@@ -352,7 +303,7 @@ abstract class Main
      * @param rotation array for rotating the shapes
      * @return shapes array
      **/
-    private static Shape[][] makeRotationArray(Shape[][] rotation)
+    private Shape[][] makeRotationArray(Shape[][] rotation)
     {
         //initial shapes of the block
         Block e = new Block(0,0);
@@ -360,29 +311,17 @@ abstract class Main
         Block g = new Block(0,0);
         Block h = new Block(0,0);
 
-        //LINE SHAPE 0      --
-        e = new Block(-2,-1);
-        f = new Block(-1,0);
-        g = new Block(0,1);
-        h = new Block(1,2);
+        //LINE SHAPE 0
         rotation[0][0] = new Shape(e,f,g,h,0);
+        rotation[0][2] = new Shape(e,f,g,h,2);
         e = new Block(-1,1);
         f = new Block(0,0);
         g = new Block(1,-1);
         h = new Block(2,-2);
         rotation[0][1] = new Shape(e,f,g,h,1);
-        e = new Block(1,2);
-        f = new Block(0,1);
-        g = new Block(-1,0);
-        h = new Block(-2,-1);
-        rotation[0][2] = new Shape(e,f,g,h,2);
-        e = new Block(2,-2);
-        f = new Block(1,-1);
-        g = new Block(0,0);
-        h = new Block(-1,1);
         rotation[0][3] = new Shape(e,f,g,h,3);
         
-        //SQUARE SHAPE 1    --
+        //SQUARE SHAPE 1
         e = new Block(0,0);
         f = new Block(0,0);
         g = new Block(0,0);
@@ -393,28 +332,25 @@ abstract class Main
         rotation[1][3] = new Shape(e,f,g,h,3);
 
         //LR SHAPE 2
-        e = new Block(-2,2);
+        e = new Block(0,0);
         f = new Block(0,0);
         g = new Block(0,0);
-        h = new Block(0,2);
+        h = new Block(0,0);
         rotation[2][0] = new Shape(e,f,g,h,0);
-        
-        e = new Block(1,1);
-        f = new Block(0,0);
-        g = new Block(0,0);
-        h = new Block(-1,1);
-        rotation[2][1] = new Shape(e,f,g,h,1);
-        
-        e = new Block(0,-2);
+        e = new Block(1,2);
         f = new Block(0,0);
         g = new Block(0,0);
         h = new Block(-1,0);
-        rotation[2][2] = new Shape(e,f,g,h,2);
-        
-        e = new Block(1,-3);
-        f = new Block(0,0);
+        rotation[2][1] = new Shape(e,f,g,h,1);
+        e = new Block(3,1);
+        f = new Block(3,1);
         g = new Block(0,0);
-        h = new Block(1,2);
+        h = new Block(0,0);
+        rotation[2][2] = new Shape(e,f,g,h,2);
+        e = new Block(0,2);
+        f = new Block(0,0);
+        g = new Block(-1,1);
+        h = new Block(-1,1);
         rotation[2][3] = new Shape(e,f,g,h,3);
 
         // LL SHAPE 3
@@ -506,5 +442,10 @@ abstract class Main
         rotation[6][3] = new Shape(e,f,g,h,3);
         
         return rotation;
+    }
+
+    private void playExistingGame()
+    {
+
     }
 }

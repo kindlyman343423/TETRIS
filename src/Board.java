@@ -51,7 +51,7 @@ public class Board
     {
         this.arr=arr;
     }
-    
+
     /**
      * It will check whether the coords are valid or not
      * If it returns true then it will ensure that the block inserted in right coords
@@ -62,7 +62,7 @@ public class Board
      **/
     public boolean checkValidCoords(int x,int y)
     {
-        if(x<0 || y<0 || x>rows || y>cols)
+        if(x<0 || y<0 || x>=rows || y>=cols)
         {
             return false;
         }
@@ -207,7 +207,7 @@ public class Board
                     }
                 }
 
-                //SHIFTING THE COUNT BLOCK ARRAY
+                //SHIFTING THE COUNT BLOCK ARRAY TO RIGHT
                 for(int j=count_block.length-1;j>0;j--)
                 {
                     count_block[j] = count_block[j-1];
@@ -217,7 +217,7 @@ public class Board
             }
             else if(count_block[i]>cols)
             {
-                System.out.println("ERROR DUE TO SIZE");
+                System.out.println("GAME OVER !!!");
                 System.exit(0);
             }
         }
