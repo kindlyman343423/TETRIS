@@ -392,29 +392,29 @@ abstract class Main
         rotation[1][2] = new Shape(e,f,g,h,2);
         rotation[1][3] = new Shape(e,f,g,h,3);
 
-        //LR SHAPE 2
-        e = new Block(-2,2);
-        f = new Block(0,0);
-        g = new Block(0,0);
-        h = new Block(0,2);
+        //LR SHAPE 2    --
+        e = new Block(-2,0);
+        f = new Block(-1,-1);
+        g = new Block(0,-2);
+        h = new Block(1,-1);
         rotation[2][0] = new Shape(e,f,g,h,0);
         
-        e = new Block(1,1);
-        f = new Block(0,0);
-        g = new Block(0,0);
-        h = new Block(-1,1);
+        e = new Block(1,2);
+        f = new Block(0,1);
+        g = new Block(-1,0);
+        h = new Block(0,-1);
         rotation[2][1] = new Shape(e,f,g,h,1);
         
-        e = new Block(0,-2);
-        f = new Block(0,0);
-        g = new Block(0,0);
-        h = new Block(-1,0);
+        e = new Block(1,0);
+        f = new Block(0,1);
+        g = new Block(-1,2);
+        h = new Block(-2,1);
         rotation[2][2] = new Shape(e,f,g,h,2);
         
-        e = new Block(1,-3);
-        f = new Block(0,0);
-        g = new Block(0,0);
-        h = new Block(1,2);
+        e = new Block(0,-2);
+        f = new Block(1,-1);
+        g = new Block(2,0);
+        h = new Block(1,1);
         rotation[2][3] = new Shape(e,f,g,h,3);
 
         // LL SHAPE 3
