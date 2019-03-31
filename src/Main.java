@@ -31,11 +31,11 @@ abstract class Main
         try
         {
             System.out.println("GAME CONTROLS");
-            System.out.println("D/d -- right");                     // right option
-            System.out.println("A/a -- left");                      // left option
-            System.out.println("W/w -- rotate");                    // rotate option
-            System.out.println("S/s -- save");                      // save option
-            System.out.println("Q/q -- quit");                      // quit game option
+            System.out.println("D/d -- right");                         // right option
+            System.out.println("A/a -- left");                          // left option
+            System.out.println("W/w -- rotate");                        // rotate option
+            System.out.println("S/s -- save");                          // save option
+            System.out.println("Q/q -- quit");                          // quit game option
 
             System.out.println("Enter the size of the board");          // getting desired size from the user
             int R = in.nextInt();                                       // input number of rows
@@ -62,16 +62,16 @@ abstract class Main
              * 5 |
              * 6 |
              **/
-            Shape[][] rotation = new Shape[7][4];
-            rotation = makeRotationArray(rotation);
+            Shape[][] rotation = new Shape[7][4];                       // array maintained for rotations of the shape
+            rotation = makeRotationArray(rotation);                     // making initial array for rotation
 
-            int pivot = (C/2) - 1;                                        // value for setting initial position of the shape
+            int pivot = (C/2) - 1;                                      // value for setting initial position of the shape
             // building the line blocks
             Block a = new Block(0, pivot);
             Block b = new Block(0, pivot+1);
             Block c = new Block(0, pivot+2);
             Block d = new Block(0, pivot+3);
-            Shape LINE = new Shape(a, b, c, d, 0);                      // created line shape
+            Shape LINE = new Shape(a, b, c, d, 0);                      // created line shape intially
 
             if(!board.insertShape(LINE))                                // insert initial shape on board if it is possible
             {
@@ -450,24 +450,27 @@ abstract class Main
         rotation[3][3] = new Shape(e,f,g,h,3);
 
         // T SHAPE 4
-        e = new Block(0, 0);
-        f = new Block(0, 0);
-        g = new Block(0, 0);
+        e = new Block(-2, 0);
+        f = new Block(-1, 1);
+        g = new Block(0, 2);
         h = new Block(0, 0);
         rotation[4][0] = new Shape(e,f,g,h,0);
-        e = new Block(0, 0);
-        f = new Block(0, 0);
-        g = new Block(-1,-1);
+
+        e = new Block(0, 2);
+        f = new Block(1, 1);
+        g = new Block(2, 0);
         h = new Block(0, 0);
         rotation[4][1] = new Shape(e,f,g,h,1);
-        e = new Block(0, 0);
-        f = new Block(0, 0);
-        g = new Block(0, 0);
-        h = new Block(-2, 0);
+
+        e = new Block(2, 0);
+        f = new Block(1, -1);
+        g = new Block(0, -2);
+        h = new Block(0, 0);
         rotation[4][2] = new Shape(e,f,g,h,2);
-        e = new Block(-1,1);
-        f = new Block(0, 0);
-        g = new Block(0, 0);
+
+        e = new Block(0, -2);
+        f = new Block(-1, -1);
+        g = new Block(-2, 0);
         h = new Block(0, 0);
         rotation[4][3] = new Shape(e,f,g,h,3);
 
