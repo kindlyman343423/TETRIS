@@ -65,7 +65,7 @@ abstract class Main
             Shape[][] rotation = new Shape[7][4];
             rotation = makeRotationArray(rotation);
 
-            int pivot = C/2 - 1;                                        // value for setting initial position of the shape
+            int pivot = (C/2) - 1;                                        // value for setting initial position of the shape
             // building the line blocks
             Block a = new Block(0, pivot);
             Block b = new Block(0, pivot+1);
@@ -102,7 +102,7 @@ abstract class Main
                     {
                         shape_counter++;
                     }
-                    LINE = create_shape(LINE, shape_counter,pivot);     // creating new shape for second move
+                    LINE = create_shape(LINE, shape_counter,pivot);     // creating new shape for second move with current state 0
 
                     flag_shape_fixed=false;                             // set shape fixed to false for next shape
                 }
@@ -272,6 +272,7 @@ abstract class Main
                 sh.getarrofblock()[2].setY(pivot+2);
                 sh.getarrofblock()[3].setX(0);
                 sh.getarrofblock()[3].setY(pivot+3);
+                sh.setcurrentstate(0);
                 break;
             case 1:
                 //SQUARE SHAPE
@@ -283,6 +284,7 @@ abstract class Main
                 sh.getarrofblock()[2].setY(pivot);
                 sh.getarrofblock()[3].setX(1);
                 sh.getarrofblock()[3].setY(pivot+1);
+                sh.setcurrentstate(0);
                 break;
             case 2:
                 //LR SHAPE
@@ -294,6 +296,7 @@ abstract class Main
                 sh.getarrofblock()[2].setY(pivot);
                 sh.getarrofblock()[3].setX(2);
                 sh.getarrofblock()[3].setY(pivot+1);
+                sh.setcurrentstate(0);
                 break;
             case 3:
                 //LL SHAPE
@@ -305,6 +308,7 @@ abstract class Main
                 sh.getarrofblock()[2].setY(pivot);
                 sh.getarrofblock()[3].setX(2);
                 sh.getarrofblock()[3].setY(pivot-1);
+                sh.setcurrentstate(0);
                 break;
             case 4:
                 //T SHAPE
@@ -316,6 +320,7 @@ abstract class Main
                 sh.getarrofblock()[2].setY(pivot+2);
                 sh.getarrofblock()[3].setX(1);
                 sh.getarrofblock()[3].setY(pivot+1);
+                sh.setcurrentstate(0);
                 break;
             case 5:
                 //ZL SHAPE
@@ -327,6 +332,7 @@ abstract class Main
                 sh.getarrofblock()[2].setY(pivot+1);
                 sh.getarrofblock()[3].setX(1);
                 sh.getarrofblock()[3].setY(pivot+2);
+                sh.setcurrentstate(0);
                 break;
             case 6:
                 //ZR SHAPE
@@ -338,6 +344,7 @@ abstract class Main
                 sh.getarrofblock()[2].setY(pivot-1);
                 sh.getarrofblock()[3].setX(1);
                 sh.getarrofblock()[3].setY(pivot);
+                sh.setcurrentstate(0);
                 break;
             default:
                 System.exit(0);
@@ -418,25 +425,28 @@ abstract class Main
         rotation[2][3] = new Shape(e,f,g,h,3);
 
         // LL SHAPE 3
-        e = new Block(0,0);
-        f = new Block(0,0);
-        g = new Block(0,0);
-        h = new Block(0,0);
+        e = new Block(0,2);
+        f = new Block(1,1);
+        g = new Block(2,0);
+        h = new Block(1,-1);
         rotation[3][0] = new Shape(e,f,g,h,0);
-        e = new Block(1,-1);
-        f = new Block(0,0);
-        g = new Block(0,0);
-        h = new Block(1,1);
+
+        e = new Block(2,0);
+        f = new Block(1,-1);
+        g = new Block(0,-2);
+        h = new Block(-1,-1);
         rotation[3][1] = new Shape(e,f,g,h,1);
-        e = new Block(0,0);
-        f = new Block(0,0);
-        g = new Block(0,0);
-        h = new Block(-2,2);
+
+        e = new Block(0,-2);
+        f = new Block(-1,-1);
+        g = new Block(-2,0);
+        h = new Block(-1,1);
         rotation[3][2] = new Shape(e,f,g,h,2);
-        e = new Block(1,-1);
-        f = new Block(0,0);
-        g = new Block(-1,-2);
-        h = new Block(0,1);
+        
+        e = new Block(-2,0);
+        f = new Block(-1,1);
+        g = new Block(0,2);
+        h = new Block(1,1);
         rotation[3][3] = new Shape(e,f,g,h,3);
 
         // T SHAPE 4
