@@ -424,7 +424,7 @@ abstract class Main
         h = new Block(1,1);
         rotation[2][3] = new Shape(e,f,g,h,3);
 
-        // LL SHAPE 3
+        // LL SHAPE 3   --
         e = new Block(0,2);
         f = new Block(1,1);
         g = new Block(2,0);
@@ -449,7 +449,7 @@ abstract class Main
         h = new Block(1,1);
         rotation[3][3] = new Shape(e,f,g,h,3);
 
-        // T SHAPE 4
+        // T SHAPE 4    --
         e = new Block(-2, 0);
         f = new Block(-1, 1);
         g = new Block(0, 2);
@@ -475,25 +475,28 @@ abstract class Main
         rotation[4][3] = new Shape(e,f,g,h,3);
 
         // ZL SHAPE 5
-        e = new Block(0, 0);
-        f = new Block(0, 0);
+        e = new Block(-2, 0);
+        f = new Block(-1, 1);
         g = new Block(0, 0);
-        h = new Block(0, 0);
+        h = new Block(1, 1);
         rotation[5][0] = new Shape(e,f,g,h,0);
-        e = new Block(0, 0);
-        f = new Block(0, 0);
-        g = new Block(0,-1);
-        h = new Block(-2,1);
-        rotation[5][1] = new Shape(e,f,g,h,1);
-        e = new Block(0, 0);
-        f = new Block(0, 0);
+
+        e = new Block(0, 2);
+        f = new Block(1, 1);
         g = new Block(0, 0);
-        h = new Block(0, 0);
+        h = new Block(1,-1);
+        rotation[5][1] = new Shape(e,f,g,h,1);
+
+        e = new Block(2, 0);
+        f = new Block(1,-1);
+        g = new Block(0, 0);
+        h = new Block(-1,-1);
         rotation[5][2] = new Shape(e,f,g,h,2);
-        e = new Block(0, 0);
-        f = new Block(0, 0);
-        g = new Block(0,-1);
-        h = new Block(-2,1);
+
+        e = new Block(0,-2);
+        f = new Block(-1, -1);
+        g = new Block(0, 0);
+        h = new Block(-1,1);
         rotation[5][3] = new Shape(e,f,g,h,3);
 
         // ZR SHAPE 6
