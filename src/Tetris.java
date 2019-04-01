@@ -2,6 +2,9 @@ import java.util.*;
 import RAINBOW.*;
 public class Tetris
 {
+    /**
+     * New tetris game is created 
+     **/
     public Tetris()
     {
         Rain color = new Rain();
@@ -14,6 +17,28 @@ public class Tetris
         System.out.println(color.RESET);
     }
 
+    /**
+     * This function will be display GAME OVER when game ends
+     * 
+     * @return void
+     **/
+    private void endTetris()
+    {
+        Rain color = new Rain();
+        System.out.println(color.BRED);
+        System.out.println("##### ##### ##### #####  ##### #       # ##### #####");
+        System.out.println("#     #   # # # # #      #   #  #     #  #     #   #");
+        System.out.println("#  ## ##### # # # ####   #   #   #   #   ####  #####");
+        System.out.println("#   # #   # #   # #      #   #    # #    #     #  # ");
+        System.out.println("##### #   # #   # #####  #####     #     ##### #   #");
+        System.out.println(color.RESET);
+    }
+
+    /**
+     * This function is displays the main functions in tetris game
+     * 
+     * @return void
+     **/
     public void tetrisMain()
     {
         Scanner in = new Scanner(System.in);                            // scanner for input in tetris
@@ -35,6 +60,8 @@ public class Tetris
             case 2:
                 playExistingGame();
                 break;
+            case 3:
+                highscores();
             default:
                 break;
         }
@@ -42,12 +69,24 @@ public class Tetris
         in.close();
     }
     
+    /**
+     * This function will start a new tetris game
+     * 
+     * @return void
+     **/
     private void playNewGame()
     {
         Scanner in = new Scanner(System.in);                            // scanner for input in tetris
         Rain color = new Rain();                                        // for using rainbow
         try
         {
+            System.out.println("GAME CONTROLS");
+            System.out.println("D/d -- right");                         // right option
+            System.out.println("A/a -- left");                          // left option
+            System.out.println("W/w -- rotate");                        // rotate option
+            System.out.println("S/s -- save");                          // save option
+            System.out.println("Q/q -- quit");                          // quit game option
+
             System.out.println("Enter the size of the board");          // getting desired size from the user
             int R = in.nextInt();                                       // input number of rows
             int C = in.nextInt();                                       // input number of cols
@@ -73,16 +112,16 @@ public class Tetris
              * 5 |
              * 6 |
              **/
-            // Shape[][] rotation = new Shape[7][4];
-            // rotation = makeRotationArray(rotation);
+            Shape[][] rotation = new Shape[7][4];                       // array maintained for rotations of the shape
+            rotation = makeRotationArray(rotation);                     // making initial array for rotation
 
-            int pivot = C/2 - 1;                                        // value for setting initial position of the shape
+            int pivot = (C/2) - 1;                                      // value for setting initial position of the shape
             // building the line blocks
-            Block a = new Block(1, pivot);
-            Block b = new Block(1, pivot+1);
-            Block c = new Block(1, pivot+2);
-            Block d = new Block(1, pivot+3);
-            Shape LINE = new Shape(a, b, c, d, 0);                      // created line shape
+            Block a = new Block(0, pivot);
+            Block b = new Block(0, pivot+1);
+            Block c = new Block(0, pivot+2);
+            Block d = new Block(0, pivot+3);
+            Shape LINE = new Shape(a, b, c, d, 0);                      // created line shape intially
 
             if(!board.insertShape(LINE))                                // insert initial shape on board if it is possible
             {
@@ -113,7 +152,7 @@ public class Tetris
                     {
                         shape_counter++;
                     }
-                    LINE = create_shape(LINE, shape_counter,pivot);     // creating new shape for second move
+                    LINE = create_shape(LINE, shape_counter,pivot);     // creating new shape for second move with current state 0
 
                     flag_shape_fixed=false;                             // set shape fixed to false for next shape
                 }
@@ -143,17 +182,66 @@ public class Tetris
                 }
                 else if(ans=='w' || ans=='W')                           // rotate shape
                 {
+                    //rotation of shape
+                    int currentstate = LINE.getcurrentstate();
+                    if(currentstate >= 3)
+                    {
+                        currentstate=0;
+                    }
+                    else
+                    {
+                        currentstate++;
+                    }
+                    System.out.println(LINE);
+                    System.out.println(currentstate);
+
+                    int ex = LINE.getarrofblock()[0].getX() + rotation[shape_counter][currentstate].getarrofblock()[0].getX();
+                    int ey = LINE.getarrofblock()[0].getY() + rotation[shape_counter][currentstate].getarrofblock()[0].getY();
+                    int fx = LINE.getarrofblock()[1].getX() + rotation[shape_counter][currentstate].getarrofblock()[1].getX();
+                    int fy = LINE.getarrofblock()[1].getY() + rotation[shape_counter][currentstate].getarrofblock()[1].getY();
+                    int gx = LINE.getarrofblock()[2].getX() + rotation[shape_counter][currentstate].getarrofblock()[2].getX();
+                    int gy = LINE.getarrofblock()[2].getY() + rotation[shape_counter][currentstate].getarrofblock()[2].getY();
+                    int hx = LINE.getarrofblock()[3].getX() + rotation[shape_counter][currentstate].getarrofblock()[3].getX();
+                    int hy = LINE.getarrofblock()[3].getY() + rotation[shape_counter][currentstate].getarrofblock()[3].getY();
+                    Block e = null;
+                    Block f = null;
+                    Block g = null;
+                    Block h = null;
                     
+                    if( board.checkValidCoords(ex, ey) && board.checkValidCoords(fx, fy) && board.checkValidCoords(gx, gy) && board.checkValidCoords(hx, hy))
+                    {
+                        e = new Block(ex,ey);
+                        f = new Block(fx,fy);
+                        g = new Block(gx,gy);
+                        h = new Block(hx,hy);
+                    }
+                    else
+                    {
+                        ex = LINE.getarrofblock()[0].getX();
+                        ey = LINE.getarrofblock()[0].getY();
+                        fx = LINE.getarrofblock()[1].getX();
+                        fy = LINE.getarrofblock()[1].getY();
+                        gx = LINE.getarrofblock()[2].getX();
+                        gy = LINE.getarrofblock()[2].getY();
+                        hx = LINE.getarrofblock()[3].getX();
+                        hy = LINE.getarrofblock()[3].getY();
+                        e = new Block(ex,ey);
+                        f = new Block(fx,fy);
+                        g = new Block(gx,gy);
+                        h = new Block(hx,hy);
+                        System.out.println("SORRY INVALID ROTATION !!!");
+                    }
+                    LINE = new Shape(e,f,g,h,currentstate);
                 }
                 else if(ans=='q' || ans=='Q')                           // EXIT GAME
                 {
                     System.exit(0);
                 }
-
-                // rotate shape
+                System.out.println(LINE);
                 if(!board.insertShape(LINE))                            // insert initial shape on board if it is possible
                 {
-                    System.out.println(color.BRED + "GAME OVER !!!" + color.RESET);
+                    System.out.println(color.BRED + "MAIN GAME OVER !!!" + color.RESET);
+                    System.exit(0);
                 }                                                       // insert shape on board
                 board.printBoard();                                     // print board
                 System.out.println();
@@ -169,36 +257,38 @@ public class Tetris
         }
     }
 
-    /**
-    *  LINE  0
-    *  # # # #
-    *
-    *  SQUARE  1
-    *  # # 
-    *  # #
-    *
-    *  LR SHAPE 2
-    *  #
-    *  #
-    *  # #
-    *
-    *  LL SHAPE 3
-    *    #
-    *    # 
-    *  # #
-    * 
-    *  T SHAPE 4
-    *  # # #
-    *    #
-    * 
-    *  ZL SHAPE 5
-    *  # #
-    *    # #
-    *
-    *  ZR SHAPE 6
-    *    # #
-    *  # #
-    **/
+    /*************************************************
+     *              SHAPES IN THE GAME               *
+     *                                               *                    
+     *                   LINE  0                     *
+     *                   # # # #                     *
+     *                                               *
+     *                   SQUARE 1                    *
+     *                   # #                         *
+     *                   # #                         *
+     *                                               *
+     *                   LR SHAPE 2                  *
+     *                   #                           *
+     *                   #                           *
+     *                   # #                         *
+     *                                               *
+     *                   LL SHAPE 3                  *
+     *                     #                         *
+     *                     #                         *
+     *                   # #                         *
+     *                                               *
+     *                   T SHAPE 4                   *
+     *                   # # #                       *
+     *                     #                         *
+     *                                               *
+     *                   ZL SHAPE 5                  *
+     *                   # #                         *
+     *                     # #                       *
+     *                                               *
+     *                   ZR SHAPE 6                  *
+     *                     # #                       *
+     *                   # #                         *
+     *************************************************/
 
     /**
      * This function will create initial shapes
@@ -311,17 +401,29 @@ public class Tetris
         Block g = new Block(0,0);
         Block h = new Block(0,0);
 
-        //LINE SHAPE 0
+        //LINE SHAPE 0      --
+        e = new Block(-2,-1);
+        f = new Block(-1,0);
+        g = new Block(0,1);
+        h = new Block(1,2);
         rotation[0][0] = new Shape(e,f,g,h,0);
-        rotation[0][2] = new Shape(e,f,g,h,2);
         e = new Block(-1,1);
         f = new Block(0,0);
         g = new Block(1,-1);
         h = new Block(2,-2);
         rotation[0][1] = new Shape(e,f,g,h,1);
+        e = new Block(1,2);
+        f = new Block(0,1);
+        g = new Block(-1,0);
+        h = new Block(-2,-1);
+        rotation[0][2] = new Shape(e,f,g,h,2);
+        e = new Block(2,-2);
+        f = new Block(1,-1);
+        g = new Block(0,0);
+        h = new Block(-1,1);
         rotation[0][3] = new Shape(e,f,g,h,3);
         
-        //SQUARE SHAPE 1
+        //SQUARE SHAPE 1    --
         e = new Block(0,0);
         f = new Block(0,0);
         g = new Block(0,0);
@@ -331,121 +433,147 @@ public class Tetris
         rotation[1][2] = new Shape(e,f,g,h,2);
         rotation[1][3] = new Shape(e,f,g,h,3);
 
-        //LR SHAPE 2
-        e = new Block(0,0);
-        f = new Block(0,0);
-        g = new Block(0,0);
-        h = new Block(0,0);
+        //LR SHAPE 2    --
+        e = new Block(-2,0);
+        f = new Block(-1,-1);
+        g = new Block(0,-2);
+        h = new Block(1,-1);
         rotation[2][0] = new Shape(e,f,g,h,0);
+        
         e = new Block(1,2);
-        f = new Block(0,0);
-        g = new Block(0,0);
-        h = new Block(-1,0);
+        f = new Block(0,1);
+        g = new Block(-1,0);
+        h = new Block(0,-1);
         rotation[2][1] = new Shape(e,f,g,h,1);
-        e = new Block(3,1);
-        f = new Block(3,1);
-        g = new Block(0,0);
-        h = new Block(0,0);
+        
+        e = new Block(1,0);
+        f = new Block(0,1);
+        g = new Block(-1,2);
+        h = new Block(-2,1);
         rotation[2][2] = new Shape(e,f,g,h,2);
-        e = new Block(0,2);
-        f = new Block(0,0);
-        g = new Block(-1,1);
-        h = new Block(-1,1);
+        
+        e = new Block(0,-2);
+        f = new Block(1,-1);
+        g = new Block(2,0);
+        h = new Block(1,1);
         rotation[2][3] = new Shape(e,f,g,h,3);
 
-        // LL SHAPE 3
-        e = new Block(0,0);
-        f = new Block(0,0);
-        g = new Block(0,0);
-        h = new Block(0,0);
+        // LL SHAPE 3   --
+        e = new Block(0,2);
+        f = new Block(1,1);
+        g = new Block(2,0);
+        h = new Block(1,-1);
         rotation[3][0] = new Shape(e,f,g,h,0);
-        e = new Block(1,-1);
-        f = new Block(0,0);
-        g = new Block(0,0);
-        h = new Block(1,1);
+
+        e = new Block(2,0);
+        f = new Block(1,-1);
+        g = new Block(0,-2);
+        h = new Block(-1,-1);
         rotation[3][1] = new Shape(e,f,g,h,1);
-        e = new Block(0,0);
-        f = new Block(0,0);
-        g = new Block(0,0);
-        h = new Block(-2,2);
+
+        e = new Block(0,-2);
+        f = new Block(-1,-1);
+        g = new Block(-2,0);
+        h = new Block(-1,1);
         rotation[3][2] = new Shape(e,f,g,h,2);
-        e = new Block(1,-1);
-        f = new Block(0,0);
-        g = new Block(-1,-2);
-        h = new Block(0,1);
+        
+        e = new Block(-2,0);
+        f = new Block(-1,1);
+        g = new Block(0,2);
+        h = new Block(1,1);
         rotation[3][3] = new Shape(e,f,g,h,3);
 
-        // T SHAPE 4
-        e = new Block(0, 0);
-        f = new Block(0, 0);
-        g = new Block(0, 0);
+        // T SHAPE 4    --
+        e = new Block(-2, 0);
+        f = new Block(-1, 1);
+        g = new Block(0, 2);
         h = new Block(0, 0);
         rotation[4][0] = new Shape(e,f,g,h,0);
-        e = new Block(0, 0);
-        f = new Block(0, 0);
-        g = new Block(-1,-1);
+
+        e = new Block(0, 2);
+        f = new Block(1, 1);
+        g = new Block(2, 0);
         h = new Block(0, 0);
         rotation[4][1] = new Shape(e,f,g,h,1);
-        e = new Block(0, 0);
-        f = new Block(0, 0);
-        g = new Block(0, 0);
-        h = new Block(-2, 0);
+
+        e = new Block(2, 0);
+        f = new Block(1, -1);
+        g = new Block(0, -2);
+        h = new Block(0, 0);
         rotation[4][2] = new Shape(e,f,g,h,2);
-        e = new Block(-1,1);
-        f = new Block(0, 0);
-        g = new Block(0, 0);
+
+        e = new Block(0, -2);
+        f = new Block(-1, -1);
+        g = new Block(-2, 0);
         h = new Block(0, 0);
         rotation[4][3] = new Shape(e,f,g,h,3);
 
         // ZL SHAPE 5
-        e = new Block(0, 0);
-        f = new Block(0, 0);
+        e = new Block(-2, 0);
+        f = new Block(-1, 1);
         g = new Block(0, 0);
-        h = new Block(0, 0);
+        h = new Block(1, 1);
         rotation[5][0] = new Shape(e,f,g,h,0);
-        e = new Block(0, 0);
-        f = new Block(0, 0);
-        g = new Block(0,-1);
-        h = new Block(-2,1);
-        rotation[5][1] = new Shape(e,f,g,h,1);
-        e = new Block(0, 0);
-        f = new Block(0, 0);
+
+        e = new Block(0, 2);
+        f = new Block(1, 1);
         g = new Block(0, 0);
-        h = new Block(0, 0);
+        h = new Block(1,-1);
+        rotation[5][1] = new Shape(e,f,g,h,1);
+
+        e = new Block(2, 0);
+        f = new Block(1,-1);
+        g = new Block(0, 0);
+        h = new Block(-1,-1);
         rotation[5][2] = new Shape(e,f,g,h,2);
-        e = new Block(0, 0);
-        f = new Block(0, 0);
-        g = new Block(0,-1);
-        h = new Block(-2,1);
+
+        e = new Block(0,-2);
+        f = new Block(-1, -1);
+        g = new Block(0, 0);
+        h = new Block(-1,1);
         rotation[5][3] = new Shape(e,f,g,h,3);
 
         // ZR SHAPE 6
-        e = new Block(0, 0);
-        f = new Block(0, 0);
-        g = new Block(0, 0);
+        e = new Block(-1, 1);
+        f = new Block(0, 2);
+        g = new Block(-1, -1);
         h = new Block(0, 0);
         rotation[6][0] = new Shape(e,f,g,h,0);
-        e = new Block(0, 0);
-        f = new Block(0, 0);
-        g = new Block(0, 2);
-        h = new Block(2, 0);
+
+        e = new Block(1, 1);
+        f = new Block(2, 0);
+        g = new Block(-1, 1);
+        h = new Block(0, 0);
         rotation[6][1] = new Shape(e,f,g,h,1);
-        e = new Block(0, 0);
-        f = new Block(0, 0);
-        g = new Block(0, 0);
+
+        e = new Block(1, -1);
+        f = new Block(0, -2);
+        g = new Block(1, 1);
         h = new Block(0, 0);
         rotation[6][2] = new Shape(e,f,g,h,2);
-        e = new Block(0, 0);
-        f = new Block(0, 0);
-        g = new Block(0, 2);
-        h = new Block(2, 0);
+
+        e = new Block(-1, -1);
+        f = new Block(-2, 0);
+        g = new Block(1, -1);
+        h = new Block(0, 0);
         rotation[6][3] = new Shape(e,f,g,h,3);
         
         return rotation;
     }
 
+    /**
+     * This function will start the existing saved games
+     **/
     private void playExistingGame()
     {
 
+    }
+
+    /**
+     * This function will display the highscores
+     **/
+    private void highscores()
+    {
+        
     }
 }

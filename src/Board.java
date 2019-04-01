@@ -14,6 +14,9 @@ public class Board
 
     /**
      * Parameterised Constructor for making new board
+     * 
+     * @param int for rows
+     * @param int for cols
      **/
     public Board(int rows,int cols)
     {
@@ -29,6 +32,7 @@ public class Board
                 arr[i][j]=' ';                                      // setting space in the board array
             }
         }
+        // ENV = new String[1];
     }
     
     /**
@@ -209,7 +213,7 @@ public class Board
                 }
 
                 //SHIFTING THE COUNT BLOCK ARRAY TO RIGHT
-                for(int j=count_block.length-1;j>0;j--)
+                for(int j=i;j>0;j--)
                 {
                     count_block[j] = count_block[j-1];
                 }
