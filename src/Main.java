@@ -500,25 +500,28 @@ abstract class Main
         rotation[5][3] = new Shape(e,f,g,h,3);
 
         // ZR SHAPE 6
-        e = new Block(0, 0);
-        f = new Block(0, 0);
-        g = new Block(0, 0);
+        e = new Block(-1, 1);
+        f = new Block(0, 2);
+        g = new Block(-1, -1);
         h = new Block(0, 0);
         rotation[6][0] = new Shape(e,f,g,h,0);
-        e = new Block(0, 0);
-        f = new Block(0, 0);
-        g = new Block(0, 2);
-        h = new Block(2, 0);
+
+        e = new Block(1, 1);
+        f = new Block(2, 0);
+        g = new Block(-1, 1);
+        h = new Block(0, 0);
         rotation[6][1] = new Shape(e,f,g,h,1);
-        e = new Block(0, 0);
-        f = new Block(0, 0);
-        g = new Block(0, 0);
+
+        e = new Block(1, -1);
+        f = new Block(0, -2);
+        g = new Block(1, 1);
         h = new Block(0, 0);
         rotation[6][2] = new Shape(e,f,g,h,2);
-        e = new Block(0, 0);
-        f = new Block(0, 0);
-        g = new Block(0, 2);
-        h = new Block(2, 0);
+
+        e = new Block(-1, -1);
+        f = new Block(-2, 0);
+        g = new Block(1, -1);
+        h = new Block(0, 0);
         rotation[6][3] = new Shape(e,f,g,h,3);
         
         return rotation;
