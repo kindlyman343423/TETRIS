@@ -10,7 +10,7 @@ public class Board
     private char[][] arr;                                           // array for making board
     private int[] count_block;                                      // store count the number of fixed block in the line
     private int points;                                             // points of collecting during game play
-    private String[] ENV;
+    private String[] ENV;                                           // array for environment variables
 
     /**
      * Parameterised Constructor for making new board
@@ -78,7 +78,7 @@ public class Board
     }
     
     /**
-     * This function will print the board on the screen
+     * This function will print the board on the screen with colors
      * 
      * @return void
      **/
@@ -173,7 +173,7 @@ public class Board
             arr[r][c] = '@';                                        // printing @ for fixed shape
         }
         
-        deleteLine();                                               // check for line deletion
+        deleteLines();                                               // check for line deletion
         System.out.println("POINTS: "+points);
     }
 
@@ -181,8 +181,9 @@ public class Board
      * This function will delete the line if the line is full of fixed blocks or not
      * 
      * @return boolean whether the lines are deleted or not
+     * @bug below line don't work
      **/
-    private boolean deleteLine()
+    private boolean deleteLines()
     {
         boolean deleted = false;                                    // boolean for whether the line is deleted or not
         for(int i=0;i<count_block.length;i++)
@@ -191,7 +192,7 @@ public class Board
             {
                 deleted=true;                                       // set boolean to true as line is deleted
 
-                // DELETING THE LINE                 
+                // DELETING THE i LINE WHICH IS FULL                 
                 for(int j=0;j<cols;j++)
                 {
                     arr[i][j] = ' ';                                // reset the spaces
@@ -199,7 +200,7 @@ public class Board
                 }
 
                 //SHIFTING THE 2D ARRAY DOWN
-                for(int j=rows-1;j>0;j--)
+                for(int j=i;j>0;j--)
                 {
                     for(int k=0;k<cols;k++)
                     {

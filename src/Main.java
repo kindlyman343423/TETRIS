@@ -5,6 +5,7 @@ abstract class Main
     public static void main(String[] args) throws IndexOutofBoardException
     {
         startTetris();
+        endTetris();
 
         Scanner in = new Scanner(System.in);                            // scanner for input in tetris
         Rain color = new Rain();                                        // for using rainbow
@@ -216,6 +217,17 @@ abstract class Main
         System.out.println("  #    ####     #    ####     #    #####");
         System.out.println("  #    #        #    #  #     #        #");
         System.out.println("  #    #####    #    #   #  #####  #####");
+        System.out.println(color.RESET);
+    }
+    public static void endTetris()
+    {
+        Rain color = new Rain();
+        System.out.println(color.BRED);
+        System.out.println("##### ##### ##### #####  ##### #       # ##### #####");
+        System.out.println("#     #   # # # # #      #   #  #     #  #     #   #");
+        System.out.println("#  ## ##### # # # ####   #   #   #   #   ####  #####");
+        System.out.println("#   # #   # #   # #      #   #    # #    #     #  # ");
+        System.out.println("##### #   # #   # #####  #####     #     ##### #   #");
         System.out.println(color.RESET);
     }
     /**
