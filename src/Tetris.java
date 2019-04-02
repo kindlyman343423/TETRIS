@@ -81,19 +81,23 @@ public class Tetris
     {
         Rain color = new Rain();
         System.out.println(color.BYELLOW);
-        System.out.println("$$$$$  $$$$$  $   $  $$$$$  $$$$   $$$$$  $      $$$$$ ");
-        System.out.println("$      $   $  $$  $    $    $   $  $   $  $      $     ");
-        System.out.println("$      $   $  $ $ $    $    $$$$   $   $  $      $$$$$ ");
-        System.out.println("$      $   $  $  $$    $    $  $   $   $  $          $ ");
-        System.out.println("$$$$$  $$$$$  $   $    $    $   $  $$$$$  $$$$$  $$$$$ ");
-        System.out.println(color.RESET);
+        System.out.println("  $$$$$  $$$$$  $   $  $$$$$  $$$$   $$$$$  $      $$$$$  ");
+        System.out.println("  $      $   $  $$  $    $    $   $  $   $  $      $      ");
+        System.out.println("  $      $   $  $ $ $    $    $$$$   $   $  $      $$$$$  ");
+        System.out.println("  $      $   $  $  $$    $    $  $   $   $  $          $  ");
+        System.out.println("  $$$$$  $$$$$  $   $    $    $   $  $$$$$  $$$$$  $$$$$  ");
 
-        System.out.println("GAME CONTROLS");
-        System.out.println("D/d -- Shape will go right");                                   // right option
-        System.out.println("A/a -- Shape will go left");                                    // left option
-        System.out.println("W/w -- Shape will rotate");                                     // rotate option
-        System.out.println("S/s -- Save the current game");                                 // save option
-        System.out.println("Q/q -- Quit the current game");                                 // quit game option
+        System.out.println(color.BLGREEN);
+        System.out.println("**********************************************************");
+        System.out.println("*                                                        *");
+        System.out.println("*           D/d     --      Shape will go right          *");                                   // right option
+        System.out.println("*           A/a     --      Shape will go left           *");                                    // left option
+        System.out.println("*           W/w     --      Shape will rotate            *");                                     // rotate option
+        System.out.println("*           S/s     --      Save the current game        *");                                 // save option
+        System.out.println("*           Q/q     --      Quit the current game        *");
+        System.out.println("*                                                        *");
+        System.out.println("**********************************************************");
+        System.out.println(color.RESET);                                 // quit game option
     }
 
     /**
@@ -115,6 +119,12 @@ public class Tetris
             Console con = System.console();                                                     // used for taking password as an input
             char[] pass = con.readPassword();                                                   // reading password from the user
             String password = String.valueOf(pass);                                             // convert password to string
+            
+            if(username.equals(password))
+            {
+                throw new SameNamePasswordException("Password cannot be same as username");
+            }
+
             MessageDigest digest = MessageDigest.getInstance("SHA-256");                        // create sha 256 hash algo instance
             byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));             // hash algo sha 256
 
