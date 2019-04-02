@@ -1,3 +1,6 @@
+import java.io.Console;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.*;
 import RAINBOW.*;
 public class Tetris
@@ -76,29 +79,53 @@ public class Tetris
      **/
     private void playNewGame()
     {
-        Scanner in = new Scanner(System.in);                            // scanner for input in tetris
-        Rain color = new Rain();                                        // for using rainbow
+        Scanner in = new Scanner(System.in);                                                    // scanner for input in tetris
+        Rain color = new Rain();                                                                // for using rainbow
         try
         {
-            System.out.println("GAME CONTROLS");
-            System.out.println("D/d -- right");                         // right option
-            System.out.println("A/a -- left");                          // left option
-            System.out.println("W/w -- rotate");                        // rotate option
-            System.out.println("S/s -- save");                          // save option
-            System.out.println("Q/q -- quit");                          // quit game option
+            //user data entry
+            System.out.println(color.BOLD + "Enter the username" + color.RESET);
+            String username = in.nextLine();                                                    // for entered username
 
-            System.out.println("Enter the size of the board");          // getting desired size from the user
-            int R = in.nextInt();                                       // input number of rows
-            int C = in.nextInt();                                       // input number of cols
+            System.out.println(color.BOLD + "Create new password" + color.RESET);
+            Console con = System.console();                                                     // used for taking password as an input
+            char[] pass = con.readPassword();                                                   // reading password from the user
+            String password = String.valueOf(pass);                                             // convert password to string
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");                        // create sha 256 hash algo instance
+            byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));             // hash algo sha 256
+
+            User user = new User(username,password,new Date(),hash,0);                          // created a new user
             
-            if(R<10 || C<10 || R>100 || C>100)                          // input validation
+            System.out.println(color.BOLD+"Confirm password"+color.RESET);                      // confirming password
+            char[] reenterpass = con.readPassword();                                            // reading password again
+            String reenterpassword = String.valueOf(reenterpass);                               // convert password to string
+            byte[] rehash = digest.digest(reenterpassword.getBytes(StandardCharsets.UTF_8));    // hash algo sha 256
+
+            if(!user.matchPassword(rehash))                                                     // check password is right or not
+            {
+                throw new WrongPasswordException("Entered wrong password");
+            }
+
+            // System.exit(0);
+            System.out.println("GAME CONTROLS");
+            System.out.println("D/d -- Shape will go right");                                   // right option
+            System.out.println("A/a -- Shape will go left");                                    // left option
+            System.out.println("W/w -- Shape will rotate");                                     // rotate option
+            System.out.println("S/s -- Save the current game");                                 // save option
+            System.out.println("Q/q -- Quit the current game");                                 // quit game option
+
+            System.out.println("Enter the size of the board");                                  // getting desired size from the user
+            int R = in.nextInt();                                                               // input number of rows
+            int C = in.nextInt();                                                               // input number of cols
+            
+            if(R<10 || C<10 || R>100 || C>100)                                                  // input validation
             {
                 throw new IndexOutofBoardException("Wrong Input Valid size should be 0-100");
             }
 
-            Board board = new Board(R, C);                              // initialize the board size
-            boolean flag_shape_fixed = false;                           // initial shape is now fixed
-            int shape_counter = 0;                                      // for counting and changing different shapes
+            Board board = new Board(R, C);                                                      // initialize the board size
+            boolean flag_shape_fixed = false;                                                   // initial shape is now fixed
+            int shape_counter = 0;                                                              // for counting and changing different shapes
             
             /**
              * MAKING 2D ARRAY FOR ROTATION
@@ -112,39 +139,39 @@ public class Tetris
              * 5 |
              * 6 |
              **/
-            Shape[][] rotation = new Shape[7][4];                       // array maintained for rotations of the shape
-            rotation = makeRotationArray(rotation);                     // making initial array for rotation
+            Shape[][] rotation = new Shape[7][4];                                               // array maintained for rotations of the shape
+            rotation = makeRotationArray(rotation);                                             // making initial array for rotation
 
-            int pivot = (C/2) - 1;                                      // value for setting initial position of the shape
+            int pivot = (C/2) - 1;                                                              // value for setting initial position of the shape
             // building the line blocks
             Block a = new Block(0, pivot);
             Block b = new Block(0, pivot+1);
             Block c = new Block(0, pivot+2);
             Block d = new Block(0, pivot+3);
-            Shape LINE = new Shape(a, b, c, d, 0);                      // created line shape intially
+            Shape LINE = new Shape(a, b, c, d, 0);                                              // created line shape intially
 
-            if(!board.insertShape(LINE))                                // insert initial shape on board if it is possible
+            if(!board.insertShape(LINE))                                                        // insert initial shape on board if it is possible
             {
                 System.out.println(color.BRED + "ERROR WHILE INSERTING THE SHAPE" + color.RESET);
                 System.exit(0);
             }                                  
-            board.printBoard();                                         // print the initial board
+            board.printBoard();                                                                 // print the initial board
             System.out.println();
             
-            flag_shape_fixed = false;                                   // shape is fixed or not
+            flag_shape_fixed = false;                                                           // shape is fixed or not
             
             // start game
             while (true) 
             {
-                board.clearboard();                                     // clear board for above
-                flag_shape_fixed = board.movedown(LINE);                // default move down
+                board.clearboard();                                                             // clear board for above
+                flag_shape_fixed = board.movedown(LINE);                                        // default move down
 
-                if(flag_shape_fixed)                                    // if flag shape cannot move down so making it fixed 
+                if(flag_shape_fixed)                                                            // if flag shape cannot move down so making it fixed 
                 {
-                    board.insertFixedShape(LINE);                       // insert the fixed shape on board
-                    board.printBoard();                                 // print the board
+                    board.insertFixedShape(LINE);                                               // insert the fixed shape on board
+                    board.printBoard();                                                         // print the board
                     
-                    if(shape_counter==6)                                // set shape counter to 0 when it becomes 6
+                    if(shape_counter==6)                                                        // set shape counter to 0 when it becomes 6
                     {
                         shape_counter=0;
                     }
@@ -152,35 +179,35 @@ public class Tetris
                     {
                         shape_counter++;
                     }
-                    LINE = create_shape(LINE, shape_counter,pivot);     // creating new shape for second move with current state 0
+                    LINE = create_shape(LINE, shape_counter,pivot);                             // creating new shape for second move with current state 0
 
-                    flag_shape_fixed=false;                             // set shape fixed to false for next shape
+                    flag_shape_fixed=false;                                                     // set shape fixed to false for next shape
                 }
 
-                System.out.println("ENTER THE OPTION");                 // displaying the options
-                System.out.println("D/d -- right");                     // right option
-                System.out.println("A/a -- left");                      // left option
-                System.out.println("W/w -- rotate");                    // rotate option
-                System.out.println("S/s -- save");                      // save option
-                System.out.println("Q/q -- quit");                      // quit game option
+                System.out.println("ENTER THE OPTION");                                         // displaying the options
+                System.out.println("D/d -- right");                                             // right option
+                System.out.println("A/a -- left");                                              // left option
+                System.out.println("W/w -- rotate");                                            // rotate option
+                System.out.println("S/s -- save");                                              // save option
+                System.out.println("Q/q -- quit");                                              // quit game option
 
                 char ans = in.next().charAt(0);
 
-                if (ans == 'D' || ans == 'd')                           // move right
+                if (ans == 'D' || ans == 'd')                                                   // move right
                 {
                     if (!board.moveright(LINE)) 
                     {
                         break;
                     }
                 } 
-                else if (ans == 'A' || ans == 'a')                      // moveleft
+                else if (ans == 'A' || ans == 'a')                                              // moveleft
                 {
                     if (!board.moveleft(LINE)) 
                     {
                         break;
                     }
                 }
-                else if(ans=='w' || ans=='W')                           // rotate shape
+                else if(ans=='w' || ans=='W')                                                   // rotate shape
                 {
                     //rotation of shape
                     int currentstate = LINE.getcurrentstate();
