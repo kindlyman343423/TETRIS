@@ -73,6 +73,30 @@ public class Tetris
     }
     
     /**
+     * This function will display the controls of the game
+     * 
+     * @return void
+     **/
+    private void displayControls()
+    {
+        Rain color = new Rain();
+        System.out.println(color.BYELLOW);
+        System.out.println("$$$$$  $$$$$  $   $  $$$$$  $$$$   $$$$$  $      $$$$$ ");
+        System.out.println("$      $   $  $$  $    $    $   $  $   $  $      $     ");
+        System.out.println("$      $   $  $ $ $    $    $$$$   $   $  $      $$$$$ ");
+        System.out.println("$      $   $  $  $$    $    $  $   $   $  $          $ ");
+        System.out.println("$$$$$  $$$$$  $   $    $    $   $  $$$$$  $$$$$  $$$$$ ");
+        System.out.println(color.RESET);
+
+        System.out.println("GAME CONTROLS");
+        System.out.println("D/d -- Shape will go right");                                   // right option
+        System.out.println("A/a -- Shape will go left");                                    // left option
+        System.out.println("W/w -- Shape will rotate");                                     // rotate option
+        System.out.println("S/s -- Save the current game");                                 // save option
+        System.out.println("Q/q -- Quit the current game");                                 // quit game option
+    }
+
+    /**
      * This function will start a new tetris game
      * 
      * @return void
@@ -106,13 +130,7 @@ public class Tetris
                 throw new WrongPasswordException("Entered wrong password");
             }
 
-            // System.exit(0);
-            System.out.println("GAME CONTROLS");
-            System.out.println("D/d -- Shape will go right");                                   // right option
-            System.out.println("A/a -- Shape will go left");                                    // left option
-            System.out.println("W/w -- Shape will rotate");                                     // rotate option
-            System.out.println("S/s -- Save the current game");                                 // save option
-            System.out.println("Q/q -- Quit the current game");                                 // quit game option
+            displayControls();                                                                  // displays the controls of the game        
 
             System.out.println("Enter the size of the board");                                  // getting desired size from the user
             int R = in.nextInt();                                                               // input number of rows
