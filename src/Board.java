@@ -55,31 +55,6 @@ public class Board
     {
         this.arr=arr;
     }
-
-    /**
-     * It will check whether the coords are valid or not
-     * If it returns true then it will ensure that the block inserted in right coords
-     * 
-     * @param x for x coordinate
-     * @param y for y coordinate
-     * @return boolean 
-     **/
-    public boolean checkValidCoords(int x,int y)
-    {
-        if(x<0 || y<0 || x>=rows || y>=cols)
-        {
-            return false;
-        }
-        switch(arr[x][y])
-        {
-            case '#':
-            case '|':
-            case '@':
-            case '=':
-                return false;
-        }
-        return true;
-    }
     
     /**
      * This function will print the board on the screen with colors
@@ -136,7 +111,36 @@ public class Board
     }
 
     /**
-     * This function will insert shape on board for runtime
+     * <ol>
+     *  <li>It will check whether the coords are in board range
+     *  <li>It will check whether all boundary are valid or not
+     *  <li>It will also check whether the new coords are on fixed shape or not
+     *  <li>If it returns true then it will ensure that the block inserted in right coords
+     * 
+     * @param x for x coordinate
+     * @param y for y coordinate
+     * 
+     * @return boolean 
+     **/
+    public boolean checkValidCoords(int x,int y)
+    {
+        if(x<0 || y<0 || x>=rows || y>=cols)
+        {
+            return false;
+        }
+        switch(arr[x][y])
+        {
+            case '#':
+            case '|':
+            case '@':
+            case '=':
+                return false;
+        }
+        return true;
+    }
+
+    /**
+     * This function will insert shape on board for runtime with '#'
      * 
      * @param S for getting Shape for printing
      * 
@@ -161,7 +165,7 @@ public class Board
     }
 
     /**
-     * This function will insert the fixed shape
+     * This function will insert the fixed shape with '@'
      * 
      * @param S for Shape to printed as fixed
      * 
@@ -277,7 +281,7 @@ public class Board
                 S.getarrofblock()[i].setX(x+1);
                 S.getarrofblock()[i].setY(y);
             }
-            return false;                                           // returning false as shape not fixed see @Main.java
+            return false;                                           // returning false as shape not fixed see @Tetris.java
         }
         else                                                        // if flag touched get true
         {
@@ -291,31 +295,34 @@ public class Board
      * @param S for moving Shape right
      * @return boolean whether the shape moved right or not
      **/
-    public boolean moveright(Shape S)
+    public void moveright(Shape S)
     {
+        boolean invalid_flag = false;
         for(int i=0;i<4;i++)
         {
-            //Get block coordinates
             int x = S.getarrofblock()[i].getX();
             int y = S.getarrofblock()[i].getY();
-            
-            /**
-             * Generate new coords for checking and movement
-             * x remain unchanged
-             * y incremented by one
-             **/
+
             y=y+1;
 
-            if(y==cols)                                             // if y coordinate get equals to cols
+            if(y==cols || arr[x][y]=='@')                           // if y coordinate get equals to cols
             {
-                return false;                                       // return false as shape can't go right
+                invalid_flag = true;
             }
-            
-            //setting coords to the block
-            S.getarrofblock()[i].setX(x);
-            S.getarrofblock()[i].setY(y);
         }
-        return true;
+        if(!invalid_flag)                                           // if new shape will be true
+        {
+            for(int i=0;i<4;i++)
+            {
+                //Get block coordinates
+                int x = S.getarrofblock()[i].getX();
+                int y = S.getarrofblock()[i].getY();
+                
+                //setting coords to the block
+                S.getarrofblock()[i].setX(x);
+                S.getarrofblock()[i].setY(y+1);
+            }
+        }
     }
 
     /**
@@ -324,30 +331,33 @@ public class Board
      * @param S for moving Shape left
      * @return boolean whether the shape moved left or not
      **/
-    public boolean moveleft(Shape S)
+    public void moveleft(Shape S)
     {
+        boolean invalid_flag = false;
         for(int i=0;i<4;i++)
         {
-            //Get block coordinates
             int x = S.getarrofblock()[i].getX();
             int y = S.getarrofblock()[i].getY();
-           
-            /**
-             * Generate new coords for checking and movement
-             * x remain unchanged
-             * y decremented by one
-             **/
+
             y=y-1;
 
-            if(y<0)                                                 // if y coordinate become less than 0
+            if(y==-1 || arr[x][y]=='@')                             // if y coordinate get equals to cols
             {
-                return false;                                       // return false as shape can't go left
+                invalid_flag = true;
             }
-
-            //setting coords to the block
-            S.getarrofblock()[i].setX(x);
-            S.getarrofblock()[i].setY(y);
         }
-        return true;
+        if(!invalid_flag)                                           // if new shape will be true
+        {
+            for(int i=0;i<4;i++)
+            {
+                //Get block coordinates
+                int x = S.getarrofblock()[i].getX();
+                int y = S.getarrofblock()[i].getY();
+                
+                //setting coords to the block
+                S.getarrofblock()[i].setX(x);
+                S.getarrofblock()[i].setY(y-1);
+            }
+        }
     }
 }

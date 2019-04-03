@@ -37,6 +37,14 @@ public class Tetris
         System.out.println(color.RESET);
     }
 
+    private void saveTetris()
+    {
+        System.out.println("##### ##### ##### #####  #####     #   #       # ##### #### ");
+        System.out.println("#     #   # # # # #      #        # #   #     #  #     #   #");
+        System.out.println("#  ## ##### # # # ####   #####   #####   #   #   ####  #   #");
+        System.out.println("#   # #   # #   # #          #  #     #   # #    #     #   # ");
+        System.out.println("##### #   # #   # #####  ##### #       #   #     ##### #### ");
+    }
     /**
      * This function is displays the main functions in tetris game
      * 
@@ -65,6 +73,7 @@ public class Tetris
                 break;
             case 3:
                 highscores();
+                break;
             default:
                 break;
         }
@@ -90,14 +99,14 @@ public class Tetris
         System.out.println(color.BLGREEN);
         System.out.println("**********************************************************");
         System.out.println("*                                                        *");
-        System.out.println("*           D/d     --      Shape will go right          *");                                   // right option
-        System.out.println("*           A/a     --      Shape will go left           *");                                    // left option
-        System.out.println("*           W/w     --      Shape will rotate            *");                                     // rotate option
-        System.out.println("*           S/s     --      Save the current game        *");                                 // save option
+        System.out.println("*           D/d     --      Shape will go right          *");       // right option
+        System.out.println("*           A/a     --      Shape will go left           *");       // left option
+        System.out.println("*           W/w     --      Shape will rotate            *");       // rotate option
+        System.out.println("*           S/s     --      Save the current game        *");       // save option
         System.out.println("*           Q/q     --      Quit the current game        *");
         System.out.println("*                                                        *");
         System.out.println("**********************************************************");
-        System.out.println(color.RESET);                                 // quit game option
+        System.out.println(color.RESET);                                                        // quit game option
     }
 
     /**
@@ -115,14 +124,22 @@ public class Tetris
             System.out.println(color.BOLD + "Enter the username" + color.RESET);
             String username = in.nextLine();                                                    // for entered username
 
-            System.out.println(color.BOLD + "Create new password" + color.RESET);
+            System.out.println(color.BOLD + "Create new password e.g: abcdef" + color.RESET);
             Console con = System.console();                                                     // used for taking password as an input
             char[] pass = con.readPassword();                                                   // reading password from the user
             String password = String.valueOf(pass);                                             // convert password to string
             
-            if(username.equals(password))
+            if(username.equals(password))                                                       // check password cannot be same as username
             {
                 throw new SameNamePasswordException("Password cannot be same as username");
+            }
+            else if(password.length() < 5)                                                      // check password length
+            {
+                throw new WrongPasswordException("Invalid length of the password");
+            }
+            else if(password.equals("abcdef"))                                                  // check password will not be same as password
+            {
+                throw new SameNamePasswordException("Make your own password don't use example");
             }
 
             MessageDigest digest = MessageDigest.getInstance("SHA-256");                        // create sha 256 hash algo instance
@@ -176,7 +193,7 @@ public class Tetris
             Block b = new Block(0, pivot+1);
             Block c = new Block(0, pivot+2);
             Block d = new Block(0, pivot+3);
-            Shape LINE = new Shape(a, b, c, d, 0);                                              // created line shape intially
+            Shape LINE = new Shape(a, b, c, d, 0);                                              // created line shape intially with 0
 
             if(!board.insertShape(LINE))                                                        // insert initial shape on board if it is possible
             {
@@ -188,13 +205,13 @@ public class Tetris
             
             flag_shape_fixed = false;                                                           // shape is fixed or not
             
-            // start game
+            // GAME LOOPING
             while (true) 
             {
                 board.clearboard();                                                             // clear board for above
                 flag_shape_fixed = board.movedown(LINE);                                        // default move down
 
-                if(flag_shape_fixed)                                                            // if flag shape cannot move down so making it fixed 
+                if(flag_shape_fixed)                                                            // if flag shape cannot move down so making it fixed when it reach boundary
                 {
                     board.insertFixedShape(LINE);                                               // insert the fixed shape on board
                     board.printBoard();                                                         // print the board
@@ -219,21 +236,15 @@ public class Tetris
                 System.out.println("S/s -- save");                                              // save option
                 System.out.println("Q/q -- quit");                                              // quit game option
 
-                char ans = in.next().charAt(0);
+                char ans = in.next().charAt(0);                                                 // filter single char from the string
 
                 if (ans == 'D' || ans == 'd')                                                   // move right
                 {
-                    if (!board.moveright(LINE)) 
-                    {
-                        break;
-                    }
+                    board.moveright(LINE);
                 } 
                 else if (ans == 'A' || ans == 'a')                                              // moveleft
                 {
-                    if (!board.moveleft(LINE)) 
-                    {
-                        break;
-                    }
+                    board.moveleft(LINE);
                 }
                 else if(ans=='w' || ans=='W')                                                   // rotate shape
                 {
@@ -288,14 +299,23 @@ public class Tetris
                     }
                     LINE = new Shape(e,f,g,h,currentstate);
                 }
+                else if(ans=='g' || ans=='G')                           // save and exit the game
+                {
+                    saveGame(user,board,R,C,LINE,shape_counter);
+                    saveTetris();
+                    System.exit(0);
+                }
                 else if(ans=='q' || ans=='Q')                           // EXIT GAME
                 {
                     System.exit(0);
                 }
-                System.out.println(LINE);
+
+                // System.out.println(LINE);
+
                 if(!board.insertShape(LINE))                            // insert initial shape on board if it is possible
                 {
-                    System.out.println(color.BRED + "MAIN GAME OVER !!!" + color.RESET);
+                    // System.out.println(color.BRED + "MAIN GAME OVER !!!" + color.RESET);
+                    endTetris();
                     System.exit(0);
                 }                                                       // insert shape on board
                 board.printBoard();                                     // print board
@@ -310,6 +330,11 @@ public class Tetris
         {
             in.close();
         }
+    }
+
+    private void saveGame(User U,Board B,int R,int C,Shape LINE,int shape_counter)
+    {
+        System.out.println("SAVED:"+LINE.getcurrentstate());
     }
 
     /*************************************************
@@ -439,6 +464,7 @@ public class Tetris
                 System.exit(0);
 
         }
+        sh.setcurrentstate(0);
         return sh;
     }
 
