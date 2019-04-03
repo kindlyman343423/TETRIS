@@ -61,6 +61,16 @@ public class User
         return this.userId;
     }
 
+    /**
+     * This fuction return the password in string format
+     * 
+     * @return String for password
+     **/
+    public String getPassword()
+    {
+        return this.password;
+    }
+
     public void setName(String name)
     {
         this.name = name;

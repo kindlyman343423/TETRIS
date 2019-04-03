@@ -37,14 +37,40 @@ public class Tetris
         System.out.println(color.RESET);
     }
 
+    /**
+     * This function displays the banner of game exited
+     * 
+     * @return void
+     **/
+    private void exitTetris()
+    {
+        Rain color = new Rain();
+        System.out.println(color.DGREEN);
+        System.out.println("&&&&& &&&&& &&&&& &&&&&  &&&&& &   & & &&&&& &&&&& &&&& ");
+        System.out.println("&     &   & & & & &      &      & &  &   &   &     &   &");
+        System.out.println("&  && &&&&& & & & &&&&   &&&&    &   &   &   &&&&  &   &");
+        System.out.println("&   & &   & &   & &      &      & &  &   &   &     &   &");
+        System.out.println("&&&&& &   & &   & &&&&&  &&&&& &   & &   &   &&&&& &&&& ");
+        System.out.println(color.RESET);
+    }
+
+    /**
+     * This function displays the banner of save game
+     * 
+     * @return void
+     **/
     private void saveTetris()
     {
-        System.out.println("##### ##### ##### #####  #####     #   #       # ##### #### ");
-        System.out.println("#     #   # # # # #      #        # #   #     #  #     #   #");
-        System.out.println("#  ## ##### # # # ####   #####   #####   #   #   ####  #   #");
-        System.out.println("#   # #   # #   # #          #  #     #   # #    #     #   # ");
-        System.out.println("##### #   # #   # #####  ##### #       #   #     ##### #### ");
+        Rain color = new Rain();
+        System.out.println(color.BCYAN);
+        System.out.println("OOOOO OOOOO OOOOO OOOOO  OOOOO     O O       O OOOOO OOOO ");
+        System.out.println("O     O   O O O O O      O        O O O     O  O     O   O");
+        System.out.println("O  OO OOOOO O O O OOOO   OOOOO   OOOOO O   O   OOOO  O   O");
+        System.out.println("O   O O   O O   O O          O  O     O O O    O     O   O");
+        System.out.println("OOOOO O   O O   O OOOOO  OOOOO O       O O     OOOOO OOOO ");
+        System.out.println(color.RESET);
     }
+
     /**
      * This function is displays the main functions in tetris game
      * 
@@ -59,11 +85,14 @@ public class Tetris
         System.out.println("0. Exit the game");
         System.out.println("1. Start new game");
         System.out.println("2. Start saved game");
+        System.out.println("3. Highscores");
+        System.out.println("4. Settings");
         System.out.println(color.RESET);
         int option = in.nextInt();
         switch(option)
         {
             case 0:
+                exitTetris();
                 System.exit(0);
             case 1:
                 playNewGame();
@@ -73,6 +102,9 @@ public class Tetris
                 break;
             case 3:
                 highscores();
+                break;
+            case 4: 
+                settings();
                 break;
             default:
                 break;
@@ -130,6 +162,7 @@ public class Tetris
             char[] pass = con.readPassword();                                                   // reading password from the user
             String password = String.valueOf(pass);                                             // convert password to string
             
+            //CHECKING PASSWORD VALIDITY
             if(username.equals(password))                                                       // check password cannot be same as username
             {
                 throw new SameNamePasswordException("Password cannot be same as username");
@@ -234,7 +267,8 @@ public class Tetris
                 System.out.println("D/d -- right");                                             // right option
                 System.out.println("A/a -- left");                                              // left option
                 System.out.println("W/w -- rotate");                                            // rotate option
-                System.out.println("S/s -- save");                                              // save option
+                System.out.println("S/s -- down");                                              // down option
+                System.out.println("G/g -- save");                                              // save option
                 System.out.println("Q/q -- quit");                                              // quit game option
 
                 char ans = in.next().charAt(0);                                                 // filter single char from the string
@@ -660,6 +694,14 @@ public class Tetris
      * This function will display the highscores
      **/
     private void highscores()
+    {
+        
+    }
+
+    /**
+     * This function will handle settings
+     **/
+    private void settings()
     {
         
     }
