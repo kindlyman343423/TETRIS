@@ -99,14 +99,15 @@ public class Tetris
         System.out.println(color.BLGREEN);
         System.out.println("**********************************************************");
         System.out.println("*                                                        *");
-        System.out.println("*           D/d     --      Shape will go right          *");       // right option
-        System.out.println("*           A/a     --      Shape will go left           *");       // left option
-        System.out.println("*           W/w     --      Shape will rotate            *");       // rotate option
-        System.out.println("*           S/s     --      Save the current game        *");       // save option
+        System.out.println("*           D/d     --      Shape will go right          *");
+        System.out.println("*           A/a     --      Shape will go left           *");
+        System.out.println("*           W/w     --      Shape will rotate            *");
+        System.out.println("*           S/s     --      Shape will go down           *");
+        System.out.println("*           G/g     --      Save the current game        *");
         System.out.println("*           Q/q     --      Quit the current game        *");
         System.out.println("*                                                        *");
         System.out.println("**********************************************************");
-        System.out.println(color.RESET);                                                        // quit game option
+        System.out.println(color.RESET);
     }
 
     /**
@@ -238,79 +239,84 @@ public class Tetris
 
                 char ans = in.next().charAt(0);                                                 // filter single char from the string
 
-                if (ans == 'D' || ans == 'd')                                                   // move right
+                switch(ans)
                 {
-                    board.moveright(LINE);
-                } 
-                else if (ans == 'A' || ans == 'a')                                              // moveleft
-                {
-                    board.moveleft(LINE);
-                }
-                else if(ans=='w' || ans=='W')                                                   // rotate shape
-                {
-                    //rotation of shape
-                    int currentstate = LINE.getcurrentstate();
-                    if(currentstate >= 3)
-                    {
-                        currentstate=0;
-                    }
-                    else
-                    {
-                        currentstate++;
-                    }
-                    System.out.println(LINE);
-                    System.out.println(currentstate);
+                    case 'D':
+                    case 'd':
+                        board.moveright(LINE);
+                        break;
+                    case 'A':
+                    case 'a':
+                        board.moveleft(LINE);
+                        break;
+                    case 'W':
+                    case 'w':
+                        {
+                            //rotation of shape
+                            int currentstate = LINE.getcurrentstate();
+                            if(currentstate >= 3)
+                            {
+                                currentstate=0;
+                            }
+                            else
+                            {
+                                currentstate++;
+                            }
+                            // System.out.println(LINE);
+                            System.out.println("CURRENTSTATE: " +currentstate);
 
-                    int ex = LINE.getarrofblock()[0].getX() + rotation[shape_counter][currentstate].getarrofblock()[0].getX();
-                    int ey = LINE.getarrofblock()[0].getY() + rotation[shape_counter][currentstate].getarrofblock()[0].getY();
-                    int fx = LINE.getarrofblock()[1].getX() + rotation[shape_counter][currentstate].getarrofblock()[1].getX();
-                    int fy = LINE.getarrofblock()[1].getY() + rotation[shape_counter][currentstate].getarrofblock()[1].getY();
-                    int gx = LINE.getarrofblock()[2].getX() + rotation[shape_counter][currentstate].getarrofblock()[2].getX();
-                    int gy = LINE.getarrofblock()[2].getY() + rotation[shape_counter][currentstate].getarrofblock()[2].getY();
-                    int hx = LINE.getarrofblock()[3].getX() + rotation[shape_counter][currentstate].getarrofblock()[3].getX();
-                    int hy = LINE.getarrofblock()[3].getY() + rotation[shape_counter][currentstate].getarrofblock()[3].getY();
-                    Block e = null;
-                    Block f = null;
-                    Block g = null;
-                    Block h = null;
-                    
-                    if( board.checkValidCoords(ex, ey) && board.checkValidCoords(fx, fy) && board.checkValidCoords(gx, gy) && board.checkValidCoords(hx, hy))
-                    {
-                        e = new Block(ex,ey);
-                        f = new Block(fx,fy);
-                        g = new Block(gx,gy);
-                        h = new Block(hx,hy);
-                    }
-                    else
-                    {
-                        ex = LINE.getarrofblock()[0].getX();
-                        ey = LINE.getarrofblock()[0].getY();
-                        fx = LINE.getarrofblock()[1].getX();
-                        fy = LINE.getarrofblock()[1].getY();
-                        gx = LINE.getarrofblock()[2].getX();
-                        gy = LINE.getarrofblock()[2].getY();
-                        hx = LINE.getarrofblock()[3].getX();
-                        hy = LINE.getarrofblock()[3].getY();
-                        e = new Block(ex,ey);
-                        f = new Block(fx,fy);
-                        g = new Block(gx,gy);
-                        h = new Block(hx,hy);
-                        System.out.println("SORRY INVALID ROTATION !!!");
-                    }
-                    LINE = new Shape(e,f,g,h,currentstate);
+                            int ex = LINE.getarrofblock()[0].getX() + rotation[shape_counter][currentstate].getarrofblock()[0].getX();
+                            int ey = LINE.getarrofblock()[0].getY() + rotation[shape_counter][currentstate].getarrofblock()[0].getY();
+                            int fx = LINE.getarrofblock()[1].getX() + rotation[shape_counter][currentstate].getarrofblock()[1].getX();
+                            int fy = LINE.getarrofblock()[1].getY() + rotation[shape_counter][currentstate].getarrofblock()[1].getY();
+                            int gx = LINE.getarrofblock()[2].getX() + rotation[shape_counter][currentstate].getarrofblock()[2].getX();
+                            int gy = LINE.getarrofblock()[2].getY() + rotation[shape_counter][currentstate].getarrofblock()[2].getY();
+                            int hx = LINE.getarrofblock()[3].getX() + rotation[shape_counter][currentstate].getarrofblock()[3].getX();
+                            int hy = LINE.getarrofblock()[3].getY() + rotation[shape_counter][currentstate].getarrofblock()[3].getY();
+                            Block e = null;
+                            Block f = null;
+                            Block g = null;
+                            Block h = null;
+                            
+                            if( board.checkValidCoords(ex, ey) && board.checkValidCoords(fx, fy) && board.checkValidCoords(gx, gy) && board.checkValidCoords(hx, hy))
+                            {
+                                e = new Block(ex,ey);
+                                f = new Block(fx,fy);
+                                g = new Block(gx,gy);
+                                h = new Block(hx,hy);
+                            }
+                            else
+                            {
+                                ex = LINE.getarrofblock()[0].getX();
+                                ey = LINE.getarrofblock()[0].getY();
+                                fx = LINE.getarrofblock()[1].getX();
+                                fy = LINE.getarrofblock()[1].getY();
+                                gx = LINE.getarrofblock()[2].getX();
+                                gy = LINE.getarrofblock()[2].getY();
+                                hx = LINE.getarrofblock()[3].getX();
+                                hy = LINE.getarrofblock()[3].getY();
+                                e = new Block(ex,ey);
+                                f = new Block(fx,fy);
+                                g = new Block(gx,gy);
+                                h = new Block(hx,hy);
+                                System.out.println("SORRY INVALID ROTATION !!!");
+                            }
+                            LINE = new Shape(e,f,g,h,currentstate);
+                        }
+                        break;
+                    case 'g':
+                    case 'G':
+                        saveGame(user,board,R,C,LINE,shape_counter);
+                        saveTetris();
+                        System.exit(0);
+                        break;
+                    case 'q':
+                    case 'Q':
+                        System.exit(0);
+                        break;
+                    default:
+                        break;
                 }
-                else if(ans=='g' || ans=='G')                           // save and exit the game
-                {
-                    saveGame(user,board,R,C,LINE,shape_counter);
-                    saveTetris();
-                    System.exit(0);
-                }
-                else if(ans=='q' || ans=='Q')                           // EXIT GAME
-                {
-                    System.exit(0);
-                }
-
-                // System.out.println(LINE);
 
                 if(!board.insertShape(LINE))                            // insert initial shape on board if it is possible
                 {
