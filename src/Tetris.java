@@ -1,4 +1,4 @@
-import java.io.Console;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.*;
@@ -375,6 +375,59 @@ public class Tetris
     private void saveGame(User U,Board B,int R,int C,Shape LINE,int shape_counter)
     {
         System.out.println("SAVED:"+LINE.getcurrentstate());
+        try
+        {
+            String filename = "db/"+U.getUserId()+".txt";
+            
+            File file = new File(filename);
+            file.getParentFile().mkdirs();
+            file.createNewFile();
+
+            BufferedWriter geeks_out1 = new BufferedWriter(new FileWriter(file));          // open the file for output
+            
+            for(int i=0;i<4;i++)                                        // saving line coords
+            {
+                int x = LINE.getarrofblock()[i].getX();
+                int y = LINE.getarrofblock()[i].getY();
+                geeks_out1.write(x +";"+y+";");
+            }
+            geeks_out1.write("\n~\n");                                  // char for flags
+            geeks_out1.write(LINE.getcurrentstate()+";"+shape_counter+";\n-\n");
+
+            //check for limit
+            int limit = B.getUpperLimit();                              // get upperlimit
+            System.out.println(limit);
+
+            if(limit!=-1)                                               // if fixed blocks exists only save then
+            {
+                for(int i=limit;i<R;i++)                                // storing the array
+                {
+                    for(int j=0;j<C;j++)
+                    {
+                        if(B.getARR()[i][j]!=' ')
+                        {
+                            geeks_out1.write(B.getARR()[i][j]+";");
+                        }
+                        else
+                        {
+                            geeks_out1.write(";");
+                        }
+                        if(j==C-1)
+                        {
+                            geeks_out1.write("\n");
+                        }
+                    }
+                }
+            }
+
+            geeks_out1.flush();                                         // flush  the stream
+            geeks_out1.close();
+        }
+        catch(Exception e)
+        {
+            System.out.println(e);
+            e.printStackTrace();
+        }
     }
 
     /*************************************************
@@ -695,7 +748,23 @@ public class Tetris
      **/
     private void highscores()
     {
-        
+        // class ScoreCard
+        // {
+        //     private int UserId;
+        //     private String name;
+        //     private int points;
+
+        //     public ScoreCard(String name,int points,int userid)
+        //     {
+        //         this.name = name;
+        //         this.points = points;
+        //         this.UserId = userid;
+        //     }
+        // }
+        // ArrayList<ScoreCard> list = new ArrayList<ScoreCard>();
+
+        // ScoreCard card = new ScoreCard(user.getName(),points,user.getUserId());
+        // list.add(card);
     }
 
     /**

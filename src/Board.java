@@ -46,6 +46,25 @@ public class Board
     }
 
     /**
+     * This function will return the upper limit 
+     * 
+     * @return int the upper limit for storing in file
+     **/
+    public int getUpperLimit()
+    {
+        int limit=-1;
+        for(int i=0;i<count_block.length;i++)
+        {
+            if(count_block[i]!=0)
+            {
+                limit = i;
+                break;
+            }
+        }
+        return limit;
+    }
+
+    /**
      * This function sets param array for the board
      * 
      * @param arr for char array 
