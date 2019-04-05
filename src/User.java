@@ -1,3 +1,4 @@
+import java.io.*;
 import java.util.*;
 /**
  * Class for making the user
@@ -20,14 +21,47 @@ public class User
      * @param Date of entrydate of the user
      * @param idsetter for setting and maintaining the id
      **/
-    public User(String name,String password,Date entryDate,byte[] arr,int idsetter)
+    public User(String name,String password,Date entryDate,byte[] arr)
     {
         this.name = name;
         this.password = password;
         this.entryDate = entryDate;
-        ID = idsetter;
-        ID++;
-        this.userId = ID;
+        File file = new File("tetris.txt");
+        
+        try
+        {
+            file.createNewFile();
+            
+
+            // read tetris file for current id
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String str;//= br.readLine();
+            // ID = Integer.parseInt(str);
+            // System.out.println(str);
+            while((str = br.readLine())!=null)
+            {
+                System.out.println(str);
+                ID = Integer.parseInt(str);
+            }
+            
+            br.close();
+
+            // update id
+            ID++;
+
+            //set new id
+            this.userId = ID;
+
+            //save id of the user in tetris.java
+            BufferedWriter out = new BufferedWriter(new FileWriter(file));
+            out.write(ID+"");
+            out.close();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
         passhash = arr.clone();
     }
 

@@ -179,13 +179,13 @@ public class Tetris
             MessageDigest digest = MessageDigest.getInstance("SHA-256");                        // create sha 256 hash algo instance
             byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));             // hash algo sha 256
 
-            User user = new User(username,password,new Date(),hash,0);                          // created a new user
-            
             System.out.println(color.BOLD+"Confirm password"+color.RESET);                      // confirming password
             char[] reenterpass = con.readPassword();                                            // reading password again
             String reenterpassword = String.valueOf(reenterpass);                               // convert password to string
             byte[] rehash = digest.digest(reenterpassword.getBytes(StandardCharsets.UTF_8));    // hash algo sha 256
-
+            
+            User user = new User(username,password,new Date(),hash);                            // created a new user
+            
             if(!user.matchPassword(rehash))                                                     // check password is right or not
             {
                 throw new WrongPasswordException("Entered wrong password");
