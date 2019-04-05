@@ -51,11 +51,6 @@ public class User
 
             //set new id
             this.userId = ID;
-
-            //save id of the user in tetris.java
-            BufferedWriter out = new BufferedWriter(new FileWriter(file));
-            out.write(ID+"");
-            out.close();
         }
         catch(Exception e)
         {

@@ -380,7 +380,19 @@ public class Tetris
      **/
     private void saveGame(User U,Board B,Shape LINE,int shape_counter)
     {
-        System.out.println("SAVED:"+LINE.getcurrentstate());
+        /**
+         * FILE FORMAT
+         * 2;9;2;10;3;9;3;10;
+         * ~
+         * 0;1;
+         * -
+         * ;;;;;;;;;@;@;@;@;;;;;;;;
+         * =
+         * 20;20;
+         * usr
+         * walia;Sat Apr 06 01:09:53 IST 2019;[68, 16, 79, -54, -17, -124, 118, 114, 65, 82, 9, 13, 109, 123, -39, -81, -88, -54, 91, 56, 95, 106, -103, -45, -58, -49, 54, -71, 67, -71, -121, 45];0;
+         **/
+        // System.out.println("SAVED:"+LINE.getcurrentstate());
         try
         {   
             String filename = "db/"+U.getUserId()+".txt";
@@ -428,11 +440,22 @@ public class Tetris
                 }
             }
             geeks_out1.write("=\n" + R +";"+ C +";\n");
+            
+            //saving env variables
+            geeks_out1.write("env\n");
+            geeks_out1.write(B.getBoardColor()+";" + B.getShapeColor()+";" + B.getFixedShapeColor()+";\n");
+
             //saving user info
             geeks_out1.write("usr\n");
-            geeks_out1.write(U.getName()+";"+U.getDate()+";"+U.getPassHash()+";");
+            geeks_out1.write(U.getName()+";"+U.getDate()+";"+U.getPassHash()+";"+B.getPoints()+";");
             geeks_out1.flush();                                                 // flush  the stream
             geeks_out1.close();
+
+            //save id of the user in tetris.java
+            File savefile = new File("tetris.txt");
+            BufferedWriter out = new BufferedWriter(new FileWriter(savefile));
+            out.write(U.getUserId()+"");
+            out.close();
         }
         catch(Exception e)
         {

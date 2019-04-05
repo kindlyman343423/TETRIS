@@ -32,9 +32,45 @@ public class Board
                 arr[i][j]=' ';                                      // setting space in the board array
             }
         }
-        // ENV = new String[1];
+
+        /**
+         * ENV for environment variables for every new user
+         * 0 board color
+         * 1 shape color
+         * 2 fixed shape color
+         **/
+        Rain color = new Rain();
+        ENV = new String[3];
+        ENV[0] = color.BYELLOW;
+        ENV[1] = color.BWHITE;
+        ENV[2] = color.BWHITE;
     }
     
+    public String getBoardColor()
+    {
+        return this.ENV[0];
+    }
+    public String getShapeColor()
+    {
+        return this.ENV[1];
+    }
+    public String getFixedShapeColor()
+    {
+        return this.ENV[2];
+    }
+    public void setBoardColor(String str)
+    {
+        this.ENV[0] = str;
+    }
+    public void setShapeColor(String str)
+    {
+        this.ENV[1] = str;
+    }
+    public void setFixedShapeColor(String str)
+    {
+        this.ENV[2] = str;
+    }
+
     /**
      * This function will return board array
      * 
@@ -64,6 +100,17 @@ public class Board
     {
         return this.cols;
     }
+
+    /**
+     * This function will return the points earned by the user
+     * 
+     * @return int for points
+     **/
+    public int getPoints()
+    {
+        return this.points;
+    }
+
     /**
      * This function will return the upper limit 
      * 
@@ -102,7 +149,7 @@ public class Board
     public void printBoard()
     {
         Rain R = new Rain();                                        // making object of rain class for using colors from rainbow
-        System.out.print(R.BYELLOW);
+        System.out.print(ENV[0]);
         for(int i=0;i<cols+2;i++)                                   // printing the above == line
         {
             System.out.print("=");
@@ -112,15 +159,27 @@ public class Board
         
         for(int i=0;i<rows;i++)                                     // printing the left and right | | lines
         {
-            System.out.print(R.BYELLOW+"|"+R.RESET);
+            System.out.print(ENV[0]+"|"+R.RESET);
             for(int j=0;j<cols;j++)
             {
-                System.out.print(arr[i][j]);
+                switch(arr[i][j])
+                {
+                    case '@':
+                        System.out.print(ENV[2]+arr[i][j]+R.RESET);
+                        break;
+                    case '#':
+                        System.out.print(ENV[1]+arr[i][j]+R.RESET);
+                        break;
+                    default:
+                        System.out.print(arr[i][j]);    
+                        break;
+                }
+                // System.out.print(arr[i][j]);
             }
-            System.out.println(R.BYELLOW+"|"+count_block[i]+R.RESET);
+            System.out.println(ENV[0]+"|"+count_block[i]+R.RESET);
         }
 
-        System.out.print(R.BYELLOW);
+        System.out.print(ENV[0]);
         for(int i=0;i<cols+2;i++)                                   // printing the below == line
         {
             System.out.print("=");
