@@ -71,6 +71,16 @@ public class User
         return this.password;
     }
 
+    /**
+     * This function return the password hash in string format
+     * 
+     * @return string for pass hash
+     **/
+    public String getPassHash()
+    {
+        return Arrays.toString(passhash);
+    }
+
     public void setName(String name)
     {
         this.name = name;

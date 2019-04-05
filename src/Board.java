@@ -46,6 +46,25 @@ public class Board
     }
 
     /**
+     * This function will return the board rows
+     * 
+     * @return int for board rows
+     **/
+    public int getRows()
+    {
+        return this.rows;
+    }
+
+    /**
+     * This function will return the board cols
+     * 
+     * @return int for board cols
+     **/
+    public int getCols()
+    {
+        return this.cols;
+    }
+    /**
      * This function will return the upper limit 
      * 
      * @return int the upper limit for storing in file
