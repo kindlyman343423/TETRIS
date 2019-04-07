@@ -39,33 +39,69 @@ public class Board
          * 1 shape color
          * 2 fixed shape color
          **/
+        //read default colors from default.txt
         Rain color = new Rain();
         ENV = new String[3];
         ENV[0] = color.BYELLOW;
         ENV[1] = color.BWHITE;
         ENV[2] = color.BWHITE;
     }
-    
+
+    /**
+     * This function will return board color
+     * 
+     * @return string board color
+     **/
     public String getBoardColor()
     {
         return this.ENV[0];
     }
+
+    /**
+     * This function will return the shape color
+     * 
+     * @return string for shape color
+     **/
     public String getShapeColor()
     {
         return this.ENV[1];
     }
+
+    /**
+     * This function will return the fixed shape color
+     * 
+     * @return string for fixed shape color
+     **/
     public String getFixedShapeColor()
     {
         return this.ENV[2];
     }
+
+    /**
+     * This function will set the board color
+     * 
+     * @param string for board color
+     **/
     public void setBoardColor(String str)
     {
         this.ENV[0] = str;
     }
+
+    /**
+     * This function will set the shape color
+     * 
+     * @param string for new shape color
+     **/
     public void setShapeColor(String str)
     {
         this.ENV[1] = str;
     }
+
+    /**
+     * This function will set the fixed shape color
+     * 
+     * @param string for fixed shape color
+     **/
     public void setFixedShapeColor(String str)
     {
         this.ENV[2] = str;

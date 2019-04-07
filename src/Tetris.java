@@ -774,7 +774,15 @@ public class Tetris
      **/
     private void playExistingGame()
     {
+        Scanner in = new Scanner(System.in);
+        System.out.println("Enter the username");
+        String name = in.next();
+        // find the username
+        // find the id
+        // open the id file
+        // parse the user id file
 
+        in.close();
     }
 
     /**
