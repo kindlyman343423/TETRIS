@@ -72,6 +72,35 @@ public class Tetris
     }
 
     /**
+     * This function will display the controls of the game
+     * 
+     * @return void
+     **/
+    private void displayControls()
+    {
+        Rain color = new Rain();
+        System.out.println(color.BYELLOW);
+        System.out.println("  $$$$$  $$$$$  $   $  $$$$$  $$$$   $$$$$  $      $$$$$  ");
+        System.out.println("  $      $   $  $$  $    $    $   $  $   $  $      $      ");
+        System.out.println("  $      $   $  $ $ $    $    $$$$   $   $  $      $$$$$  ");
+        System.out.println("  $      $   $  $  $$    $    $  $   $   $  $          $  ");
+        System.out.println("  $$$$$  $$$$$  $   $    $    $   $  $$$$$  $$$$$  $$$$$  ");
+
+        System.out.println(color.BLGREEN);
+        System.out.println("**********************************************************");
+        System.out.println("*                                                        *");
+        System.out.println("*           D/d     --      Shape will go right          *");
+        System.out.println("*           A/a     --      Shape will go left           *");
+        System.out.println("*           W/w     --      Shape will rotate            *");
+        System.out.println("*           S/s     --      Shape will go down           *");
+        System.out.println("*           G/g     --      Save the current game        *");
+        System.out.println("*           Q/q     --      Quit the current game        *");
+        System.out.println("*                                                        *");
+        System.out.println("**********************************************************");
+        System.out.println(color.RESET);
+    }
+    
+    /**
      * This function is displays the main functions in tetris game
      * 
      * @return void
@@ -111,35 +140,6 @@ public class Tetris
         }
 
         in.close();
-    }
-    
-    /**
-     * This function will display the controls of the game
-     * 
-     * @return void
-     **/
-    private void displayControls()
-    {
-        Rain color = new Rain();
-        System.out.println(color.BYELLOW);
-        System.out.println("  $$$$$  $$$$$  $   $  $$$$$  $$$$   $$$$$  $      $$$$$  ");
-        System.out.println("  $      $   $  $$  $    $    $   $  $   $  $      $      ");
-        System.out.println("  $      $   $  $ $ $    $    $$$$   $   $  $      $$$$$  ");
-        System.out.println("  $      $   $  $  $$    $    $  $   $   $  $          $  ");
-        System.out.println("  $$$$$  $$$$$  $   $    $    $   $  $$$$$  $$$$$  $$$$$  ");
-
-        System.out.println(color.BLGREEN);
-        System.out.println("**********************************************************");
-        System.out.println("*                                                        *");
-        System.out.println("*           D/d     --      Shape will go right          *");
-        System.out.println("*           A/a     --      Shape will go left           *");
-        System.out.println("*           W/w     --      Shape will rotate            *");
-        System.out.println("*           S/s     --      Shape will go down           *");
-        System.out.println("*           G/g     --      Save the current game        *");
-        System.out.println("*           Q/q     --      Quit the current game        *");
-        System.out.println("*                                                        *");
-        System.out.println("**********************************************************");
-        System.out.println(color.RESET);
     }
 
     /**
