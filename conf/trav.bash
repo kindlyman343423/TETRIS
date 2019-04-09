@@ -1,5 +1,10 @@
 #!bin/bash
 
-# cd ../build             # go to build folder
+# travis build script
 
-bash build/build.bash         # auto build by travis
+echo "Build started ..."
+
+cd src
+javac Main.java             # compile java files
+rm *.class
+echo "Build Completed..."
