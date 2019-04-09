@@ -1,0 +1,4 @@
+# IGNORE FILES FOR JAVA in src directory
+
+*.class
+*.jar
