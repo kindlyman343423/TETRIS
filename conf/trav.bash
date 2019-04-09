@@ -1,9 +1,5 @@
 #!bin/bash
 
-echo -e "Building...\n"
+cd ../build             # go to build folder
 
-cd src
-javac Main.java
-mv *.class ../bin
-
-echo -e "***** Build completed *****\n";
+bash build.bash         # auto build by travis

@@ -1,6 +1,4 @@
 #!bin/bash
 
-cd ../src
-javac Main.java
+cd ../bin
 java Main
-rm *.class

@@ -1,5 +1,2 @@
-
-Set-Location ../src
-javac Main.java
+Set-Location ../bin
 java Main
-Remove-Item *.class
