@@ -188,6 +188,8 @@ public class Tetris
             
             User user = new User(username,password,new Date(),hash);                            // created a new user
             
+            System.out.println("NEW USER ID:"+user.getUserId());
+
             if(!user.matchPassword(rehash))                                                     // check password is right or not
             {
                 throw new WrongPasswordException("Entered wrong password");
