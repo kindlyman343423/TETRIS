@@ -12,6 +12,21 @@ public class User
     private byte[] passhash;        // sha256 hash for password
 
     /**
+     * This constructor will make the user with id and name for using in highcscores
+     * 
+     * @param String for name
+     * @param id for taking user id
+     **/
+    public User(String name,int id)
+    {
+        this.name = name;
+        this.userId = id;
+        this.entryDate = null;
+        this.password = null;
+        this.passhash = null;
+    }
+
+    /**
      * This constructor will create the new user
      * 
      * @param String name of the user

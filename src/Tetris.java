@@ -132,7 +132,7 @@ public class Tetris
                 playExistingGame();
                 break;
             case 3:
-                // scorelist.displayHighScore();
+                scorelist.displayHighScore();
                 break;
             case 4: 
                 settings();
@@ -187,8 +187,6 @@ public class Tetris
             byte[] rehash = digest.digest(reenterpassword.getBytes(StandardCharsets.UTF_8));    // hash algo sha 256
             
             User user = new User(username,password,new Date(),hash);                            // created a new user
-            
-            System.out.println("NEW USER ID:"+user.getUserId());
 
             if(!user.matchPassword(rehash))                                                     // check password is right or not
             {
@@ -345,13 +343,18 @@ public class Tetris
                     case 'g':
                     case 'G':
                         saveGame(user,board,LINE,shape_counter);
-                        saveTetris();
+                        
                         scorelist.addHighScore(user, board.getPoints());
+                        scorelist.saveHighScore();
+                        scorelist.displayHighScore();
+                        
+                        saveTetris();
                         System.exit(0);
                         break;
                     case 'q':
                     case 'Q':
-                        scorelist.addHighScore(user, board.getPoints());
+                        scorelist.displayHighScore();
+                        exitTetris();
                         System.exit(0);
                         break;
                     default:
@@ -783,7 +786,7 @@ public class Tetris
     {
         Scanner in = new Scanner(System.in);
         System.out.println("Enter the username");
-        String name = in.next();
+        // String name = in.next();
         // find the username
         // find the id
         // open the id file
