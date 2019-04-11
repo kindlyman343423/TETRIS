@@ -5,6 +5,8 @@ import java.util.*;
 import RAINBOW.*;
 public class Tetris
 {
+    private Highscore scorelist = new Highscore();                          // created highscore object for storing highscores
+    
     /**
      * New tetris game is created 
      **/
@@ -130,7 +132,7 @@ public class Tetris
                 playExistingGame();
                 break;
             case 3:
-                highscores();
+                scorelist.displayHighScore();
                 break;
             case 4: 
                 settings();
@@ -185,7 +187,7 @@ public class Tetris
             byte[] rehash = digest.digest(reenterpassword.getBytes(StandardCharsets.UTF_8));    // hash algo sha 256
             
             User user = new User(username,password,new Date(),hash);                            // created a new user
-            
+
             if(!user.matchPassword(rehash))                                                     // check password is right or not
             {
                 throw new WrongPasswordException("Entered wrong password");
@@ -341,11 +343,18 @@ public class Tetris
                     case 'g':
                     case 'G':
                         saveGame(user,board,LINE,shape_counter);
+                        
+                        scorelist.addHighScore(user, board.getPoints());
+                        scorelist.saveHighScore();
+                        scorelist.displayHighScore();
+                        
                         saveTetris();
                         System.exit(0);
                         break;
                     case 'q':
                     case 'Q':
+                        scorelist.displayHighScore();
+                        exitTetris();
                         System.exit(0);
                         break;
                     default:
@@ -356,6 +365,7 @@ public class Tetris
                 {
                     // System.out.println(color.BRED + "MAIN GAME OVER !!!" + color.RESET);
                     endTetris();
+                    scorelist.addHighScore(user, board.getPoints());
                     System.exit(0);
                 }                                                       // insert shape on board
                 board.printBoard();                                     // print board
@@ -776,37 +786,13 @@ public class Tetris
     {
         Scanner in = new Scanner(System.in);
         System.out.println("Enter the username");
-        String name = in.next();
+        // String name = in.next();
         // find the username
         // find the id
         // open the id file
         // parse the user id file
 
         in.close();
-    }
-
-    /**
-     * This function will display the highscores
-     **/
-    private void highscores()
-    {
-        // class ScoreCard
-        // {
-        //     private int UserId;
-        //     private String name;
-        //     private int points;
-
-        //     public ScoreCard(String name,int points,int userid)
-        //     {
-        //         this.name = name;
-        //         this.points = points;
-        //         this.UserId = userid;
-        //     }
-        // }
-        // ArrayList<ScoreCard> list = new ArrayList<ScoreCard>();
-
-        // ScoreCard card = new ScoreCard(user.getName(),points,user.getUserId());
-        // list.add(card);
     }
 
     /**

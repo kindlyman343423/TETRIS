@@ -11,7 +11,20 @@ public class User
     private String password;        // password of the user
     private byte[] passhash;        // sha256 hash for password
 
-    private static int ID=0;        // storing id of the user
+    /**
+     * This constructor will make the user with id and name for using in highcscores
+     * 
+     * @param String for name
+     * @param id for taking user id
+     **/
+    public User(String name,int id)
+    {
+        this.name = name;
+        this.userId = id;
+        this.entryDate = null;
+        this.password = null;
+        this.passhash = null;
+    }
 
     /**
      * This constructor will create the new user
@@ -26,38 +39,35 @@ public class User
         this.name = name;
         this.password = password;
         this.entryDate = entryDate;
-        File file = new File("tetris.txt");
+        File file = new File("tetris.txt");                                 // create a file object for tetris.txt file
         
         try
         {
-            file.createNewFile();
-            
-
-            // read tetris file for current id
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            String str;//= br.readLine();
-            // ID = Integer.parseInt(str);
-            // System.out.println(str);
-            while((str = br.readLine())!=null)
+            if(file.createNewFile())                                        // initially if file not present then create new file
             {
-                System.out.println(str);
-                ID = Integer.parseInt(str);
+                System.out.println("file created");
+                this.userId = 1;                                            // initially create user with id 1
             }
-            
-            br.close();
-
-            // update id
-            ID++;
-
-            //set new id
-            this.userId = ID;
+            else                                                            // if file present then read and increment id by 1
+            {
+                // read tetris file for current id
+                BufferedReader br = new BufferedReader(new FileReader(file.getAbsolutePath()));
+                String str;
+                int id = 0;
+                while((str = br.readLine())!=null)
+                {
+                    id = Integer.parseInt(str);
+                }
+                this.userId = ++id;
+                br.close();
+            }
         }
         catch(Exception e)
         {
             e.printStackTrace();
         }
 
-        passhash = arr.clone();
+        passhash = arr.clone();                                             // copy password in hash format to user array
     }
 
     /**
