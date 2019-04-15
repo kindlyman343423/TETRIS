@@ -1,14 +1,10 @@
-# TETRIS GAME
+# TETRIS GAME [![Build Status](https://travis-ci.com/GauravWalia19/TETRIS.svg?token=BG8gK8FxkjPDgn2Gszpj&branch=master)](https://travis-ci.com/GauravWalia19/TETRIS)
 
 This repository contains the code for tetris game in java.
 
-[![Build Status](https://travis-ci.com/GauravWalia19/TETRIS.svg?token=BG8gK8FxkjPDgn2Gszpj&branch=master)](https://travis-ci.com/GauravWalia19/TETRIS)
-
-This project is currently in development
-
 ## BUILD
 
-### LINUX
+### BUILD IN LINUX / UNIX
 
 Move to build directory
 
@@ -22,7 +18,7 @@ For building run build script using
 bash build.bash
 ```
 
-### WINDOWS
+### BUILD IN WINDOWS
 
 Move to build directory
 
@@ -38,7 +34,7 @@ pwsh build.ps1
 
 ## TEST
 
-### RUN (LINUX)
+### Testing in Linux / Unix
 
 Move to test directory
 
@@ -52,7 +48,7 @@ For testing in linux use test script
 bash test.bash
 ```
 
-### RUN (WINDOWS)
+### Testing in Windows
 
 Move to test directory
 
@@ -66,6 +62,28 @@ For testing in windows use test script
 pwsh test.ps1
 ```
 
+## RUN
+
+### Running in Linux/Unix
+
+Run the **tetris.bash** for running the updated version.
+
+```bash
+bash tetris.bash
+```
+
+### Running in Windows
+
+Run the **tetris.ps1** for running the updated version.
+
+```powershell
+pwsh tetris.ps1
+```
+
 ## CONTRIBUTION
 
 ### LICENSE
+
+[MIT License](LICENSE)
+
+:copyright: 2019 Gaurav Walia

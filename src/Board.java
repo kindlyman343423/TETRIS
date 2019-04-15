@@ -1,5 +1,5 @@
 import RAINBOW.*;
-
+import java.io.*;
 /**
  * Board class for making board
  **/
@@ -23,8 +23,8 @@ public class Board
         this.rows=rows;
         this.cols=cols;
         arr = new char[rows][cols];                                 // create dynamic array for printing board
-        count_block = new int[rows];
-        points=0;
+        count_block = new int[rows];                                // set array for storing count of fixed blocks in each rows
+        points=0;                                                   // initially scored points on the board
         for(int i=0;i<rows;i++)
         {
             for(int j=0;j<cols;j++)
@@ -33,23 +33,67 @@ public class Board
             }
         }
 
-        /**
-         * ENV for environment variables for every new user
-         * 0 board color
-         * 1 shape color
-         * 2 fixed shape color
-         **/
         //read default colors from default.txt
-        Rain color = new Rain();
-        ENV = new String[3];
-        ENV[0] = color.BYELLOW;
-        ENV[1] = color.BWHITE;
-        ENV[2] = color.BWHITE;
+        ENV = new String[9];
+        File file = new File("default.txt");
+        try
+        {
+            if(file.createNewFile())                                // if file don't exists then write it
+            {
+                //new file created
+                //write a new file for environment variables
+                Rain color = new Rain();
+                BufferedWriter out = new BufferedWriter(new FileWriter(file));
+                out.write(color.BYELLOW + ",\n");                   // ENV[0] for board color -
+                out.write(color.BWHITE + ",\n");                    // ENV[1] for shape color -
+                out.write(color.BWHITE + ",\n");                    // ENV[2] for fixed shape color -
+                out.write(color.RESET + ",\n");                     // ENV[3] for background of the board -
+                out.write(color.BRED + ",\n");                      // ENV[4] for game over logo
+                out.write(color.DGREEN + ",\n");                    // ENV[5] for game exited
+                out.write(color.BCYAN + ",\n");                     // ENV[6] for game saved
+                out.write(color.BYELLOW + ",\n");                   // ENV[7] for controls
+                out.write(color.BMAGENTA + ",\n");                  // ENV[8] for highscore
+                out.close();
+            }
+            //read the default.txt file and save the variables to board
+            BufferedReader in = new BufferedReader(new FileReader(file));
+            String str="";
+            int i=0;
+            while((str = in.readLine())!=null)
+            {
+                String[] arr = str.split(",");
+                ENV[i] = arr[0];
+                i++;
+            }
+            in.close();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            System.out.println(e);
+        }
+    }
+
+    /**
+     * This function will return environment variables array
+     * @return the string array
+     **/
+    public String[] getENV()
+    {
+        return this.ENV;
+    }
+
+    /**
+     * This function will initialize the environment variables array
+     * @param arr for setting ENV array
+     **/
+    public void setENV(String[] arr)
+    {
+        this.ENV = arr.clone();
     }
 
     /**
      * This function will return board color
-     * 
      * @return string board color
      **/
     public String getBoardColor()
@@ -59,7 +103,6 @@ public class Board
 
     /**
      * This function will return the shape color
-     * 
      * @return string for shape color
      **/
     public String getShapeColor()
@@ -69,7 +112,6 @@ public class Board
 
     /**
      * This function will return the fixed shape color
-     * 
      * @return string for fixed shape color
      **/
     public String getFixedShapeColor()
@@ -78,8 +120,61 @@ public class Board
     }
 
     /**
+     * This function will return the background color of the board
+     * @return string for background color
+     **/
+    public String getBoardBackgroundColor()
+    {
+        return this.ENV[3];
+    }
+
+    /**
+     * This function will return the game over logo color
+     * @return string for game over logo color
+     **/
+    public String getGameOverColor()
+    {
+        return this.ENV[4];
+    }
+
+    /**
+     * This function will return the game exited logo color
+     * @return string for game exited logo color
+     **/
+    public String getGameExitedColor()
+    {
+        return this.ENV[5];
+    }
+
+    /**
+     * This function will return the game saved logo color
+     * @return  string for game saved logo color
+     **/
+    public String getGameSavedColor()
+    {
+        return this.ENV[6];
+    }
+
+    /**
+     * This function will return the control logo color
+     * @return string for control logo
+     **/
+    public String getControlsColor()
+    {
+        return this.ENV[7];
+    }
+
+    /**
+     * This function will return the highscore board color
+     * @return string for highscore board color
+     **/
+    public String getHighscoreColor()
+    {
+        return this.ENV[8];
+    }
+
+    /**
      * This function will set the board color
-     * 
      * @param string for board color
      **/
     public void setBoardColor(String str)
@@ -89,7 +184,6 @@ public class Board
 
     /**
      * This function will set the shape color
-     * 
      * @param string for new shape color
      **/
     public void setShapeColor(String str)
@@ -99,7 +193,6 @@ public class Board
 
     /**
      * This function will set the fixed shape color
-     * 
      * @param string for fixed shape color
      **/
     public void setFixedShapeColor(String str)
@@ -185,7 +278,7 @@ public class Board
     public void printBoard()
     {
         Rain R = new Rain();                                        // making object of rain class for using colors from rainbow
-        System.out.print(ENV[0]);
+        System.out.print(ENV[3]+ENV[0]);
         for(int i=0;i<cols+2;i++)                                   // printing the above == line
         {
             System.out.print("=");
@@ -195,27 +288,26 @@ public class Board
         
         for(int i=0;i<rows;i++)                                     // printing the left and right | | lines
         {
-            System.out.print(ENV[0]+"|"+R.RESET);
+            System.out.print(ENV[3]+ENV[0]+"|"+R.RESET);
             for(int j=0;j<cols;j++)
             {
                 switch(arr[i][j])
                 {
                     case '@':
-                        System.out.print(ENV[2]+arr[i][j]+R.RESET);
+                        System.out.print(ENV[3]+ENV[2]+arr[i][j]+R.RESET);
                         break;
                     case '#':
-                        System.out.print(ENV[1]+arr[i][j]+R.RESET);
+                        System.out.print(ENV[3]+ENV[1]+arr[i][j]+R.RESET);
                         break;
                     default:
-                        System.out.print(arr[i][j]);    
+                        System.out.print(ENV[3]+arr[i][j]);    
                         break;
                 }
-                // System.out.print(arr[i][j]);
             }
-            System.out.println(ENV[0]+"|"+count_block[i]+R.RESET);
+            System.out.println(ENV[3]+ENV[0]+"|"+R.RESET+count_block[i]);
         }
 
-        System.out.print(ENV[0]);
+        System.out.print(ENV[3]+ENV[0]);
         for(int i=0;i<cols+2;i++)                                   // printing the below == line
         {
             System.out.print("=");

@@ -23,14 +23,30 @@ public class Tetris
     }
 
     /**
-     * This function will be display GAME OVER when game ends
-     * 
-     * @return void
+     * New tetris game is created 
+     * @param envcolor for changing environment color
      **/
-    private void endTetris()
+    public Tetris(String envcolor)
     {
         Rain color = new Rain();
-        System.out.println(color.BRED);
+        System.out.println(envcolor);
+        System.out.println("#####  #####  #####  ####   #####  #####");
+        System.out.println("  #    #        #    #   #    #    #    ");
+        System.out.println("  #    ####     #    ####     #    #####");
+        System.out.println("  #    #        #    #  #     #        #");
+        System.out.println("  #    #####    #    #   #  #####  #####");
+        System.out.println(color.RESET);
+    }
+
+    /**
+     * This function will be display GAME OVER when game ends
+     * @param envcolor for setting logo color
+     * @return void
+     **/
+    private void endTetris(String envcolor)
+    {
+        Rain color = new Rain();
+        System.out.println(envcolor);
         System.out.println("##### ##### ##### #####  ##### #       # ##### #####");
         System.out.println("#     #   # # # # #      #   #  #     #  #     #   #");
         System.out.println("#  ## ##### # # # ####   #   #   #   #   ####  #####");
@@ -41,13 +57,13 @@ public class Tetris
 
     /**
      * This function displays the banner of game exited
-     * 
+     * @param envcolor for setting logo color
      * @return void
      **/
-    private void exitTetris()
+    private void exitTetris(String envcolor)
     {
         Rain color = new Rain();
-        System.out.println(color.DGREEN);
+        System.out.println(envcolor);
         System.out.println("&&&&& &&&&& &&&&& &&&&&  &&&&& &   & & &&&&& &&&&& &&&& ");
         System.out.println("&     &   & & & & &      &      & &  &   &   &     &   &");
         System.out.println("&  && &&&&& & & & &&&&   &&&&    &   &   &   &&&&  &   &");
@@ -58,10 +74,10 @@ public class Tetris
 
     /**
      * This function displays the banner of save game
-     * 
+     * @param envcolor for setting logo color 
      * @return void
      **/
-    private void saveTetris()
+    private void saveTetris(String envcolor)
     {
         Rain color = new Rain();
         System.out.println(color.BCYAN);
@@ -75,13 +91,13 @@ public class Tetris
 
     /**
      * This function will display the controls of the game
-     * 
+     * @param envcolor for setting logo color
      * @return void
      **/
-    private void displayControls()
+    private void displayControls(String envcolor)
     {
         Rain color = new Rain();
-        System.out.println(color.BYELLOW);
+        System.out.println(envcolor);
         System.out.println("  $$$$$  $$$$$  $   $  $$$$$  $$$$   $$$$$  $      $$$$$  ");
         System.out.println("  $      $   $  $$  $    $    $   $  $   $  $      $      ");
         System.out.println("  $      $   $  $ $ $    $    $$$$   $   $  $      $$$$$  ");
@@ -123,7 +139,8 @@ public class Tetris
         switch(option)
         {
             case 0:
-                exitTetris();
+                Rain col = new Rain();
+                exitTetris(col.BDGREEN);
                 System.exit(0);
             case 1:
                 playNewGame();
@@ -158,6 +175,10 @@ public class Tetris
             //user data entry
             System.out.println(color.BOLD + "Enter the username" + color.RESET);
             String username = in.nextLine();                                                    // for entered username
+            if(scorelist.checkDuplicateHighScoreName(username))                                 // check for duplicate name in db
+            {
+                throw new DuplicateNameException("User Name cannot be duplicate");
+            }
 
             System.out.println(color.BOLD + "Create new password e.g: abcdef" + color.RESET);
             Console con = System.console();                                                     // used for taking password as an input
@@ -186,16 +207,14 @@ public class Tetris
             String reenterpassword = String.valueOf(reenterpass);                               // convert password to string
             byte[] rehash = digest.digest(reenterpassword.getBytes(StandardCharsets.UTF_8));    // hash algo sha 256
             
-            User user = new User(username,password,new Date(),hash);                            // created a new user
+            User user = new User(username,password,new Date(),hash,0);                            // created a new user
 
             if(!user.matchPassword(rehash))                                                     // check password is right or not
             {
                 throw new WrongPasswordException("Entered wrong password");
-            }
+            }        
 
-            displayControls();                                                                  // displays the controls of the game        
-
-            System.out.println("Enter the size of the board");                                  // getting desired size from the user
+            System.out.println("Enter the size of the board in format i.e 20 20");              // getting desired size from the user
             int R = in.nextInt();                                                               // input number of rows
             int C = in.nextInt();                                                               // input number of cols
             
@@ -207,7 +226,9 @@ public class Tetris
             Board board = new Board(R, C);                                                      // initialize the board size
             boolean flag_shape_fixed = false;                                                   // initial shape is now fixed
             int shape_counter = 0;                                                              // for counting and changing different shapes
-            
+
+            displayControls(board.getControlsColor());                                          // displays the controls of the game
+
             /**
              * MAKING 2D ARRAY FOR ROTATION
              * storing the rotation of different shapes
@@ -342,30 +363,38 @@ public class Tetris
                         break;
                     case 'g':
                     case 'G':
+                        //set the score scored from board to user
+                        int score = board.getPoints();
+                        user.setUserScore(score);
+
                         saveGame(user,board,LINE,shape_counter);
+
+                        scorelist.addHighScore(user.getName(),user.getUserId(),user.getUserScore());
                         
-                        scorelist.addHighScore(user, board.getPoints());
                         scorelist.saveHighScore();
-                        scorelist.displayHighScore();
                         
-                        saveTetris();
+                        saveTetris(board.getGameSavedColor());
                         System.exit(0);
                         break;
                     case 'q':
                     case 'Q':
-                        scorelist.displayHighScore();
-                        exitTetris();
+                        exitTetris(board.getGameExitedColor());
                         System.exit(0);
                         break;
                     default:
                         break;
                 }
 
-                if(!board.insertShape(LINE))                            // insert initial shape on board if it is possible
+                if(!board.insertShape(LINE))                            // insert initial shape on board if it is possible means game finished
                 {
                     // System.out.println(color.BRED + "MAIN GAME OVER !!!" + color.RESET);
-                    endTetris();
-                    scorelist.addHighScore(user, board.getPoints());
+                    endTetris(board.getGameOverColor());
+
+                    //set the score scored from board to user
+                    int score = board.getPoints();
+                    user.setUserScore(score);
+                    
+                    scorelist.addHighScore(user.getName(),user.getUserId(),user.getUserScore());
                     System.exit(0);
                 }                                                       // insert shape on board
                 board.printBoard();                                     // print board
@@ -391,7 +420,7 @@ public class Tetris
     private void saveGame(User U,Board B,Shape LINE,int shape_counter)
     {
         /**
-         * FILE FORMAT
+         * FILE FORMAT FOR SVING TO USERNAME.txt files
          * 2;9;2;10;3;9;3;10;
          * ~
          * 0;1;
@@ -400,7 +429,7 @@ public class Tetris
          * =
          * 20;20;
          * usr
-         * walia;Sat Apr 06 01:09:53 IST 2019;[68, 16, 79, -54, -17, -124, 118, 114, 65, 82, 9, 13, 109, 123, -39, -81, -88, -54, 91, 56, 95, 106, -103, -45, -58, -49, 54, -71, 67, -71, -121, 45];0;
+         * walia;Sat Apr 06 01:09:53 IST 2019;1;[68, 16, 79, -54, -17, -124, 118, 114, 65, 82, 9, 13, 109, 123, -39, -81, -88, -54, 91, 56, 95, 106, -103, -45, -58, -49, 54, -71, 67, -71, -121, 45];0;
          **/
         // System.out.println("SAVED:"+LINE.getcurrentstate());
         try
@@ -457,7 +486,7 @@ public class Tetris
 
             //saving user info
             geeks_out1.write("usr\n");
-            geeks_out1.write(U.getName()+";"+U.getDate()+";"+U.getPassHash()+";"+B.getPoints()+";");
+            geeks_out1.write(U.getName()+";"+U.getDate()+";"+U.getUserId()+";"+U.getPassHash()+";"+U.getUserScore()+";");
             geeks_out1.flush();                                                 // flush  the stream
             geeks_out1.close();
 

@@ -10,21 +10,7 @@ public class User
     private int userId;             // for user ids
     private String password;        // password of the user
     private byte[] passhash;        // sha256 hash for password
-
-    /**
-     * This constructor will make the user with id and name for using in highcscores
-     * 
-     * @param String for name
-     * @param id for taking user id
-     **/
-    public User(String name,int id)
-    {
-        this.name = name;
-        this.userId = id;
-        this.entryDate = null;
-        this.password = null;
-        this.passhash = null;
-    }
+    private int score;              // score made by the user
 
     /**
      * This constructor will create the new user
@@ -34,11 +20,12 @@ public class User
      * @param Date of entrydate of the user
      * @param idsetter for setting and maintaining the id
      **/
-    public User(String name,String password,Date entryDate,byte[] arr)
+    public User(String name,String password,Date entryDate,byte[] arr,int score)
     {
         this.name = name;
         this.password = password;
         this.entryDate = entryDate;
+        this.score = score;
         File file = new File("tetris.txt");                                 // create a file object for tetris.txt file
         
         try
@@ -68,6 +55,26 @@ public class User
         }
 
         passhash = arr.clone();                                             // copy password in hash format to user array
+    }
+
+    /**
+     * This function will return the score scored
+     * 
+     * @return int for score
+     **/
+    public int getUserScore()
+    {
+        return this.score;
+    }
+
+    /**
+     * This function will set the new highscore
+     * 
+     * @param score in integer
+     **/
+    public void setUserScore(int score)
+    {
+        this.score = score;
     }
 
     /**
@@ -120,11 +127,21 @@ public class User
         return Arrays.toString(passhash);
     }
 
+    /**
+     * This function will set the new name
+     * 
+     * @param name in string
+     **/
     public void setName(String name)
     {
         this.name = name;
     }
 
+    /**
+     * This function will set the new date
+     * 
+     * @param d for new date
+     **/
     public void setDate(Date d)
     {
         this.entryDate = d;

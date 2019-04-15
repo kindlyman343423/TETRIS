@@ -1,1 +1,2 @@
-5;walia;100
+Walia Gaurav;2;2;
+Gaurav Walia;1;0;

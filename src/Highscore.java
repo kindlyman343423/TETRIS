@@ -9,67 +9,64 @@ import RAINBOW.*;
 public class Highscore
 {
     /**
-     * This class is used for making node used for making highscores list
+     * This class is for storing the highscores
      **/
-    private static class ScoreNode
+    class ScoreNode
     {
-        private User user;
-        private int score;
+        private String name;            // username
+        private int userid;             // user id
+        private int score;              // user score
 
         /**
-         * Constructor
-         * 
-         * @param user for user data
-         * @param score for score of the user
+         * This constructor will create a new score node
          **/
-        public ScoreNode(User user,int score)
+        public ScoreNode(String name,int userid,int score)
         {
-            this.user = user;
+            this.name = name;
+            this.userid = userid;
             this.score = score;
         }
 
-        /**
-         * This function will return the score of the user
-         * 
-         * @return int for score
-         **/
-        public int getScore()
+        public String getHighScoreUserName()
+        {
+            return this.name;
+        }
+        public int getHighScoreUserId()
+        {
+            return this.userid;
+        }
+        public int getHighScore()
         {
             return this.score;
         }
-
-        /**
-         * This function will return the user name
-         * 
-         * @return string for username 
-         **/
-        public String getUserName()
+    }
+    private ArrayList<ScoreNode> list;                                               // list for storing highscores
+    
+    public boolean checkDuplicateHighScoreName(String name)
+    {
+        for(int i=0;i<list.size();i++)
         {
-            return user.getName();
+            if(list.get(i).getHighScoreUserName().equals(name))
+            {
+                return true;
+            }
         }
-
-        /**
-         * This function will return the user id
-         * 
-         * @return int for user id
-         **/
-        public int getUserId()
-        {
-            return user.getUserId();
-        }
+        return false;
     }
 
-    private ArrayList<ScoreNode> list;                                          // list for storing highscores
-    
     /**
      * Constructor for highscore.
      * Allocating memory to highscore list.
+     * read data from highscore.txt add in list
      **/
     public Highscore()
     {
-        list = new ArrayList<ScoreNode>();
+        list = new ArrayList<ScoreNode>();                                           // create new arraylist of users
 
-        //read data from highscore.txt contains id and score file
+        /**
+         * parse the format
+         * username;userid;score
+         **/
         File file = new File("highscore.txt");                                  // create a new file structure for highscore.txt
         try
         {
@@ -82,12 +79,11 @@ public class Highscore
                 while((str = br.readLine())!=null)
                 {
                     String[] data = str.split(";");
-                    int id = Integer.parseInt(data[0]);
-                    String name = data[1]; 
+                    String username = data[0];
+                    int userid = Integer.parseInt(data[1]);
                     int score = Integer.parseInt(data[2]);
-                    User dummyuser = new User(name,id);
 
-                    ScoreNode newNode = new ScoreNode(dummyuser,score);
+                    ScoreNode newNode = new ScoreNode(username,userid,score);
                     list.add(newNode);
                 }
 
@@ -104,24 +100,24 @@ public class Highscore
     /**
      * This function will add new highscore at the end of the game
      * 
-     * @param user for User object
-     * @param score as integer
+     * @param username for getting user name
+     * @param userid for getting user id
+     * @param score for getting user score
      **/
-    public void addHighScore(User user,int score)
-    {
-        //create score node
-        ScoreNode newNode = new ScoreNode(user,score);
-        
+    public void addHighScore(String username,int userid,int score)
+    {   
+        ScoreNode newNode = new ScoreNode(username,userid,score);
+
         //add according to score
         if(list.size()==0)                                                      // if list is empty
         {
             list.add(newNode);                                                  // add a new node to list
         }
-        else if(score >= list.get(0).getScore())                                // if score is greater than or equal to the top score
+        else if(score >= list.get(0).getHighScore())                                // if score is greater than or equal to the top score
         {
             list.add(0,newNode);                                                // add node at position 0 from front
         }
-        else if(score < list.get(list.size()-1).getScore())                     // if score is less than last node
+        else if(score < list.get(list.size()-1).getHighScore())                     // if score is less than last node
         {
             list.add(list.size(),newNode);                                      // add node from last
         }
@@ -129,7 +125,7 @@ public class Highscore
         {
             for(int i=0;i<list.size();i++)                                      // traverse the list and add new node at middle
             {
-                if(score > list.get(i).getScore())
+                if(score > list.get(i).getHighScore())
                 {
                     list.add(i,newNode);
                     break;
@@ -170,22 +166,22 @@ public class Highscore
         int idlength = 0;                                                                               // variable maintatining tabs
         for(int i=0;i<list.size();i++)
         {
-            System.out.print("\t"+list.get(i).getUserId());                                             // print the user id
-            idlength = 20 - list.get(i).getUserId();
+            System.out.print("\t"+list.get(i).getHighScoreUserId());                                             // print the user id
+            idlength = 20 - list.get(i).getHighScoreUserId();
             for(int j=0;j<idlength;j++)
             {
                 System.out.print(" ");
             }
             
-            System.out.print("|\t"+list.get(i).getUserName());                                          // print the username on scoreboard
-            idlength = 16 - list.get(i).getUserName().length();
+            System.out.print("|\t"+list.get(i).getHighScoreUserName());                                          // print the username on scoreboard
+            idlength = 16 - list.get(i).getHighScoreUserName().length();
             for(int j=0;j<idlength;j++)
             {
                 System.out.print(" ");
             }
 
-            System.out.println("|\t"+list.get(i).getScore());                                           // print the user highscore
-            idlength = 16 - list.get(i).getScore();
+            System.out.print("|\t"+list.get(i).getHighScore());                                           // print the user highscore
+            idlength = 16 - list.get(i).getHighScore();
             for(int j=0;j<idlength;j++)
             {
                 System.out.print(" ");
@@ -206,7 +202,7 @@ public class Highscore
      **/
     public void saveHighScore()
     {
-        //save the user id and score to highscore.txt file
+        //save the user to highscore.txt file
         try
         {
             File file = new File("highscore.txt");                                                              // create new file object of highscore.txt file
@@ -214,9 +210,15 @@ public class Highscore
 
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));                                       // create buffered writer for writing the files
             
+            /**
+             * highscore.txt format
+             * username;userid;score
+             * username;userid;score
+             **/
+
             for(int i=0;i<list.size();i++)                                                                      // traverse the list for writing to file
             {
-                bw.write(list.get(i).getUserId()+";"+list.get(i).getUserName()+";"+list.get(i).getScore()+"\n");// write the highscore file
+                bw.write(list.get(i).getHighScoreUserName()+";"+list.get(i).getHighScoreUserId()+";"+list.get(i).getHighScore()+";\n");// write the highscore file
             }
             bw.close();
         }
