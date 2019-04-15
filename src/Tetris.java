@@ -186,7 +186,7 @@ public class Tetris
             String reenterpassword = String.valueOf(reenterpass);                               // convert password to string
             byte[] rehash = digest.digest(reenterpassword.getBytes(StandardCharsets.UTF_8));    // hash algo sha 256
             
-            User user = new User(username,password,new Date(),hash);                            // created a new user
+            User user = new User(username,password,new Date(),hash,0);                            // created a new user
 
             if(!user.matchPassword(rehash))                                                     // check password is right or not
             {
@@ -195,7 +195,7 @@ public class Tetris
 
             displayControls();                                                                  // displays the controls of the game        
 
-            System.out.println("Enter the size of the board");                                  // getting desired size from the user
+            System.out.println("Enter the size of the board in format i.e 20 20");              // getting desired size from the user
             int R = in.nextInt();                                                               // input number of rows
             int C = in.nextInt();                                                               // input number of cols
             
@@ -342,11 +342,15 @@ public class Tetris
                         break;
                     case 'g':
                     case 'G':
+                        //set the score scored from board to user
+                        int score = board.getPoints();
+                        user.setUserScore(score);
+
                         saveGame(user,board,LINE,shape_counter);
+
+                        scorelist.addHighScore(user.getName(),user.getUserId(),user.getUserScore());
                         
-                        scorelist.addHighScore(user, board.getPoints());
                         scorelist.saveHighScore();
-                        scorelist.displayHighScore();
                         
                         saveTetris();
                         System.exit(0);
@@ -361,11 +365,16 @@ public class Tetris
                         break;
                 }
 
-                if(!board.insertShape(LINE))                            // insert initial shape on board if it is possible
+                if(!board.insertShape(LINE))                            // insert initial shape on board if it is possible means game finished
                 {
                     // System.out.println(color.BRED + "MAIN GAME OVER !!!" + color.RESET);
                     endTetris();
-                    scorelist.addHighScore(user, board.getPoints());
+
+                    //set the score scored from board to user
+                    int score = board.getPoints();
+                    user.setUserScore(score);
+                    
+                    scorelist.addHighScore(user.getName(),user.getUserId(),user.getUserScore());
                     System.exit(0);
                 }                                                       // insert shape on board
                 board.printBoard();                                     // print board
@@ -391,7 +400,7 @@ public class Tetris
     private void saveGame(User U,Board B,Shape LINE,int shape_counter)
     {
         /**
-         * FILE FORMAT
+         * FILE FORMAT FOR SVING TO USERNAME.txt files
          * 2;9;2;10;3;9;3;10;
          * ~
          * 0;1;
@@ -400,7 +409,7 @@ public class Tetris
          * =
          * 20;20;
          * usr
-         * walia;Sat Apr 06 01:09:53 IST 2019;[68, 16, 79, -54, -17, -124, 118, 114, 65, 82, 9, 13, 109, 123, -39, -81, -88, -54, 91, 56, 95, 106, -103, -45, -58, -49, 54, -71, 67, -71, -121, 45];0;
+         * walia;Sat Apr 06 01:09:53 IST 2019;1;[68, 16, 79, -54, -17, -124, 118, 114, 65, 82, 9, 13, 109, 123, -39, -81, -88, -54, 91, 56, 95, 106, -103, -45, -58, -49, 54, -71, 67, -71, -121, 45];0;
          **/
         // System.out.println("SAVED:"+LINE.getcurrentstate());
         try
@@ -457,7 +466,7 @@ public class Tetris
 
             //saving user info
             geeks_out1.write("usr\n");
-            geeks_out1.write(U.getName()+";"+U.getDate()+";"+U.getPassHash()+";"+B.getPoints()+";");
+            geeks_out1.write(U.getName()+";"+U.getDate()+";"+U.getUserId()+";"+U.getPassHash()+";"+U.getUserScore()+";");
             geeks_out1.flush();                                                 // flush  the stream
             geeks_out1.close();
 

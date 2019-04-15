@@ -10,22 +10,16 @@ public class User
     private int userId;             // for user ids
     private String password;        // password of the user
     private byte[] passhash;        // sha256 hash for password
+    private int score;              // score made by the user
 
-    /**
-     * This constructor will make the user with id and name for using in highcscores
-     * 
-     * @param String for name
-     * @param id for taking user id
-     **/
-    public User(String name,int id)
+    public int getUserScore()
     {
-        this.name = name;
-        this.userId = id;
-        this.entryDate = null;
-        this.password = null;
-        this.passhash = null;
+        return this.score;
     }
-
+    public void setUserScore(int score)
+    {
+        this.score = score;
+    }
     /**
      * This constructor will create the new user
      * 
@@ -34,11 +28,12 @@ public class User
      * @param Date of entrydate of the user
      * @param idsetter for setting and maintaining the id
      **/
-    public User(String name,String password,Date entryDate,byte[] arr)
+    public User(String name,String password,Date entryDate,byte[] arr,int score)
     {
         this.name = name;
         this.password = password;
         this.entryDate = entryDate;
+        this.score = score;
         File file = new File("tetris.txt");                                 // create a file object for tetris.txt file
         
         try
