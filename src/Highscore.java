@@ -42,6 +42,18 @@ public class Highscore
     }
     private ArrayList<ScoreNode> list;                                               // list for storing highscores
     
+    public boolean checkDuplicateHighScoreName(String name)
+    {
+        for(int i=0;i<list.size();i++)
+        {
+            if(list.get(i).getHighScoreUserName().equals(name))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Constructor for highscore.
      * Allocating memory to highscore list.
@@ -168,7 +180,7 @@ public class Highscore
                 System.out.print(" ");
             }
 
-            System.out.println("|\t"+list.get(i).getHighScore());                                           // print the user highscore
+            System.out.print("|\t"+list.get(i).getHighScore());                                           // print the user highscore
             idlength = 16 - list.get(i).getHighScore();
             for(int j=0;j<idlength;j++)
             {
@@ -206,7 +218,7 @@ public class Highscore
 
             for(int i=0;i<list.size();i++)                                                                      // traverse the list for writing to file
             {
-                bw.write(list.get(i).getHighScoreUserName()+";"+list.get(i).getHighScoreUserId()+";"+list.get(i).getHighScore());// write the highscore file
+                bw.write(list.get(i).getHighScoreUserName()+";"+list.get(i).getHighScoreUserId()+";"+list.get(i).getHighScore()+";\n");// write the highscore file
             }
             bw.close();
         }

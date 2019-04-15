@@ -158,6 +158,10 @@ public class Tetris
             //user data entry
             System.out.println(color.BOLD + "Enter the username" + color.RESET);
             String username = in.nextLine();                                                    // for entered username
+            if(scorelist.checkDuplicateHighScoreName(username))
+            {
+                throw new DuplicateNameException("User Name cannot be duplicate");
+            }
 
             System.out.println(color.BOLD + "Create new password e.g: abcdef" + color.RESET);
             Console con = System.console();                                                     // used for taking password as an input

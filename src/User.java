@@ -12,14 +12,6 @@ public class User
     private byte[] passhash;        // sha256 hash for password
     private int score;              // score made by the user
 
-    public int getUserScore()
-    {
-        return this.score;
-    }
-    public void setUserScore(int score)
-    {
-        this.score = score;
-    }
     /**
      * This constructor will create the new user
      * 
@@ -63,6 +55,26 @@ public class User
         }
 
         passhash = arr.clone();                                             // copy password in hash format to user array
+    }
+
+    /**
+     * This function will return the score scored
+     * 
+     * @return int for score
+     **/
+    public int getUserScore()
+    {
+        return this.score;
+    }
+
+    /**
+     * This function will set the new highscore
+     * 
+     * @param score in integer
+     **/
+    public void setUserScore(int score)
+    {
+        this.score = score;
     }
 
     /**
@@ -115,11 +127,21 @@ public class User
         return Arrays.toString(passhash);
     }
 
+    /**
+     * This function will set the new name
+     * 
+     * @param name in string
+     **/
     public void setName(String name)
     {
         this.name = name;
     }
 
+    /**
+     * This function will set the new date
+     * 
+     * @param d for new date
+     **/
     public void setDate(Date d)
     {
         this.entryDate = d;
