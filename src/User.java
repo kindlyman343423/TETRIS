@@ -9,7 +9,7 @@ public class User
     private Date entryDate;         // storing entry date of the user
     private int userId;             // for user ids
     private String password;        // password of the user
-    private byte[] passhash;        // sha256 hash for password
+    private String passhash;        // sha256 hash for password
     private int score;              // score made by the user
 
     /**
@@ -20,11 +20,12 @@ public class User
      * @param Date of entrydate of the user
      * @param idsetter for setting and maintaining the id
      **/
-    public User(String name,String password,Date entryDate,byte[] arr,int score)
+    public User(String name,String password,Date entryDate,String passhash,int score)
     {
         this.name = name;
-        this.password = password;
         this.entryDate = entryDate;
+        this.password = password;
+        this.passhash = passhash;
         this.score = score;
         File file = new File("tetris.txt");                                 // create a file object for tetris.txt file
         
@@ -53,8 +54,44 @@ public class User
         {
             e.printStackTrace();
         }
+    }
 
-        passhash = arr.clone();                                             // copy password in hash format to user array
+    /**
+     * This function will check whether username contains special char or not
+     * returns true when the username has special char else return false
+     * @param name for username
+     * @return boolean for check
+     **/
+    public static boolean checkSpecialCharUsername(String name)
+    {
+        for(int i=0;i<name.length();i++)
+        {
+            char ch = name.charAt(i);
+            switch(ch)
+            {
+                case '{':
+                case '}':
+                case '(':
+                case ')':
+                case '*':
+                case '-':
+                case '=':
+                case '|':
+                case ';':
+                case ':':
+                case '!':
+                case ',':
+                case '[':
+                case ']':
+                case '\\':
+                case '/':
+                case '@':
+                case '~':
+                case '$':
+                    return true;
+            }     
+        } 
+        return false;
     }
 
     /**
@@ -124,7 +161,7 @@ public class User
      **/
     public String getPassHash()
     {
-        return Arrays.toString(passhash);
+        return passhash;
     }
 
     /**
@@ -150,23 +187,16 @@ public class User
     /**
      * This function matches the password of the user with the given password
      * 
-     * @param byte[] arr for hash
+     * @param hash for hash string
      * 
      * @return boolean whether hash is matched or not
      **/
-    public boolean matchPassword(byte[] hash)
+    public boolean matchPassword(String hash)
     {
-        if(passhash.length!=hash.length)
+        if(passhash.equals(hash))
         {
-            return false;
+            return true;
         }
-        for(int i=0;i<hash.length;i++)
-        {
-            if(passhash[i]!=hash[i])
-            {
-                return false;
-            }
-        }
-        return true;
+        return false;
     }
 }

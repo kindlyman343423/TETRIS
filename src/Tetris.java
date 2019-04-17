@@ -1,4 +1,5 @@
 import java.io.*;
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.*;
@@ -119,6 +120,22 @@ public class Tetris
     }
     
     /**
+     * This function will display the banner of the settings
+     * @param envcolor for printing the specific color
+     **/
+    private void settingTetris()
+    {
+        Rain color = new Rain();
+        System.out.println(color.BYELLOW);
+        System.out.println(" $$$$$ $$$$$ $$$$$ $$$$$ $ $   $ $$$$$ $$$$$ ");
+        System.out.println(" $     $       $     $   $ $$  $ $     $     ");
+        System.out.println(" $$$$$ $$$$    $     $   $ $ $ $ $  $$ $$$$$ ");
+        System.out.println("     $ $       $     $   $ $  $$ $   $     $ ");
+        System.out.println(" $$$$$ $$$$$   $     $   $ $   $ $$$$$ $$$$$ ");
+        System.out.print(color.RESET);
+    }
+
+    /**
      * This function is displays the main functions in tetris game
      * 
      * @return void
@@ -135,30 +152,42 @@ public class Tetris
         System.out.println("3. Highscores");
         System.out.println("4. Settings");
         System.out.println(color.RESET);
-        int option = in.nextInt();
-        switch(option)
+        try
         {
-            case 0:
-                Rain col = new Rain();
-                exitTetris(col.BDGREEN);
-                System.exit(0);
-            case 1:
-                playNewGame();
-                break;
-            case 2:
-                playExistingGame();
-                break;
-            case 3:
-                scorelist.displayHighScore();
-                break;
-            case 4: 
-                settings();
-                break;
-            default:
-                break;
+            int option = in.nextInt();
+            switch(option)
+            {
+                case 0:
+                    exitTetris(color.BDGREEN);
+                    System.exit(0);
+                case 1:
+                    playNewGame();
+                    break;
+                case 2:
+                    playExistingGame();
+                    break;
+                case 3:
+                    scorelist.displayHighScore();
+                    break;
+                case 4: 
+                    settings();
+                    break;
+                default:
+                    throw new InvalidOptionException("Invalid Option entered by the user");
+            }
         }
-
-        in.close();
+        catch(InputMismatchException e)
+        {
+            System.out.println(color.BRED+e+"\nInvalid Option entered by the user"+color.RESET);
+        }
+        catch(Exception e)
+        {
+            System.out.println(color.BRED+e+color.RESET);
+        }
+        finally
+        {
+            in.close();
+        }
     }
 
     /**
@@ -175,9 +204,13 @@ public class Tetris
             //user data entry
             System.out.println(color.BOLD + "Enter the username" + color.RESET);
             String username = in.nextLine();                                                    // for entered username
-            if(scorelist.checkDuplicateHighScoreName(username))                                 // check for duplicate name in db
+            if(scorelist.checkDuplicateHighScoreName(username))                                 // check for duplicate name in highscore list
             {
                 throw new DuplicateNameException("User Name cannot be duplicate");
+            }
+            else if(User.checkSpecialCharUsername(username))                                    // check if special char in username
+            {
+                throw new InvalidOptionException("User Name cannot contain special characters");
             }
 
             System.out.println(color.BOLD + "Create new password e.g: abcdef" + color.RESET);
@@ -201,15 +234,28 @@ public class Tetris
 
             MessageDigest digest = MessageDigest.getInstance("SHA-256");                        // create sha 256 hash algo instance
             byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));             // hash algo sha 256
+            
+            BigInteger hashno = new BigInteger(1,hash);
+            String passhash = hashno.toString(16);                                              // make sha 256 password string
+            while (passhash.length() < 32) { 
+                passhash = "0" + passhash; 
+            } 
 
             System.out.println(color.BOLD+"Confirm password"+color.RESET);                      // confirming password
-            char[] reenterpass = con.readPassword();                                            // reading password again
-            String reenterpassword = String.valueOf(reenterpass);                               // convert password to string
+            char[] reenterpass = con.readPassword();                                            // reading password again from console
+            String reenterpassword = String.valueOf(reenterpass);                               // convert char array to string
             byte[] rehash = digest.digest(reenterpassword.getBytes(StandardCharsets.UTF_8));    // hash algo sha 256
-            
-            User user = new User(username,password,new Date(),hash,0);                            // created a new user
+            hashno = new BigInteger(1,rehash);
+            String passrehash = hashno.toString(16);
+            while (passrehash.length() < 32) { 
+                passrehash = "0" + passrehash; 
+            } 
+            // System.out.println(passhash);
+            // System.out.println(passrehash);
 
-            if(!user.matchPassword(rehash))                                                     // check password is right or not
+            User user = new User(username,password,new Date(),passhash,0);                          // created a new user
+
+            if(!user.matchPassword(passrehash))                                                     // check password is right or not
             {
                 throw new WrongPasswordException("Entered wrong password");
             }        
@@ -223,6 +269,7 @@ public class Tetris
                 throw new IndexOutofBoardException("Wrong Input Valid size should be 0-100");
             }
 
+            //the main game
             Board board = new Board(R, C);                                                      // initialize the board size
             boolean flag_shape_fixed = false;                                                   // initial shape is now fixed
             int shape_counter = 0;                                                              // for counting and changing different shapes
@@ -420,56 +467,69 @@ public class Tetris
     private void saveGame(User U,Board B,Shape LINE,int shape_counter)
     {
         /**
-         * FILE FORMAT FOR SVING TO USERNAME.txt files
-         * 2;9;2;10;3;9;3;10;
-         * ~
-         * 0;1;
-         * -
-         * ;;;;;;;;;@;@;@;@;;;;;;;;
-         * =
-         * 20;20;
-         * usr
-         * walia;Sat Apr 06 01:09:53 IST 2019;1;[68, 16, 79, -54, -17, -124, 118, 114, 65, 82, 9, 13, 109, 123, -39, -81, -88, -54, 91, 56, 95, 106, -103, -45, -58, -49, 54, -71, 67, -71, -121, 45];0;
+         * walia gaurav|Wed Apr 17 21:00:07 IST 2019|1|44104fcaef8476724152090d6d7bd9afa8ca5b385f6a99d3c6cf36b943b9872d|0|
+         * 6|9|7|9|8|9|8|8|
+         * 0|3|
+         * [1;33m|[1;37m|[1;37m|[0m|[1;31m|[2m|[1;36m|[1;33m|[1;35m|
+         * 20|20|
+         * ||||||||||||@|@|@|@|@|@|@|@|
+         * ||||||||||||@||@|@|||||
+         * ||||||||||||@||||||||
          **/
         // System.out.println("SAVED:"+LINE.getcurrentstate());
         try
         {   
-            String filename = "db/"+U.getUserId()+".txt";
+            String filename = "db/"+U.getUserId()+".txt";                                   // create new filename
             
             File file = new File(filename);
             file.getParentFile().mkdirs();
-            file.createNewFile();
+            file.createNewFile();                                                           // create new file if not present
 
             BufferedWriter geeks_out1 = new BufferedWriter(new FileWriter(file));           // open the file for output
             
+            /**
+             * saving user info
+             **/
+            geeks_out1.write(U.getName()+"|"+U.getDate()+"|"+U.getUserId()+"|"+U.getPassHash()+"|"+U.getUserScore()+"|\n");
+
             for(int i=0;i<4;i++)                                                            // saving line coords
             {
                 int x = LINE.getarrofblock()[i].getX();
                 int y = LINE.getarrofblock()[i].getY();
-                geeks_out1.write(x +";"+y+";");
+                geeks_out1.write(x +"|"+y+"|");
             }
-            geeks_out1.write("\n~\n");                                                      // char for flags
-            geeks_out1.write(LINE.getcurrentstate()+";"+shape_counter+";\n-\n");
+            geeks_out1.write("\n");                                                      // char for flags
+            geeks_out1.write(LINE.getcurrentstate()+"|"+shape_counter+"|\n");
+
+            //saving env variables
+            String[] envcolors = B.getENV();
+
+            for(int i=0;i<envcolors.length;i++)
+            {
+                geeks_out1.write(envcolors[i]+"|");
+            }
+            geeks_out1.write("\n");
 
             //check for limit
             int limit = B.getUpperLimit();                                                  // get upperlimit
-            System.out.println(limit);
             int R = B.getRows();                                                            // get board rows
             int C = B.getCols();                                                            // get board cols
             
+            geeks_out1.write(R +"|"+ C +"|\n");
+            
             if(limit!=-1)                                                                   // if fixed blocks exists only save then
             {
-                for(int i=limit;i<R;i++)                                                    // storing the array
+                for(int i=R-1;i>=limit;i--)                                                    // storing the array
                 {
                     for(int j=0;j<C;j++)
                     {
                         if(B.getARR()[i][j]!=' ')
                         {
-                            geeks_out1.write(B.getARR()[i][j]+";");
+                            geeks_out1.write(B.getARR()[i][j]+"|");
                         }
                         else
                         {
-                            geeks_out1.write(";");
+                            geeks_out1.write("|");
                         }
                         if(j==C-1)
                         {
@@ -478,22 +538,14 @@ public class Tetris
                     }
                 }
             }
-            geeks_out1.write("=\n" + R +";"+ C +";\n");
             
-            //saving env variables
-            geeks_out1.write("env\n");
-            geeks_out1.write(B.getBoardColor()+";" + B.getShapeColor()+";" + B.getFixedShapeColor()+";\n");
-
-            //saving user info
-            geeks_out1.write("usr\n");
-            geeks_out1.write(U.getName()+";"+U.getDate()+";"+U.getUserId()+";"+U.getPassHash()+";"+U.getUserScore()+";");
             geeks_out1.flush();                                                 // flush  the stream
             geeks_out1.close();
 
             //save id of the user in tetris.java
             File savefile = new File("tetris.txt");
             BufferedWriter out = new BufferedWriter(new FileWriter(savefile));
-            out.write(U.getUserId()+"");
+            out.write(U.getUserId()+"");                                        // store user id to tetris.txt in string format
             out.close();
         }
         catch(Exception e)
@@ -809,19 +861,297 @@ public class Tetris
     }
 
     /**
+     * This function will return the sha 25 6 of a string
+     * 
+     * @param password for input pasword in char array
+     * 
+     * @return string sha256 hash
+     **/
+    private String getSHA256(char[] password)
+    {
+        String passhash = "";
+        try
+        {
+            String str = String.valueOf(password);
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");                        // create sha 256 hash algo instance
+            byte[] bytearr = digest.digest(str.getBytes(StandardCharsets.UTF_8));
+            BigInteger hashno = new BigInteger(1,bytearr);
+            passhash = hashno.toString(16);                                              // make sha 256 password string
+            while (passhash.length() < 32) { 
+                passhash = "0" + passhash; 
+            }
+        }
+        catch(Exception e)
+        {
+            System.out.println(e);
+        }
+        return passhash;
+    }
+
+
+    /**
      * This function will start the existing saved games
      **/
     private void playExistingGame()
     {
         Scanner in = new Scanner(System.in);
-        System.out.println("Enter the username");
-        // String name = in.next();
-        // find the username
-        // find the id
-        // open the id file
-        // parse the user id file
+        System.out.println("Enter the username:");
+        String name = in.nextLine();
+        
+        int userid = scorelist.findIndexOfUser(name);                                       // find the username in the highscores
+        
+        if(userid == -1)                                                                    // if user is not present in highscores
+        {
+            System.out.println("Sorry you haven't saved a game with this username yet...");
+            in.close();
+            return;   
+        }
 
-        in.close();
+        String filename = "db/" + userid +".txt";                                           // create new file name
+        File file = new File(filename);
+        
+        if(!file.exists())                                                                   // check if user file is present or not
+        {
+            System.out.println("Sorry your application is broken please reset the game");
+            in.close();
+            return;
+        }
+        
+        BufferedReader br=null;
+        try
+        {
+            //PASSWORD CHECKING
+            Console input = System.console();
+            if(input==null)
+            {
+                System.out.println("no console available");
+            }
+            System.out.println("Enter your password");
+            char[] consolepassword = input.readPassword();
+            String passhash = getSHA256(consolepassword);
+            
+            BufferedReader read = new BufferedReader(new FileReader(file));
+            String string=read.readLine();                                                           // string for reading lines
+            String[] arr = string.split("[|]");
+            read.close();
+            //compare arr[3] and passhash
+            if(!passhash.equals(arr[3]))
+            {
+                throw new WrongPasswordException("Entered wrong password, recover it in settings");
+            }
+            
+            System.out.println("GOOD TO GO");
+            //PARSING FILES
+            int linecounter=1;                                                                      // variable for line counting while parsing
+            br = new BufferedReader(new FileReader(file));
+            while((string=br.readLine())!=null)
+            {
+                switch(linecounter)
+                {
+                    case 1:         // parse user
+                        break;
+                    case 2:         // parse for the block current location
+                        break;
+                    case 3:         // parse for current position of shape
+                        break;
+                    case 4:         // storing env variables
+                        break;
+                    case 5:         // storing board size
+                        break;
+                    case 6:         // storing the board
+                        break;
+                }
+                linecounter++;
+            }
+            br.close();
+        }
+        catch(Exception e)
+        {
+            System.out.println(e);
+        }
+        finally
+        {
+            in.close();
+        }
+        //the main game
+        // Board board = new Board(R, C);                                                      // initialize the board size
+        // boolean flag_shape_fixed = false;                                                   // initial shape is now fixed
+        // int shape_counter = 0;                                                              // for counting and changing different shapes
+
+        // displayControls(board.getControlsColor());                                          // displays the controls of the game
+
+        /**
+         * MAKING 2D ARRAY FOR ROTATION
+         * storing the rotation of different shapes
+         *      0   1   2   3
+         * 0 |  
+         * 1 |
+         * 2 |
+         * 3 |
+         * 4 |
+         * 5 |
+         * 6 |
+         **/
+        // Shape[][] rotation = new Shape[7][4];                                               // array maintained for rotations of the shape
+        // rotation = makeRotationArray(rotation);                                             // making initial array for rotation
+
+        // int pivot = (C/2) - 1;                                                              // value for setting initial position of the shape
+        // building the line blocks
+        // Block a = new Block(0, pivot);
+        // Block b = new Block(0, pivot+1);
+        // Block c = new Block(0, pivot+2);
+        // Block d = new Block(0, pivot+3);
+        // Shape LINE = new Shape(a, b, c, d, 0);                                              // created line shape intially with 0
+
+        // if(!board.insertShape(LINE))                                                        // insert initial shape on board if it is possible
+        // {
+        //     System.out.println(color.BRED + "ERROR WHILE INSERTING THE SHAPE" + color.RESET);
+        //     System.exit(0);
+        // }                                  
+        // board.printBoard();                                                                 // print the initial board
+        // System.out.println();
+        
+        // flag_shape_fixed = false;                                                           // shape is fixed or not
+        
+        // // GAME LOOPING
+        // while (true) 
+        // {
+        //     board.clearboard();                                                             // clear board for above
+        //     flag_shape_fixed = board.movedown(LINE);                                        // default move down
+
+        //     if(flag_shape_fixed)                                                            // if flag shape cannot move down so making it fixed when it reach boundary
+        //     {
+        //         board.insertFixedShape(LINE);                                               // insert the fixed shape on board
+        //         board.printBoard();                                                         // print the board
+                
+        //         if(shape_counter==6)                                                        // set shape counter to 0 when it becomes 6
+        //         {
+        //             shape_counter=0;
+        //         }
+        //         else
+        //         {
+        //             shape_counter++;
+        //         }
+        //         LINE = create_shape(LINE, shape_counter,pivot);                             // creating new shape for second move with current state 0
+
+        //         flag_shape_fixed=false;                                                     // set shape fixed to false for next shape
+        //     }
+
+        //     System.out.println("ENTER THE OPTION");                                         // displaying the options
+        //     System.out.println("D/d -- right");                                             // right option
+        //     System.out.println("A/a -- left");                                              // left option
+        //     System.out.println("W/w -- rotate");                                            // rotate option
+        //     System.out.println("S/s -- down");                                              // down option
+        //     System.out.println("G/g -- save");                                              // save option
+        //     System.out.println("Q/q -- quit");                                              // quit game option
+
+        //     char ans = in.next().charAt(0);                                                 // filter single char from the string
+
+        //     switch(ans)
+        //     {
+        //         case 'D':
+        //         case 'd':
+        //             board.moveright(LINE);
+        //             break;
+        //         case 'A':
+        //         case 'a':
+        //             board.moveleft(LINE);
+        //             break;
+        //         case 'W':
+        //         case 'w':
+        //             {
+        //                 //rotation of shape
+        //                 int currentstate = LINE.getcurrentstate();
+        //                 if(currentstate >= 3)
+        //                 {
+        //                     currentstate=0;
+        //                 }
+        //                 else
+        //                 {
+        //                     currentstate++;
+        //                 }
+        //                 // System.out.println(LINE);
+        //                 System.out.println("CURRENTSTATE: " +currentstate);
+
+        //                 int ex = LINE.getarrofblock()[0].getX() + rotation[shape_counter][currentstate].getarrofblock()[0].getX();
+        //                 int ey = LINE.getarrofblock()[0].getY() + rotation[shape_counter][currentstate].getarrofblock()[0].getY();
+        //                 int fx = LINE.getarrofblock()[1].getX() + rotation[shape_counter][currentstate].getarrofblock()[1].getX();
+        //                 int fy = LINE.getarrofblock()[1].getY() + rotation[shape_counter][currentstate].getarrofblock()[1].getY();
+        //                 int gx = LINE.getarrofblock()[2].getX() + rotation[shape_counter][currentstate].getarrofblock()[2].getX();
+        //                 int gy = LINE.getarrofblock()[2].getY() + rotation[shape_counter][currentstate].getarrofblock()[2].getY();
+        //                 int hx = LINE.getarrofblock()[3].getX() + rotation[shape_counter][currentstate].getarrofblock()[3].getX();
+        //                 int hy = LINE.getarrofblock()[3].getY() + rotation[shape_counter][currentstate].getarrofblock()[3].getY();
+        //                 Block e = null;
+        //                 Block f = null;
+        //                 Block g = null;
+        //                 Block h = null;
+                        
+        //                 if( board.checkValidCoords(ex, ey) && board.checkValidCoords(fx, fy) && board.checkValidCoords(gx, gy) && board.checkValidCoords(hx, hy))
+        //                 {
+        //                     e = new Block(ex,ey);
+        //                     f = new Block(fx,fy);
+        //                     g = new Block(gx,gy);
+        //                     h = new Block(hx,hy);
+        //                 }
+        //                 else
+        //                 {
+        //                     ex = LINE.getarrofblock()[0].getX();
+        //                     ey = LINE.getarrofblock()[0].getY();
+        //                     fx = LINE.getarrofblock()[1].getX();
+        //                     fy = LINE.getarrofblock()[1].getY();
+        //                     gx = LINE.getarrofblock()[2].getX();
+        //                     gy = LINE.getarrofblock()[2].getY();
+        //                     hx = LINE.getarrofblock()[3].getX();
+        //                     hy = LINE.getarrofblock()[3].getY();
+        //                     e = new Block(ex,ey);
+        //                     f = new Block(fx,fy);
+        //                     g = new Block(gx,gy);
+        //                     h = new Block(hx,hy);
+        //                     System.out.println("SORRY INVALID ROTATION !!!");
+        //                 }
+        //                 LINE = new Shape(e,f,g,h,currentstate);
+        //             }
+        //             break;
+        //         case 'g':
+        //         case 'G':
+        //             //set tho console available, then exit. 
+        // if(con == null)  e score scored from board to user
+        //             int score = board.getPoints();
+        //             user.setUserScore(score);
+
+        //             saveGame(user,board,LINE,shape_counter);
+
+        //             scorelist.addHighScore(user.getName(),user.getUserId(),user.getUserScore());
+                    
+        //             scorelist.saveHighScore();
+                    
+        //             saveTetris(board.getGameSavedColor());
+        //             System.exit(0);
+        //             break;
+        //         case 'q':
+        //         case 'Q':
+        //             exitTetris(board.getGameExitedColor());
+        //             System.exit(0);
+        //             break;
+        //         default:
+        //             break;
+        //     }
+
+        //     if(!board.insertShape(LINE))                            // insert initial shape on board if it is possible means game finished
+        //     {
+        //         // System.out.println(color.BRED + "MAIN GAME OVER !!!" + color.RESET);
+        //         endTetris(board.getGameOverColor());
+
+        //         //set the score scored from board to user
+        //         int score = board.getPoints();
+        //         user.setUserScore(score);
+                
+        //         scorelist.addHighScore(user.getName(),user.getUserId(),user.getUserScore());
+        //         System.exit(0);
+        //     }                                                       // insert shape on board
+        //     board.printBoard();                                     // print board
+        //     System.out.println();
+        // }   
     }
 
     /**
@@ -829,6 +1159,60 @@ public class Tetris
      **/
     private void settings()
     {
-        
+        Rain color = new Rain();
+        settingTetris();
+        System.out.println(color.BOLD);
+        System.out.println("---------------------------------------------");
+        System.out.println("Enter one option:");
+        System.out.println("0. Exit");
+        System.out.println("1. Change Default Environment Variables");
+        System.out.println("2. Change User's Environment Variables");
+        System.out.println("3. Collect Information of the user");
+        System.out.println("4. Compare two users");
+        System.out.println("5. Delete the old user");
+        System.out.println("6. Reset all users and highscores");
+        System.out.println("7. Delete all History");
+        System.out.println("8. Reset user password");
+        System.out.println(color.RESET);
+        Scanner in = new Scanner(System.in);
+        try
+        {
+            int option= in.nextInt();
+            switch(option)
+            {
+                case 0:
+                    exitTetris(color.BRED);
+                    System.exit(0);
+                    break;
+                case 1:
+                    break;
+                case 2: 
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    break;
+                case 5:
+                    break;
+                case 6: 
+                    break;
+                case 7:
+                    break;
+                default:
+                    throw new InvalidOptionException("Invalid Settings Option entered by the user");
+            }
+        }
+        catch(InputMismatchException e)
+        {
+            System.out.println(color.BRED+e+"\nInvalid Settings Option entered by the user"+color.RESET);
+        }
+        catch(Exception e)
+        {
+            System.out.println(color.BRED+e+color.RESET);
+        }
+        finally
+        {
+            in.close();
+        }
     }
 }
