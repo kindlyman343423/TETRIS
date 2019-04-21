@@ -585,4 +585,25 @@ public class Board
             }
         }
     }
+
+    /**
+     * This function will sync the count of fixed blocks in existing game
+     * 
+     * @return void
+     **/
+    public void countFixedLines()
+    {
+        for(int i=rows-1;i>=0;i--)
+        {
+            int count=0;
+            for(int j=0;j<cols;j++)
+            {
+                if(arr[i][j]=='@')
+                {
+                    count++;
+                }
+            }
+            count_block[i] = count;
+        }   
+    }
 }

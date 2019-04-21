@@ -41,18 +41,6 @@ public class Highscore
         }
     }
     private ArrayList<ScoreNode> list;                                               // list for storing highscores
-    
-    public boolean checkDuplicateHighScoreName(String name)
-    {
-        for(int i=0;i<list.size();i++)
-        {
-            if(list.get(i).getHighScoreUserName().equals(name))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
 
     /**
      * Constructor for highscore.
@@ -134,6 +122,21 @@ public class Highscore
         }
     }
 
+    public void removeHighScore(String username,int userid,int score)
+    {
+        int index=-1;
+        for(int i=0;i<list.size();i++)
+        {
+            if(list.get(i).getHighScoreUserName().equals(username) && list.get(i).getHighScoreUserId()==userid)
+            {
+                index = i;
+            }
+        }
+        if(index!=-1)
+        {
+            list.remove(index);
+        }
+    }
     /**
      * This function will display the highscore board
      * 
@@ -167,7 +170,7 @@ public class Highscore
         for(int i=0;i<list.size();i++)
         {
             System.out.print("\t"+list.get(i).getHighScoreUserId());                                             // print the user id
-            idlength = 20 - list.get(i).getHighScoreUserId();
+            idlength = 16 - (list.get(i).getHighScoreUserId()+"").length();
             for(int j=0;j<idlength;j++)
             {
                 System.out.print(" ");
@@ -227,5 +230,40 @@ public class Highscore
             System.out.println(e);
             e.printStackTrace();
         }
+    }
+
+    /**
+     * This function will check whether the name is present in the list or not
+     * 
+     * @return boolean
+     **/
+    public boolean checkDuplicateHighScoreName(String name)
+    {
+        for(int i=0;i<list.size();i++)
+        {
+            if(list.get(i).getHighScoreUserName().equals(name))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * This function will return the user id if user is present in the list
+     * 
+     * @param name for finding string
+     * @return int for user id
+     **/
+    public int findIndexOfUser(String name)
+    {
+        for(int i=0;i<list.size();i++)
+        {
+            if(list.get(i).getHighScoreUserName().equals(name))
+            {
+                return list.get(i).getHighScoreUserId();
+            }
+        }
+        return -1;
     }
 }
