@@ -7,14 +7,14 @@ import RAINBOW.*;
 import java.text.*;
 public class Tetris
 {
-    private Highscore scorelist = new Highscore();                          // created highscore object for storing highscores
+    private Highscore scorelist = new Highscore();                                                      // created highscore object for storing highscores
     
     /**
      * New tetris game is created 
      **/
     public Tetris()
     {
-        Rain color = new Rain();
+        Rain color = new Rain();                                                                        // use of rainbow package class for displaying colors on terminal
         System.out.println(color.BCYAN);
         System.out.println("#####  #####  #####  ####   #####  #####");
         System.out.println("  #    #        #    #   #    #    #    ");
@@ -30,7 +30,7 @@ public class Tetris
      **/
     public Tetris(String envcolor)
     {
-        Rain color = new Rain();
+        Rain color = new Rain();                                                                        // use of rainbow package class for displaying colors on terminal
         System.out.println(envcolor);
         System.out.println("#####  #####  #####  ####   #####  #####");
         System.out.println("  #    #        #    #   #    #    #    ");
@@ -41,13 +41,13 @@ public class Tetris
     }
 
     /**
-     * This function will be display GAME OVER when game ends
+     * This function will be display GAME OVER when game overs
      * @param envcolor for setting logo color
      * @return void
      **/
     private void endTetris(String envcolor)
     {
-        Rain color = new Rain();
+        Rain color = new Rain();                                                                        // use of rainbow package class for displaying colors on terminal
         System.out.println(envcolor);
         System.out.println("##### ##### ##### #####  ##### #       # ##### #####");
         System.out.println("#     #   # # # # #      #   #  #     #  #     #   #");
@@ -64,7 +64,7 @@ public class Tetris
      **/
     private void exitTetris(String envcolor)
     {
-        Rain color = new Rain();
+        Rain color = new Rain();                                                                        // use of rainbow package class for displaying colors on terminal
         System.out.println(envcolor);
         System.out.println("&&&&& &&&&& &&&&& &&&&&  &&&&& &   & & &&&&& &&&&& &&&& ");
         System.out.println("&     &   & & & & &      &      & &  &   &   &     &   &");
@@ -81,7 +81,7 @@ public class Tetris
      **/
     private void saveTetris(String envcolor)
     {
-        Rain color = new Rain();
+        Rain color = new Rain();                                                                        // use of rainbow package class for displaying colors on terminal
         System.out.println(color.BCYAN);
         System.out.println("OOOOO OOOOO OOOOO OOOOO  OOOOO     O O       O OOOOO OOOO ");
         System.out.println("O     O   O O O O O      O        O O O     O  O     O   O");
@@ -98,7 +98,7 @@ public class Tetris
      **/
     private void displayControls(String envcolor)
     {
-        Rain color = new Rain();
+        Rain color = new Rain();                                                                        // use of rainbow package class for displaying colors on terminal
         System.out.println(envcolor);
         System.out.println("  $$$$$  $$$$$  $   $  $$$$$  $$$$   $$$$$  $      $$$$$  ");
         System.out.println("  $      $   $  $$  $    $    $   $  $   $  $      $      ");
@@ -126,7 +126,7 @@ public class Tetris
      **/
     private void settingTetris()
     {
-        Rain color = new Rain();
+        Rain color = new Rain();                                                                        // use of rainbow package class for displaying colors on terminal
         System.out.println(color.BYELLOW);
         System.out.println(" $$$$$ $$$$$ $$$$$ $$$$$ $ $   $ $$$$$ $$$$$ ");
         System.out.println(" $     $       $     $   $ $$  $ $     $     ");
@@ -143,15 +143,15 @@ public class Tetris
      **/
     public void tetrisMain()
     {
-        Scanner in = new Scanner(System.in);                            // scanner for input in tetris
-        Rain color = new Rain();                                        // for using rainbow
+        Scanner in = new Scanner(System.in);                                                            // scanner for input in tetris
+        Rain color = new Rain();                                                                        // use of rainbow package class for displaying colors on terminal
         System.out.println(color.BOLD);
         System.out.println("Select one option");
-        System.out.println("0. Exit the game");
-        System.out.println("1. Start new game");
-        System.out.println("2. Start saved game");
-        System.out.println("3. Highscores");
-        System.out.println("4. Settings");
+        System.out.println("0. Exit the game");                                                         // this option will exist the game
+        System.out.println("1. Start new game");                                                        // it will start new game for new user
+        System.out.println("2. Start saved game");                                                      // start old game of the user
+        System.out.println("3. Highscores");                                                            // display highscores
+        System.out.println("4. Settings");                                                              // display the settings
         System.out.println(color.RESET);
         try
         {
@@ -198,84 +198,82 @@ public class Tetris
      **/
     private void playNewGame()
     {
-        Scanner in = new Scanner(System.in);                                                    // scanner for input in tetris
-        Rain color = new Rain();                                                                // for using rainbow
+        Scanner in = new Scanner(System.in);                                                            // scanner for input in tetris
+        Rain color = new Rain();                                                                        // for using rainbow
         try
         {
             //user data entry
             System.out.println(color.BOLD + "Enter the username" + color.RESET);
-            String username = in.nextLine();                                                    // for entered username
-            if(scorelist.checkDuplicateHighScoreName(username))                                 // check for duplicate name in highscore list
+            String username = in.nextLine();                                                            // for entered username
+            if(scorelist.checkDuplicateHighScoreName(username))                                         // check for duplicate name in highscore list
             {
                 throw new DuplicateNameException("User Name cannot be duplicate");
             }
-            else if(User.checkSpecialCharUsername(username))                                    // check if special char in username
+            else if(User.checkSpecialCharUsername(username))                                            // check if special char in username
             {
                 throw new InvalidOptionException("User Name cannot contain special characters");
             }
 
             System.out.println(color.BOLD + "Create new password e.g: abcdef" + color.RESET);
-            Console con = System.console();                                                     // used for taking password as an input
-            char[] pass = con.readPassword();                                                   // reading password from the user
-            String password = String.valueOf(pass);                                             // convert password to string
+            Console con = System.console();                                                             // used for taking password as an input
+            char[] pass = con.readPassword();                                                           // reading password from the user
+            String password = String.valueOf(pass);                                                     // convert password to string
             
             //CHECKING PASSWORD VALIDITY
-            if(username.equals(password))                                                       // check password cannot be same as username
+            if(username.equals(password))                                                               // check password cannot be same as username
             {
                 throw new SameNamePasswordException("Password cannot be same as username");
             }
-            else if(password.length() < 5)                                                      // check password length
+            else if(password.length() < 5)                                                              // check password length
             {
                 throw new WrongPasswordException("Invalid length of the password");
             }
-            else if(password.equals("abcdef"))                                                  // check password will not be same as password
+            else if(password.equals("abcdef"))                                                          // check password will not be same as password
             {
                 throw new SameNamePasswordException("Make your own password don't use example");
             }
 
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");                        // create sha 256 hash algo instance
-            byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));             // hash algo sha 256
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");                                // create sha 256 hash algo instance
+            byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));                     // hash algo sha 256
             
             BigInteger hashno = new BigInteger(1,hash);
-            String passhash = hashno.toString(16);                                              // make sha 256 password string
+            String passhash = hashno.toString(16);                                                      // make sha 256 password string
             while (passhash.length() < 32) { 
                 passhash = "0" + passhash; 
             } 
 
-            System.out.println(color.BOLD+"Confirm password"+color.RESET);                      // confirming password
-            char[] reenterpass = con.readPassword();                                            // reading password again from console
-            String reenterpassword = String.valueOf(reenterpass);                               // convert char array to string
-            byte[] rehash = digest.digest(reenterpassword.getBytes(StandardCharsets.UTF_8));    // hash algo sha 256
+            System.out.println(color.BOLD+"Confirm password"+color.RESET);                              // confirming password
+            char[] reenterpass = con.readPassword();                                                    // reading password again from console
+            String reenterpassword = String.valueOf(reenterpass);                                       // convert char array to string
+            byte[] rehash = digest.digest(reenterpassword.getBytes(StandardCharsets.UTF_8));            // hash algo sha 256
             hashno = new BigInteger(1,rehash);
             String passrehash = hashno.toString(16);
             while (passrehash.length() < 32) { 
                 passrehash = "0" + passrehash; 
             } 
-            // System.out.println(passhash);
-            // System.out.println(passrehash);
 
-            User user = new User(username,password,new Date(),passhash,0);                          // created a new user
+            User user = new User(username,password,new Date(),passhash,0);                              // created a new user
 
-            if(!user.matchPassword(passrehash))                                                     // check password is right or not
+            if(!user.matchPassword(passrehash))                                                         // check password is right or not
             {
                 throw new WrongPasswordException("Entered wrong password");
             }        
 
-            System.out.println("Enter the size of the board in format i.e 20 20");              // getting desired size from the user
-            int R = in.nextInt();                                                               // input number of rows
-            int C = in.nextInt();                                                               // input number of cols
+            System.out.println("Enter the size of the board in format i.e 20 20");                      // getting desired size from the user
+            int R = in.nextInt();                                                                       // input number of rows
+            int C = in.nextInt();                                                                       // input number of cols
             
-            if(R<10 || C<10 || R>100 || C>100)                                                  // input validation
+            if(R<10 || C<10 || R>100 || C>100)                                                          // input validation
             {
                 throw new IndexOutofBoardException("Wrong Input Valid size should be 0-100");
             }
 
             //the main game
-            Board board = new Board(R, C);                                                      // initialize the board size
-            boolean flag_shape_fixed = false;                                                   // initial shape is now fixed
-            int shape_counter = 0;                                                              // for counting and changing different shapes
+            Board board = new Board(R, C);                                                              // initialize the board size
+            boolean flag_shape_fixed = false;                                                           // initial shape is now fixed
+            int shape_counter = 0;                                                                      // for counting and changing different shapes
 
-            displayControls(board.getControlsColor());                                          // displays the controls of the game
+            displayControls(board.getControlsColor());                                                  // displays the controls of the game
 
             /**
              * MAKING 2D ARRAY FOR ROTATION
@@ -289,39 +287,39 @@ public class Tetris
              * 5 |
              * 6 |
              **/
-            Shape[][] rotation = new Shape[7][4];                                               // array maintained for rotations of the shape
-            rotation = makeRotationArray(rotation);                                             // making initial array for rotation
+            Shape[][] rotation = new Shape[7][4];                                                       // array maintained for rotations of the shape
+            rotation = makeRotationArray(rotation);                                                     // making initial array for rotation
 
-            int pivot = (C/2) - 1;                                                              // value for setting initial position of the shape
+            int pivot = (C/2) - 1;                                                                      // value for setting initial position of the shape
             // building the line blocks
             Block a = new Block(0, pivot);
             Block b = new Block(0, pivot+1);
             Block c = new Block(0, pivot+2);
             Block d = new Block(0, pivot+3);
-            Shape LINE = new Shape(a, b, c, d, 0);                                              // created line shape intially with 0
+            Shape LINE = new Shape(a, b, c, d, 0);                                                      // created line shape intially with 0
 
-            if(!board.insertShape(LINE))                                                        // insert initial shape on board if it is possible
+            if(!board.insertShape(LINE))                                                                // insert initial shape on board if it is possible
             {
                 System.out.println(color.BRED + "ERROR WHILE INSERTING THE SHAPE" + color.RESET);
                 System.exit(0);
             }                                  
-            board.printBoard();                                                                 // print the initial board
+            board.printBoard();                                                                         // print the initial board
             System.out.println();
             
-            flag_shape_fixed = false;                                                           // shape is fixed or not
+            flag_shape_fixed = false;                                                                   // shape is fixed or not
             
             // GAME LOOPING
             while (true) 
             {
-                board.clearboard();                                                             // clear board for above
-                flag_shape_fixed = board.movedown(LINE);                                        // default move down
+                board.clearboard();                                                                     // clear board for above
+                flag_shape_fixed = board.movedown(LINE);                                                // default move down
 
-                if(flag_shape_fixed)                                                            // if flag shape cannot move down so making it fixed when it reach boundary
+                if(flag_shape_fixed)                                                                    // if flag shape cannot move down so making it fixed when it reach boundary
                 {
-                    board.insertFixedShape(LINE);                                               // insert the fixed shape on board
-                    board.printBoard();                                                         // print the board
+                    board.insertFixedShape(LINE);                                                       // insert the fixed shape on board
+                    board.printBoard();                                                                 // print the board
                     
-                    if(shape_counter==6)                                                        // set shape counter to 0 when it becomes 6
+                    if(shape_counter==6)                                                                // set shape counter to 0 when it becomes 6
                     {
                         shape_counter=0;
                     }
@@ -329,36 +327,36 @@ public class Tetris
                     {
                         shape_counter++;
                     }
-                    LINE = create_shape(LINE, shape_counter,pivot);                             // creating new shape for second move with current state 0
+                    LINE = create_shape(LINE, shape_counter,pivot);                                     // creating new shape for second move with current state 0
 
-                    flag_shape_fixed=false;                                                     // set shape fixed to false for next shape
+                    flag_shape_fixed=false;                                                             // set shape fixed to false for next shape
                 }
 
-                System.out.println("ENTER THE OPTION");                                         // displaying the options
-                System.out.println("D/d -- right");                                             // right option
-                System.out.println("A/a -- left");                                              // left option
-                System.out.println("W/w -- rotate");                                            // rotate option
-                System.out.println("S/s -- down");                                              // down option
-                System.out.println("G/g -- save");                                              // save option
-                System.out.println("Q/q -- quit");                                              // quit game option
-
-                char ans = in.next().charAt(0);                                                 // filter single char from the string
+                System.out.println("ENTER THE OPTION");                                                 // displaying the options
+                System.out.println("D/d -- right");                                                     // right option
+                System.out.println("A/a -- left");                                                      // left option
+                System.out.println("W/w -- rotate");                                                    // rotate option
+                System.out.println("S/s -- down");                                                      // down option
+                System.out.println("G/g -- save");                                                      // save option
+                System.out.println("Q/q -- quit");                                                      // quit game option
+                
+                char ans = in.next().charAt(0);                                                         // filter single char from the string
 
                 switch(ans)
                 {
                     case 'D':
                     case 'd':
-                        board.moveright(LINE);
+                        board.moveright(LINE);                                                          // this function will move the shape to right
                         break;
                     case 'A':
                     case 'a':
-                        board.moveleft(LINE);
+                        board.moveleft(LINE);                                                           // this function will move the shape to left
                         break;
                     case 'W':
                     case 'w':
                         {
                             //rotation of shape
-                            int currentstate = LINE.getcurrentstate();
+                            int currentstate = LINE.getcurrentstate();                                  // get current state of the shape
                             if(currentstate >= 3)
                             {
                                 currentstate=0;
@@ -368,8 +366,9 @@ public class Tetris
                                 currentstate++;
                             }
                             // System.out.println(LINE);
-                            System.out.println("CURRENTSTATE: " +currentstate);
+                            // System.out.println("CURRENTSTATE: " +currentstate);
 
+                            // MAKE NEW COORDS FOR THE SHAPE FROM ROTATION ARRAY
                             int ex = LINE.getarrofblock()[0].getX() + rotation[shape_counter][currentstate].getarrofblock()[0].getX();
                             int ey = LINE.getarrofblock()[0].getY() + rotation[shape_counter][currentstate].getarrofblock()[0].getY();
                             int fx = LINE.getarrofblock()[1].getX() + rotation[shape_counter][currentstate].getarrofblock()[1].getX();
@@ -383,14 +382,15 @@ public class Tetris
                             Block g = null;
                             Block h = null;
                             
-                            if( board.checkValidCoords(ex, ey) && board.checkValidCoords(fx, fy) && board.checkValidCoords(gx, gy) && board.checkValidCoords(hx, hy))
+                            if( board.checkValidCoords(ex, ey) && board.checkValidCoords(fx, fy) && board.checkValidCoords(gx, gy) 
+                            && board.checkValidCoords(hx, hy))                                          // check for all valid coords
                             {
                                 e = new Block(ex,ey);
                                 f = new Block(fx,fy);
                                 g = new Block(gx,gy);
                                 h = new Block(hx,hy);
                             }
-                            else
+                            else                                                                        // else set old coords
                             {
                                 ex = LINE.getarrofblock()[0].getX();
                                 ey = LINE.getarrofblock()[0].getY();
@@ -406,46 +406,44 @@ public class Tetris
                                 h = new Block(hx,hy);
                                 System.out.println("SORRY INVALID ROTATION !!!");
                             }
-                            LINE = new Shape(e,f,g,h,currentstate);
+                            LINE = new Shape(e,f,g,h,currentstate);                                     // update the rotated shape
                         }
                         break;
                     case 'g':
                     case 'G':
-                        //set the score scored from board to user
-                        int score = board.getPoints();
-                        user.setUserScore(score);
+                        int score = board.getPoints();                                                  // get the socre from the board
+                        user.setUserScore(score);                                                       // set the score from board to user
 
-                        saveGame(user,board,LINE,shape_counter);
+                        saveGame(user,board,LINE,shape_counter);                                        // save the game
 
-                        scorelist.addHighScore(user.getName(),user.getUserId(),user.getUserScore());
+                        scorelist.addHighScore(user.getName(),user.getUserId(),user.getUserScore());    // add highscore to the highscore list
                         
-                        scorelist.saveHighScore();
+                        scorelist.saveHighScore();                                                      // save the highscore
                         
-                        saveTetris(board.getGameSavedColor());
-                        System.exit(0);
+                        saveTetris(board.getGameSavedColor());                                          // display the SAVED TETRIS on screen
+                        System.exit(0);                                                                 // exit the game
                         break;
                     case 'q':
                     case 'Q':
-                        exitTetris(board.getGameExitedColor());
+                        exitTetris(board.getGameExitedColor());                                         // display exit tetris on game
                         System.exit(0);
                         break;
                     default:
                         break;
                 }
 
-                if(!board.insertShape(LINE))                            // insert initial shape on board if it is possible means game finished
+                if(!board.insertShape(LINE))                                                            // insert initial shape on board if it is possible means game finished
                 {
-                    // System.out.println(color.BRED + "MAIN GAME OVER !!!" + color.RESET);
-                    endTetris(board.getGameOverColor());
+                    endTetris(board.getGameOverColor());                                                // display END TETRIS on screen
 
                     //set the score scored from board to user
-                    int score = board.getPoints();
-                    user.setUserScore(score);
+                    int score = board.getPoints();                                                      // get the current score from the baord
+                    user.setUserScore(score);                                                           // set the user score
                     
-                    scorelist.addHighScore(user.getName(),user.getUserId(),user.getUserScore());
+                    scorelist.addHighScore(user.getName(),user.getUserId(),user.getUserScore());        // add the highscore to the highscore list
                     System.exit(0);
-                }                                                       // insert shape on board
-                board.printBoard();                                     // print board
+                }
+                board.printBoard();                                                                     // print board
                 System.out.println();
             }
         }
@@ -468,6 +466,8 @@ public class Tetris
     private void saveGame(User U,Board B,Shape LINE,int shape_counter)
     {
         /**
+         * FILE SAVING FORMAT
+         * 
          * walia gaurav|Wed Apr 17 21:00:07 IST 2019|1|44104fcaef8476724152090d6d7bd9afa8ca5b385f6a99d3c6cf36b943b9872d|0|
          * 6|9|7|9|8|9|8|8|
          * 0|3|
@@ -477,62 +477,53 @@ public class Tetris
          *  | | | | | | | | | | | |@| |@|@| | | | |
          *  | | | | | | | | | | | |@| | | | | | | |
          **/
-        // System.out.println("SAVED:"+LINE.getcurrentstate());
         try
         {   
-            String filename = "db/"+U.getUserId()+".txt";                                   // create new filename
+            String filename = "db/"+U.getUserId()+".txt";                                               // create new filename
             
             File file = new File(filename);
             file.getParentFile().mkdirs();
-            file.createNewFile();                                                           // create new file if not present
+            file.createNewFile();                                                                       // create new file if not present
 
-            BufferedWriter geeks_out1 = new BufferedWriter(new FileWriter(file));           // open the file for output
+            BufferedWriter geeks_out1 = new BufferedWriter(new FileWriter(file));                       // open the file for output
             
             /**
              * saving user info
              **/
             geeks_out1.write(U.getName()+"|"+U.getDate()+"|"+U.getUserId()+"|"+U.getPassHash()+"|"+U.getUserScore()+"|\n");
 
-            for(int i=0;i<4;i++)                                                            // saving line coords
+            for(int i=0;i<4;i++)                                                                        // saving line coords
             {
                 int x = LINE.getarrofblock()[i].getX();
                 int y = LINE.getarrofblock()[i].getY();
                 geeks_out1.write(x +"|"+y+"|");
             }
             geeks_out1.write("\n");                                                         
-            geeks_out1.write(LINE.getcurrentstate()+"|"+shape_counter+"|\n");               // saving current state and shape counter
+            geeks_out1.write(LINE.getcurrentstate()+"|"+shape_counter+"|\n");                           // saving current state and shape counter
 
             //check for limit
-            int limit = B.getUpperLimit();                                                  // get upperlimit
-            int R = B.getRows();                                                            // get board rows
-            int C = B.getCols();                                                            // get board cols
+            int limit = B.getUpperLimit();                                                              // get upperlimit
+            int R = B.getRows();                                                                        // get board rows
+            int C = B.getCols();                                                                        // get board cols
             
-            geeks_out1.write(R +"|"+ C +"|\n");                                             // saving rows and cols of current board
+            geeks_out1.write(R +"|"+ C +"|\n");                                                         // saving rows and cols of current board
             
             //saving env variables
-            String[] envcolors = B.getENV();
+            String[] envcolors = B.getENV();                                                            // getting board env color array
 
-            for(int i=0;i<envcolors.length;i++)
+            for(int i=0;i<envcolors.length;i++)                                                         // write the board env variables in file
             {
                 geeks_out1.write(envcolors[i]+"|");
             }
             geeks_out1.write("\n");
 
-            if(limit!=-1)                                                                   // if fixed blocks exists only save then
+            if(limit!=-1)                                                                               // if fixed blocks exists only save then
             {
-                for(int i=R-1;i>=limit;i--)                                                 // storing the array
+                for(int i=R-1;i>=limit;i--)                                                             // storing the board array
                 {
                     for(int j=0;j<C;j++)
                     {
-                        // if(B.getARR()[i][j]!=' ')
-                        // {
-                        //     geeks_out1.write(B.getARR()[i][j]+"|");
-                        // }
-                        // else
-                        // {
-                        //     geeks_out1.write("|");
-                        // }
-                        geeks_out1.write(B.getARR()[i][j]+"|");
+                        geeks_out1.write(B.getARR()[i][j]+"|");                                         // store the array one by one
                         if(j==C-1)
                         {
                             geeks_out1.write("\n");
@@ -541,14 +532,14 @@ public class Tetris
                 }
             }
             
-            geeks_out1.flush();                                                             // flush  the stream
-            geeks_out1.close();
+            geeks_out1.flush();                                                                         // flush  the stream
+            geeks_out1.close();                                                                         // close the file stream
 
-            //save id of the user in tetris.java
-            File savefile = new File("tetris.txt");
+            //SAVE ID OF THE USER IN tetris.txt
+            File savefile = new File("tetris.txt");                                                     // open the tetris.txt file
             BufferedWriter out = new BufferedWriter(new FileWriter(savefile));
-            out.write(U.getUserId()+"");                                                    // store user id to tetris.txt in string format
-            out.close();
+            out.write(U.getUserId()+"");                                                                // store user id to tetris.txt in string format
+            out.close();                                                                                // close the tetris.txt file
         }
         catch(Exception e)
         {
@@ -690,6 +681,7 @@ public class Tetris
 
     /**
      * This function will make the rotation array
+     * @implSpec WARNING DON'T CHANGE THIS FUNCTION AS ROTATION OF SHAPE WILL NOT OCCUR IF U CHANGE IT
      * 
      * @param rotation array for rotating the shapes
      * @return shapes array
@@ -702,7 +694,7 @@ public class Tetris
         Block g = new Block(0,0);
         Block h = new Block(0,0);
 
-        //LINE SHAPE 0      --
+        //LINE SHAPE 0
         e = new Block(-2,-1);
         f = new Block(-1,0);
         g = new Block(0,1);
@@ -724,7 +716,7 @@ public class Tetris
         h = new Block(-1,1);
         rotation[0][3] = new Shape(e,f,g,h,3);
         
-        //SQUARE SHAPE 1    --
+        //SQUARE SHAPE 1
         e = new Block(0,0);
         f = new Block(0,0);
         g = new Block(0,0);
@@ -734,7 +726,7 @@ public class Tetris
         rotation[1][2] = new Shape(e,f,g,h,2);
         rotation[1][3] = new Shape(e,f,g,h,3);
 
-        //LR SHAPE 2    --
+        //LR SHAPE 2
         e = new Block(-2,0);
         f = new Block(-1,-1);
         g = new Block(0,-2);
@@ -759,7 +751,7 @@ public class Tetris
         h = new Block(1,1);
         rotation[2][3] = new Shape(e,f,g,h,3);
 
-        // LL SHAPE 3   --
+        // LL SHAPE 3
         e = new Block(0,2);
         f = new Block(1,1);
         g = new Block(2,0);
@@ -784,7 +776,7 @@ public class Tetris
         h = new Block(1,1);
         rotation[3][3] = new Shape(e,f,g,h,3);
 
-        // T SHAPE 4    --
+        // T SHAPE 4
         e = new Block(-2, 0);
         f = new Block(-1, 1);
         g = new Block(0, 2);
@@ -863,7 +855,7 @@ public class Tetris
     }
 
     /**
-     * This function will return the sha 25 6 of a string
+     * This function will return the sha 256 of a string
      * 
      * @param password for input pasword in char array
      * 
@@ -875,10 +867,10 @@ public class Tetris
         try
         {
             String str = String.valueOf(password);
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");                        // create sha 256 hash algo instance
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");                                // create sha 256 hash algo instance
             byte[] bytearr = digest.digest(str.getBytes(StandardCharsets.UTF_8));
             BigInteger hashno = new BigInteger(1,bytearr);
-            passhash = hashno.toString(16);                                              // make sha 256 password string
+            passhash = hashno.toString(16);                                                             // make sha 256 password string
             while (passhash.length() < 32) { 
                 passhash = "0" + passhash; 
             }
@@ -898,60 +890,58 @@ public class Tetris
      **/
     private void playExistingGame()
     {
-        Scanner in = new Scanner(System.in);                                                // scanner for user inputs
-        System.out.println("Enter the old username:");
-        String name = in.nextLine();                                                        // user name for verification
-        
-        int userid = scorelist.findIndexOfUser(name);                                       // collect id from the highscores
-        
-        if(userid == -1)                                                                    // if user is not present in highscores
-        {
-            System.out.println("Sorry you haven't saved a game with this username yet...");
-            in.close();
-            return;   
-        }
+        Scanner in = new Scanner(System.in);                                                            // scanner for user inputs
+        Rain color = new Rain();
 
-        String filename = "db/" + userid +".txt";                                                   // create new file name
-        File file = new File(filename);                                                             // create new file structure
-        
-        if(!file.exists())                                                                          // check if userid file is present or not
-        {
-            System.out.println("Sorry your application is broken please reset the game");
-            in.close();
-            return;
-        }
-
-        User oldUser = null;                                                                        // user for starting existing game
-        Board board = null;                                                                         // board created for existing game
-        Block a=null;
-        Block b=null;
-        Block c=null;
-        Block d=null;
-        Shape LINE = null;                                                                          // LINE for initial shape position
-        int R=-1;                                                                                   // rows of the board
-        int C=-1;                                                                                   // cols of the board
-        int shape_counter=-1;                                                                       // shape counter
-
-        BufferedReader br=null;
         try
         {
+            System.out.println("Enter the old username:");
+            String name = in.nextLine();                                                                // user name for verification
+            
+            int userid = scorelist.findIndexOfUser(name);                                               // collect id from the highscores
+            
+            if(userid == -1)                                                                            // if user is not present in highscores
+            {
+                throw new InvalidOptionException("Sorry you haven't saved a game with this username yet...");
+            }
+
+            String filename = "db/" + userid +".txt";                                                   // create new file name
+            File file = new File(filename);                                                             // create new file structure
+        
+            if(!file.exists())                                                                          // check if userid file is present or not
+            {
+                throw new InvalidOptionException("Sorry your application is broken please reset the game");
+            }
+
+            //DECLARE VARIABLES FOR THE GAME PLAY
+            User oldUser = null;                                                                        // user for starting existing game
+            Board board = null;                                                                         // board created for existing game
+            Block a=null;                                                                               // block created for making a shape
+            Block b=null;                                                                               // block created for making a shape
+            Block c=null;                                                                               // block created for making a shape
+            Block d=null;                                                                               // block created for making a shape
+            Shape LINE = null;                                                                          // LINE for initial shape position
+            int R=-1;                                                                                   // rows of the board
+            int C=-1;                                                                                   // cols of the board
+            int shape_counter=-1;                                                                       // shape counter
+
             //PASSWORD CHECKING
             Console input = System.console();
             if(input==null)
             {
-                System.out.println("no console available");
+                throw new IllegalStateException("no console available");
             }
             System.out.println("Enter your password");
-            char[] consolepassword = input.readPassword();
-            String passhash = getSHA256(consolepassword);
+            char[] consolepassword = input.readPassword();                                              // read the password from the console
+            String passhash = getSHA256(consolepassword);                                               // encrypt the password
             
             // READING THE USER PASSHASH
             BufferedReader read = new BufferedReader(new FileReader(file));
-            String string=read.readLine();                                                          // reading the first user line for getting password hash
+            String string=read.readLine();                                                              // reading the first user line for getting password hash
             String[] arr = string.split("[|]");
             read.close();
             
-            if(!passhash.equals(arr[3]))                                                            // compare arr[3]/hash in file and passhash entered by the user
+            if(!passhash.equals(arr[3]))                                                                // compare arr[3]/hash in file and passhash entered by the user
             {
                 throw new WrongPasswordException("Entered wrong password, recover it in settings");
             }
@@ -959,14 +949,14 @@ public class Tetris
             System.out.println("GOOD TO GO");
             
             //PARSING USER ID FILE
-            int linecounter=1;                                                                      // variable for line counting while parsing
-            br = new BufferedReader(new FileReader(file));
+            int linecounter=1;                                                                          // variable for line counting while parsing
+            BufferedReader br = new BufferedReader(new FileReader(file));
             int rowCount=0;
             while((string=br.readLine())!=null)
             {
-                switch(linecounter)                                                                 // taking switch for parsing lines
+                switch(linecounter)                                                                     // taking switch for parsing lines
                 {
-                    case 1:                                                                         // LINE 1: parse user information
+                    case 1:                                                                             // LINE 1: parse user information
                         {
                             String[] parsed = string.split("[|]");                                  
                             /**
@@ -981,10 +971,10 @@ public class Tetris
                             DateFormat df = new SimpleDateFormat("E MMM dd HH:mm:ss yyyy");
                             Date dat = df.parse(strdate);
                             
-                            oldUser = new User(parsed[0],String.valueOf(consolepassword),dat,parsed[3],Integer.parseInt(parsed[4]));
+                            oldUser = new User(parsed[0],String.valueOf(consolepassword),dat,Integer.parseInt(parsed[2]),parsed[3],Integer.parseInt(parsed[4]));
                         }
                         break;
-                    case 2:                                                                         // LINE 2: parse block's current location
+                    case 2:                                                                             // LINE 2: parse block's current location
                         {
                             String[] parsed = string.split("[|]");
                             /**
@@ -1000,232 +990,233 @@ public class Tetris
                             d = new Block(Integer.parseInt(parsed[6]), Integer.parseInt(parsed[7]));
                         }
                         break;
-                    case 3:                                                                         // LINE3: parse for current position of shape
+                    case 3:                                                                             // LINE3: parse for current position of shape
                         {
                             String[] parsed = string.split("[|]");
                             /**
                              * parsed[0]    ->  currentstate
                              * parsed[1]    ->  shapecounter
                              **/
-                            LINE = new Shape(a, b, c, d, Integer.parseInt(parsed[0]));              // created line shape intially with 0
-                            shape_counter = Integer.parseInt(parsed[1]);                            // set current shape counter for game
+                            LINE = new Shape(a, b, c, d, Integer.parseInt(parsed[0]));                  // created line shape intially with 0
+                            shape_counter = Integer.parseInt(parsed[1]);                                // set current shape counter for game
                         }
                         break;
-                    case 4:                                                                         // LINE 4: storing board size
+                    case 4:                                                                             // LINE 4: storing board size
                         {
                             String[] parsed = string.split("[|]");
-                            R = Integer.parseInt(parsed[0]);                                        // setting rows of the board
-                            C = Integer.parseInt(parsed[1]);                                        // setting cols of the board
-                            board = new Board(R,C);                                                 // create a new board
+                            R = Integer.parseInt(parsed[0]);                                            // setting rows of the board
+                            C = Integer.parseInt(parsed[1]);                                            // setting cols of the board
+                            board = new Board(R,C);                                                     // create a new board
                             rowCount = R-1;
                         }
                         break;
-                    case 5:                                                                         // LINE 5: storing env variables
+                    case 5:                                                                             // LINE 5: storing env variables
                         {
                             String[] parsed = string.split("[|]");
-                            board.setENV(parsed.clone());                                           // set environment variables of the user
+                            board.setENV(parsed.clone());                                               // set environment variables of the user
                         }
                         break;
-                    default:                                                                        // LINE >= 6 storing the board
+                    default:                                                                            // LINE >= 6 storing the board
                         if(linecounter >=6)
                         {
                             String[] parsed = string.split("[|]");
                             for(int i=0;i<C;i++)
                             {
-                                board.getARR()[rowCount][i] = parsed[i].charAt(0);
+                                board.getARR()[rowCount][i] = parsed[i].charAt(0);                      // insert data of baord from file
                             }
                             rowCount--;
-                        }    
+                        }
+                        board.countFixedLines();                                                        // count fixed blocks in all lines 
                     break;
                 }
                 linecounter++;
             }
             br.close();
+        
+            //START THE MAIN GAME
+            boolean flag_shape_fixed = false;                                                           // initial shape is now fixed
+
+            displayControls(board.getControlsColor());                                                  // displays the controls of the game
+
+            /**
+             * MAKING 2D ARRAY FOR ROTATION
+             * storing the rotation of different shapes
+             *      0   1   2   3
+             * 0 |  
+             * 1 |
+             * 2 |
+             * 3 |
+             * 4 |
+             * 5 |
+             * 6 |
+             **/
+            Shape[][] rotation = new Shape[7][4];                                                       // array maintained for rotations of the shape
+            rotation = makeRotationArray(rotation);                                                     // making initial array for rotation
+
+            int pivot = (C/2) - 1;                                                                      // value for setting initial position of the shape
+            // building the line blocks
+            // Block a = new Block(0, pivot);
+            // Block b = new Block(0, pivot+1);
+            // Block c = new Block(0, pivot+2);
+            // Block d = new Block(0, pivot+3);
+            // Shape LINE = new Shape(a, b, c, d, 0);                                                   // created line shape intially with 0
+
+            if(!board.insertShape(LINE))                                                                // insert initial shape on board if it is possible
+            {
+                System.out.println(color.BRED + "ERROR WHILE INSERTING THE SHAPE" + color.RESET);
+                System.exit(0);
+            }                                  
+            board.printBoard();                                                                         // print the initial board
+            System.out.println();
+            
+            flag_shape_fixed = false;                                                                   // shape is fixed or not
+            
+            // GAME LOOPING
+            while (true) 
+            {
+                board.clearboard();                                                                     // clear board for above
+                flag_shape_fixed = board.movedown(LINE);                                                // default move down
+
+                if(flag_shape_fixed)                                                                    // if flag shape cannot move down so making it fixed when it reach boundary
+                {
+                    board.insertFixedShape(LINE);                                                       // insert the fixed shape on board
+                    board.printBoard();                                                                 // print the board
+                    
+                    if(shape_counter==6)                                                                // set shape counter to 0 when it becomes 6
+                    {
+                        shape_counter=0;
+                    }
+                    else
+                    {
+                        shape_counter++;
+                    }
+                    LINE = create_shape(LINE, shape_counter,pivot);                                     // creating new shape for second move with current state 0
+
+                    flag_shape_fixed=false;                                                             // set shape fixed to false for next shape
+                }
+
+                System.out.println("ENTER THE OPTION");                                                 // displaying the options
+                System.out.println("D/d -- right");                                                     // right option
+                System.out.println("A/a -- left");                                                      // left option
+                System.out.println("W/w -- rotate");                                                    // rotate option
+                System.out.println("S/s -- down");                                                      // down option
+                System.out.println("G/g -- save");                                                      // save option
+                System.out.println("Q/q -- quit");                                                      // quit game option
+
+                char ans = in.next().charAt(0);                                                         // filter single char from the string
+
+                switch(ans)
+                {
+                    case 'D':
+                    case 'd':
+                        board.moveright(LINE);
+                        break;
+                    case 'A':
+                    case 'a':
+                        board.moveleft(LINE);
+                        break;
+                    case 'W':
+                    case 'w':
+                        {
+                            //rotation of shape
+                            int currentstate = LINE.getcurrentstate();                                  // get and update current state of the block
+                            if(currentstate >= 3)
+                            {
+                                currentstate=0;
+                            }
+                            else
+                            {
+                                currentstate++;
+                            }
+
+                            int ex = LINE.getarrofblock()[0].getX() + rotation[shape_counter][currentstate].getarrofblock()[0].getX();
+                            int ey = LINE.getarrofblock()[0].getY() + rotation[shape_counter][currentstate].getarrofblock()[0].getY();
+                            int fx = LINE.getarrofblock()[1].getX() + rotation[shape_counter][currentstate].getarrofblock()[1].getX();
+                            int fy = LINE.getarrofblock()[1].getY() + rotation[shape_counter][currentstate].getarrofblock()[1].getY();
+                            int gx = LINE.getarrofblock()[2].getX() + rotation[shape_counter][currentstate].getarrofblock()[2].getX();
+                            int gy = LINE.getarrofblock()[2].getY() + rotation[shape_counter][currentstate].getarrofblock()[2].getY();
+                            int hx = LINE.getarrofblock()[3].getX() + rotation[shape_counter][currentstate].getarrofblock()[3].getX();
+                            int hy = LINE.getarrofblock()[3].getY() + rotation[shape_counter][currentstate].getarrofblock()[3].getY();
+                            Block e = null;
+                            Block f = null;
+                            Block g = null;
+                            Block h = null;
+                            
+                            if( board.checkValidCoords(ex, ey) && board.checkValidCoords(fx, fy) && board.checkValidCoords(gx, gy) && board.checkValidCoords(hx, hy))
+                            {
+                                e = new Block(ex,ey);
+                                f = new Block(fx,fy);
+                                g = new Block(gx,gy);
+                                h = new Block(hx,hy);
+                            }
+                            else
+                            {
+                                ex = LINE.getarrofblock()[0].getX();
+                                ey = LINE.getarrofblock()[0].getY();
+                                fx = LINE.getarrofblock()[1].getX();
+                                fy = LINE.getarrofblock()[1].getY();
+                                gx = LINE.getarrofblock()[2].getX();
+                                gy = LINE.getarrofblock()[2].getY();
+                                hx = LINE.getarrofblock()[3].getX();
+                                hy = LINE.getarrofblock()[3].getY();
+                                e = new Block(ex,ey);
+                                f = new Block(fx,fy);
+                                g = new Block(gx,gy);
+                                h = new Block(hx,hy);
+                                System.out.println("SORRY INVALID ROTATION !!!");
+                            }
+                            LINE = new Shape(e,f,g,h,currentstate);                                                 // create new rotated shape
+                        }
+                        break;
+                    case 'g':
+                    case 'G':
+                        // set the score scored from board to user
+                        int score = board.getPoints() + oldUser.getUserScore();                                     // get user old score and update it
+                        oldUser.setUserScore(score);                                                                // set new highscore to the user
+
+                        saveGame(oldUser,board,LINE,shape_counter);
+
+                        scorelist.removeHighScore(oldUser.getName(),oldUser.getUserId(),oldUser.getUserScore());    // remove old highscore of the user from the highscore list
+                        scorelist.addHighScore(oldUser.getName(),oldUser.getUserId(),oldUser.getUserScore());       // add new highscore of the user to the list
+                        
+                        scorelist.saveHighScore();                                                                  // save the user highscore to the userfile
+                        
+                        saveTetris(board.getGameSavedColor());                                                      // display GAME SAVED on board
+                        System.exit(0);
+                        break;
+                    case 'q':
+                    case 'Q':
+                        exitTetris(board.getGameExitedColor());
+                        System.exit(0);
+                        break;
+                    default:
+                        break;
+                }
+
+                if(!board.insertShape(LINE))                                                                        // insert initial shape on board if it is possible means game finished
+                {
+                    endTetris(board.getGameOverColor());
+
+                    //set the score scored from board to user
+                    int score = board.getPoints() + oldUser.getUserScore();                                         // get user old score and update it
+                    oldUser.setUserScore(score);
+                    
+                    scorelist.removeHighScore(oldUser.getName(),oldUser.getUserId(),oldUser.getUserScore());        // remove old highscore of the user from the highscore list
+                    scorelist.addHighScore(oldUser.getName(),oldUser.getUserId(),oldUser.getUserScore());
+                    System.exit(0);
+                }                                                                                                   // insert shape on board
+                board.printBoard();                                                                                 // print board
+                System.out.println();
+            }   
         }
         catch(Exception e)
         {
-            System.out.println(e);
+            System.out.println(color.BRED + e + color.RESET);
         }
-        
-        //the main game
-        // Board board = new Board(R, C);                                                      // initialize the board size
-        boolean flag_shape_fixed = false;                                                   // initial shape is now fixed
-        // int shape_counter = 0;                                                              // for counting and changing different shapes
-
-        displayControls(board.getControlsColor());                                          // displays the controls of the game
-
-        /**
-         * MAKING 2D ARRAY FOR ROTATION
-         * storing the rotation of different shapes
-         *      0   1   2   3
-         * 0 |  
-         * 1 |
-         * 2 |
-         * 3 |
-         * 4 |
-         * 5 |
-         * 6 |
-         **/
-        Shape[][] rotation = new Shape[7][4];                                               // array maintained for rotations of the shape
-        rotation = makeRotationArray(rotation);                                             // making initial array for rotation
-
-        int pivot = (C/2) - 1;                                                              // value for setting initial position of the shape
-        // building the line blocks
-        // Block a = new Block(0, pivot);
-        // Block b = new Block(0, pivot+1);
-        // Block c = new Block(0, pivot+2);
-        // Block d = new Block(0, pivot+3);
-        // Shape LINE = new Shape(a, b, c, d, 0);                                              // created line shape intially with 0
-
-        if(!board.insertShape(LINE))                                                        // insert initial shape on board if it is possible
+        finally
         {
-            Rain color = new Rain();
-            System.out.println(color.BRED + "ERROR WHILE INSERTING THE SHAPE" + color.RESET);
-            System.exit(0);
-        }                                  
-        board.printBoard();                                                                 // print the initial board
-        System.out.println();
-        
-        flag_shape_fixed = false;                                                           // shape is fixed or not
-        
-        // GAME LOOPING
-        while (true) 
-        {
-            board.clearboard();                                                             // clear board for above
-            flag_shape_fixed = board.movedown(LINE);                                        // default move down
-
-            if(flag_shape_fixed)                                                            // if flag shape cannot move down so making it fixed when it reach boundary
-            {
-                board.insertFixedShape(LINE);                                               // insert the fixed shape on board
-                board.printBoard();                                                         // print the board
-                
-                if(shape_counter==6)                                                        // set shape counter to 0 when it becomes 6
-                {
-                    shape_counter=0;
-                }
-                else
-                {
-                    shape_counter++;
-                }
-                LINE = create_shape(LINE, shape_counter,pivot);                             // creating new shape for second move with current state 0
-
-                flag_shape_fixed=false;                                                     // set shape fixed to false for next shape
-            }
-
-            System.out.println("ENTER THE OPTION");                                         // displaying the options
-            System.out.println("D/d -- right");                                             // right option
-            System.out.println("A/a -- left");                                              // left option
-            System.out.println("W/w -- rotate");                                            // rotate option
-            System.out.println("S/s -- down");                                              // down option
-            System.out.println("G/g -- save");                                              // save option
-            System.out.println("Q/q -- quit");                                              // quit game option
-
-            char ans = in.next().charAt(0);                                                 // filter single char from the string
-
-            switch(ans)
-            {
-                case 'D':
-                case 'd':
-                    board.moveright(LINE);
-                    break;
-                case 'A':
-                case 'a':
-                    board.moveleft(LINE);
-                    break;
-                case 'W':
-                case 'w':
-                    {
-                        //rotation of shape
-                        int currentstate = LINE.getcurrentstate();
-                        if(currentstate >= 3)
-                        {
-                            currentstate=0;
-                        }
-                        else
-                        {
-                            currentstate++;
-                        }
-                        // System.out.println(LINE);
-                        System.out.println("CURRENTSTATE: " +currentstate);
-
-                        int ex = LINE.getarrofblock()[0].getX() + rotation[shape_counter][currentstate].getarrofblock()[0].getX();
-                        int ey = LINE.getarrofblock()[0].getY() + rotation[shape_counter][currentstate].getarrofblock()[0].getY();
-                        int fx = LINE.getarrofblock()[1].getX() + rotation[shape_counter][currentstate].getarrofblock()[1].getX();
-                        int fy = LINE.getarrofblock()[1].getY() + rotation[shape_counter][currentstate].getarrofblock()[1].getY();
-                        int gx = LINE.getarrofblock()[2].getX() + rotation[shape_counter][currentstate].getarrofblock()[2].getX();
-                        int gy = LINE.getarrofblock()[2].getY() + rotation[shape_counter][currentstate].getarrofblock()[2].getY();
-                        int hx = LINE.getarrofblock()[3].getX() + rotation[shape_counter][currentstate].getarrofblock()[3].getX();
-                        int hy = LINE.getarrofblock()[3].getY() + rotation[shape_counter][currentstate].getarrofblock()[3].getY();
-                        Block e = null;
-                        Block f = null;
-                        Block g = null;
-                        Block h = null;
-                        
-                        if( board.checkValidCoords(ex, ey) && board.checkValidCoords(fx, fy) && board.checkValidCoords(gx, gy) && board.checkValidCoords(hx, hy))
-                        {
-                            e = new Block(ex,ey);
-                            f = new Block(fx,fy);
-                            g = new Block(gx,gy);
-                            h = new Block(hx,hy);
-                        }
-                        else
-                        {
-                            ex = LINE.getarrofblock()[0].getX();
-                            ey = LINE.getarrofblock()[0].getY();
-                            fx = LINE.getarrofblock()[1].getX();
-                            fy = LINE.getarrofblock()[1].getY();
-                            gx = LINE.getarrofblock()[2].getX();
-                            gy = LINE.getarrofblock()[2].getY();
-                            hx = LINE.getarrofblock()[3].getX();
-                            hy = LINE.getarrofblock()[3].getY();
-                            e = new Block(ex,ey);
-                            f = new Block(fx,fy);
-                            g = new Block(gx,gy);
-                            h = new Block(hx,hy);
-                            System.out.println("SORRY INVALID ROTATION !!!");
-                        }
-                        LINE = new Shape(e,f,g,h,currentstate);
-                    }
-                    break;
-                case 'g':
-                case 'G':
-                    //set the score scored from board to user
-                    // int score = board.getPoints();
-                    // user.setUserScore(score);    
-
-                    // saveGame(user,board,LINE,shape_counter);
-
-                    // scorelist.addHighScore(user.getName(),user.getUserId(),user.getUserScore());
-                    
-                    // scorelist.saveHighScore();
-                    
-                    // saveTetris(board.getGameSavedColor());
-                    // System.exit(0);
-                    break;
-                case 'q':
-                case 'Q':
-                    exitTetris(board.getGameExitedColor());
-                    System.exit(0);
-                    break;
-                default:
-                    break;
-            }
-
-            if(!board.insertShape(LINE))                            // insert initial shape on board if it is possible means game finished
-            {
-                // System.out.println(color.BRED + "MAIN GAME OVER !!!" + color.RESET);
-                endTetris(board.getGameOverColor());
-
-                //set the score scored from board to user
-                // int score = board.getPoints();
-                // user.setUserScore(score);
-                
-                // scorelist.addHighScore(user.getName(),user.getUserId(),user.getUserScore());
-                System.exit(0);
-            }                                                       // insert shape on board
-            board.printBoard();                                     // print board
-            System.out.println();
-        }   
+            in.close();
+        }
     }
 
     /**

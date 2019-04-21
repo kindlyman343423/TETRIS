@@ -122,6 +122,21 @@ public class Highscore
         }
     }
 
+    public void removeHighScore(String username,int userid,int score)
+    {
+        int index=-1;
+        for(int i=0;i<list.size();i++)
+        {
+            if(list.get(i).getHighScoreUserName().equals(username) && list.get(i).getHighScoreUserId()==userid)
+            {
+                index = i;
+            }
+        }
+        if(index!=-1)
+        {
+            list.remove(index);
+        }
+    }
     /**
      * This function will display the highscore board
      * 

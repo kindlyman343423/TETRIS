@@ -13,7 +13,27 @@ public class User
     private int score;              // score made by the user
 
     /**
-     * This constructor will create the new user
+     * This constructor will create the old user
+     * 
+     * @param name for username
+     * @param password for user password
+     * @param entryDate for setting that old date
+     * @param userid for userid
+     * @param passhash for passowrd in shs256 hash
+     * @param score for user score
+     **/
+    public User(String name,String password,Date entryDate,int userid,String passhash,int score)
+    {
+        this.name = name;
+        this.entryDate = entryDate;
+        this.userId = userid;
+        this.password = password;
+        this.passhash = passhash;
+        this.score = score;
+    }
+
+    /**
+     * This constructor will create the new user and take new id from tetris.txt file
      * 
      * @param String name of the user
      * @param String password of the user
