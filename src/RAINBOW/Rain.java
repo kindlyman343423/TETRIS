@@ -47,6 +47,8 @@ public class Rain
     public final String IBLUE = "\u001B[3;34m";		//ITALIC BLUE
     public final String UBLUE = "\u001B[4;34m"; 	//UNDERLINE BLUE
     public final String BMAGENTA = "\u001B[1;35m";  //BOLD MAGENTA
+    public final String IMAGENTA = "\u001B[3;35m";  //ITALIC MAGENTA
+    public final String UMAGENTA = "\u001B[4;35m";  //UNDERLINE MAGENTA
     public final String BCYAN = "\u001B[1;36m";		//BOLD CYAN
     public final String ICYAN = "\u001B[3;36m"; 	//ITALIC CYAN
     public final String UCYAN = "\u001B[4;36m"; 	//UNDERLINE CYAN
