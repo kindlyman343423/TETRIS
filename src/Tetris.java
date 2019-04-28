@@ -1230,14 +1230,9 @@ public class Tetris
         System.out.println("---------------------------------------------");
         System.out.println("Enter one option:");
         System.out.println("0. Exit");
-        System.out.println("1. Change Default Environment Variables");
-        System.out.println("2. Change User's Environment Variables");
-        System.out.println("3. Collect Information of the user");
-        System.out.println("4. Compare two users");
-        System.out.println("5. Delete the old user");
-        System.out.println("6. Reset the Tetris Game");
-        System.out.println("7. Delete all History");
-        System.out.println("8. Reset user password");
+        System.out.println("1. Game Settings");
+        System.out.println("2. User Settings");
+
         System.out.println(color.RESET);
         Scanner in = new Scanner(System.in);
         try
@@ -1246,34 +1241,14 @@ public class Tetris
             switch(option)
             {
                 case 0:                                                 // exit the game
-                    exitTetris(color.LGREEN);                             // display GAME EXITED logo
+                    exitTetris(color.LGREEN);                           // display GAME EXITED logo
                     System.exit(0);                                     // exit the game
                     break;
-                case 1:                                                 // change default environment variables
-                    changeDefaultEnVariables();
+                case 1:                                                 // display game setting options
+                    gameSettings();
                     break;
-                case 2:                                                 // change user environment variables 
-                    changeUserEnVariables();
-                    break;
-                case 3:                                                 // show user information
-                    break;
-                case 4:                                                 // compare two users
-                    compareTwoUsers();
-                    // System.out.println("COMPARING TWO USERS");
-                    // System.out.println("Enter the first username");
-                    // System.out.println("Enter the second username");
-                    break;
-                case 5:                                                 // delete the old user
-                    deleteOldUser();
-                    break;
-                case 6:                                                 // reset all the game
-                    resetAllGame();
-                    break;
-                case 7:                                                 // delete all history
-                    deleteHistory();
-                    break;
-                case 8:                                                 // reset user password
-                    resetUserPassword();
+                case 2:                                                 // display user setting options
+                    userSettings();
                     break;
                 default:
                     throw new InvalidOptionException("Invalid Settings Option entered by the user");
@@ -1294,7 +1269,60 @@ public class Tetris
     }
 
     /**
-     * This function will change the default environment variables of every game
+     * This function will show game settings and catching all options exceptions
+     **/
+    private void gameSettings()
+    {
+        Rain color = new Rain();
+        Scanner in = new Scanner(System.in);
+        System.out.println("GAME SETTINGS");
+        System.out.println("Select one option");
+        System.out.println("1. Change User Interface");
+        System.out.println("2. Reset the Default Environment Variables");
+        System.out.println("3. Show game history");
+        System.out.println("4. Delete all History");
+        System.out.println("5. Reset the Tetris Game");
+        try
+        {
+            int option = in.nextInt();
+            switch(option)
+            {
+                case 1:
+                    changeDefaultEnVariables();                         // change User Interface
+                    break;
+                case 2:                                                 // reset the default variables
+                    resetDefaultColors();
+                    break;    
+                case 3:                                                 // show user history
+                    showHistory();
+                    break;
+                case 4:                                                 // delete all history
+                    deleteHistory();
+                    break;
+                case 5:                                                 // reset all the game
+                    resetAllGame();
+                    break;
+                default:
+                    throw new InvalidOptionException("Invalid Game Settings option");
+            }
+        }
+        catch(InputMismatchException e)
+        {
+            System.out.println(color.BRED+e+"\nInvalid Game Settings option"+color.RESET);
+        }
+        catch(Exception e)
+        {
+            System.out.println(color.BRED+e+color.RESET);
+        }
+        finally
+        {
+            in.close();
+        }
+    }
+
+    /**
+     * This function will change the default environment variables of every new game. 
+     * It changes colors of shape, board and game logos.
      * 
      * @throws exception
      * @return void
@@ -1303,304 +1331,369 @@ public class Tetris
     {
         Rain colors = new Rain();
         Scanner in = new Scanner(System.in);
-        try
+        
+        //READ DEFAULT.TXT TO env
+        String[] env = new String[9];
+        int envcounter=0;
+        BufferedReader br = new BufferedReader(new FileReader("default.txt"));
+        String str="";
+        while((str = br.readLine())!=null)
         {
-            //READ DEFAULT.TXT TO env
-            String[] env = new String[9];
-            int envcounter=0;
-            BufferedReader br = new BufferedReader(new FileReader("default.txt"));
-            String str="";
-            while((str = br.readLine())!=null)
-            {
-                String[] arr = str.split("[,]");
-                env[envcounter++] = arr[0];
-            }
-            br.close();
+            String[] arr = str.split("[,]");
+            env[envcounter++] = arr[0];
+        }
+        br.close();
 
-            // ITERATE AND ASK USER FOR CHANGE
-            for(int i=0;i<env.length;i++)
+        // ITERATE AND ASK USER FOR CHANGE
+        for(int i=0;i<env.length;i++)
+        {
+            String result ="";
+            switch(i)
             {
-                String result ="";
-                switch(i)
-                {
-                    case 0:
-                        System.out.println("Do you want to change"+env[i]+ " default board color " + colors.RESET +"(Y/N)");
-                        result = changeDefaultColors(in,env,i);                  // change the colors
-                        break;
-                    case 1:
-                        System.out.println("Do you want to change"+env[i]+" default shape color "+colors.RESET+"(Y/N)");
-                        result = changeDefaultColors(in,env,i);                  // change the colors
-                        break;
-                    case 2:
-                        System.out.println("Do you want to change"+env[i]+" default fixed shape color "+colors.RESET+"(Y/N)");
-                        result = changeDefaultColors(in,env,i);                  // change the colors
-                        break;
-                    case 3:
-                        // System.out.println("Do you want to change"+env[i]+" default background color "+colors.RESET+"(Y/N)");
-                        // result = changeDefaultBackgroundColors(in,env,i);       // change background colors
-                        break;
-                    case 4:
-                        System.out.println("Do you want to change"+env[i]+" default GAME OVER logo color "+colors.RESET+"(Y/N)");
-                        result = changeDefaultColors(in,env,i);                  // change the colors
-                        break;
-                    case 5:
-                        System.out.println("Do you want to change"+env[i]+" default GAME EXITED logo color "+colors.RESET+"(Y/N)");
-                        result = changeDefaultColors(in,env,i);                  // change the colors
-                        break;
-                    case 6:
-                        System.out.println("Do you want to change"+env[i]+" default GAME SAVED logo color "+colors.RESET+"(Y/N)");
-                        result = changeDefaultColors(in,env,i);                  // change the colors
-                        break;
-                    case 7:
-                        System.out.println("Do you want to change"+env[i]+" default CONTROLS logo color "+colors.RESET+"(Y/N)");
-                        result = changeDefaultColors(in,env,i);                  // change the colors
-                        break;
-                    case 8:
-                        System.out.println("Do you want to change"+env[i]+" default HIGHSCORE logo color "+colors.RESET+"(Y/N)");
-                        result = changeDefaultColors(in,env,i);                  // change the colors
-                        break;
-                }
-                env[i] = result;                                                // update the array
+                case 0:
+                    System.out.println("Do you want to change"+env[i]+ " default board color " + colors.RESET +"(Y/N)");
+                    result = changeDefaultColors(in,env,i);                  // change the colors
+                    break;
+                case 1:
+                    System.out.println("Do you want to change"+env[i]+" default shape color "+colors.RESET+"(Y/N)");
+                    result = changeDefaultColors(in,env,i);                  // change the colors
+                    break;
+                case 2:
+                    System.out.println("Do you want to change"+env[i]+" default fixed shape color "+colors.RESET+"(Y/N)");
+                    result = changeDefaultColors(in,env,i);                  // change the colors
+                    break;
+                case 3:
+                    System.out.println("Do you want to change"+env[i]+" default background color "+colors.RESET+"(Y/N)");
+                    result = changeDefaultBackgroundColors(in,env,i);       // change background colors
+                    break;
+                case 4:
+                    System.out.println("Do you want to change"+env[i]+" default GAME OVER logo color "+colors.RESET+"(Y/N)");
+                    result = changeDefaultColors(in,env,i);                  // change the colors
+                    break;
+                case 5:
+                    System.out.println("Do you want to change"+env[i]+" default GAME EXITED logo color "+colors.RESET+"(Y/N)");
+                    result = changeDefaultColors(in,env,i);                  // change the colors
+                    break;
+                case 6:
+                    System.out.println("Do you want to change"+env[i]+" default GAME SAVED logo color "+colors.RESET+"(Y/N)");
+                    result = changeDefaultColors(in,env,i);                  // change the colors
+                    break;
+                case 7:
+                    System.out.println("Do you want to change"+env[i]+" default CONTROLS logo color "+colors.RESET+"(Y/N)");
+                    result = changeDefaultColors(in,env,i);                  // change the colors
+                    break;
+                case 8:
+                    System.out.println("Do you want to change"+env[i]+" default HIGHSCORE logo color "+colors.RESET+"(Y/N)");
+                    result = changeDefaultColors(in,env,i);                  // change the colors
+                    break;
             }
+            if(result.equals(env[i]))
+            {
+                System.out.println(colors.BRED+"No change occured !!!"+colors.RESET);
+            }
+            env[i] = result;                                                // update the array
+        }
 
-            // WRITE env to default.txt
-            BufferedWriter bw = new BufferedWriter(new FileWriter("default.txt"));
-            for(int i=0;i<env.length;i++)
-            {
-                bw.write(env[i]+"\n");
-            }
-            bw.close();
-            // for(int i=0;i<env.length;i++)
-            // {
-            //     System.out.println(env[i]+"check"+colors.RESET);
-            // }
-        }
-        catch(Exception e)
+        // WRITE env to default.txt
+        BufferedWriter bw = new BufferedWriter(new FileWriter("default.txt"));
+        for(int i=0;i<env.length;i++)
         {
-            System.out.println(e);
+            bw.write(env[i]+"\n");
         }
-        finally
-        {
-            in.close();
-        }
+        bw.close();
+        in.close();
     }
 
-    private String changeDefaultBackgroundColors(Scanner in,String[] env,int index)
+    /**
+     * This function will change the default background color of the game board
+     * 
+     * @param in for scanner
+     * @param env for taking environment variables
+     * @param index for changing the env variable
+     * 
+     * @exception thrown to changeDefaultEnVariables() method
+     * @return string for changed color
+     **/
+    private String changeDefaultBackgroundColors(Scanner in,String[] env,int index) throws Exception
     {
         String backColor = env[index];
-
-        return backColor;
-    }
-
-    private String changeDefaultColors(Scanner in,String[] env,int index) throws Exception
-    {
         Rain color = new Rain();
-        String answer = env[index];
-        try
-        {
-            char option = in.next().charAt(0);
-            if(option=='Y')                 // changing color at the current index
-            {
-                System.out.println("Select one option");
-                System.out.println("0. No change");
-                System.out.println("1. DGREEN");
-                System.out.println("2. BLACK");
-                System.out.println("3. RED");
-                System.out.println("4. LGREEN");
-                System.out.println("5. YELLOW");
-                System.out.println("6. BLUE");
-                System.out.println("7. MAGENTA");
-                System.out.println("8. CYAN");
-                System.out.println("9. WHITE");
-                System.out.println("10. Advanced settings");
-
-                int opt = in.nextInt();
-                switch(opt)
-                {
-                    case 0:
-                        break;
-                    case 1:
-                        answer = color.DGREEN;
-                        break;
-                    case 2:
-                        answer = color.BLACK;
-                        break;
-                    case 3:
-                        answer = color.RED;
-                        break;
-                    case 4:
-                        answer = color.LGREEN;
-                        break;
-                    case 5:
-                        answer = color.YELLOW;
-                        break;
-                    case 6:
-                        answer = color.BLUE;
-                        break;
-                    case 7:
-                        answer = color.MAGENTA;
-                        break;
-                    case 8:
-                        answer = color.CYAN;
-                        break;
-                    case 9:
-                        answer = color.WHITE;
-                        break;
-                    case 10:
-                        answer = advancedDefaultColorChangeSettings(in,env,index);
-                        break;
-                    default:
-                        throw new InvalidOptionException("Invalid option entered by the user");
-                }
-            }
-        }
-        catch(Exception e)
-        {
-            System.out.println(e);
-        }
-        return answer;
-    }
-
-    private String advancedDefaultColorChangeSettings(Scanner in,String[] env,int index) throws Exception
-    {   
-        String advanceColor=env[index];
-        Rain color = new Rain();
-        try
+        char opt = in.next().charAt(0);
+        if(opt=='Y')
         {
             System.out.println("Select one option");
-            System.out.println("0. No change");
-            System.out.println("1. RESET");
-            System.out.println("2. BOLD");
-            System.out.println("3. ITALIC");
-            System.out.println("4. UNDERLINE");
-            System.out.println("5. BDGREEN");
-            System.out.println("6. IDGREEN");
-            System.out.println("7. UDGREEN");
-            System.out.println("8. BRED");
-            System.out.println("9. IRED");
-            System.out.println("10. URED");
-            System.out.println("11. BLGREEN");
-            System.out.println("12. ILGREEN");
-            System.out.println("13. ULGREEN");
-            System.out.println("14. BYELLOW");
-            System.out.println("15. IYELLOW");
-            System.out.println("16. UYELLOW");
-            System.out.println("17. BBLUE");
-            System.out.println("18. IBLUE");
-            System.out.println("19. UBLUE");
-            System.out.println("20. BMAGENTA");
-            System.out.println("21. IMAGENTA");
-            System.out.println("22. UMAGENTA");
-            System.out.println("23. BCYAN");
-            System.out.println("24. ICYAN");
-            System.out.println("25. UCYAN");
+            System.out.println("0. No Change");
+            System.out.println("1. BGGREEN");
+            System.out.println("2. BGRED");
+            System.out.println("3. BGLGREEN");
+            System.out.println("4. BGORANGE");
+            System.out.println("5. BGLBLUE");
+            System.out.println("6. BGPINK");
+            System.out.println("7. BGDGREEN");
+            System.out.println("8. BGWHITE");
+            System.out.println("9. RESET");
             int option = in.nextInt();
             switch(option)
             {
                 case 0:
                     break;
                 case 1:
-                    advanceColor = color.RESET;
+                    backColor = color.BGGREEN;
                     break;
                 case 2:
-                    advanceColor = color.BOLD;
+                    backColor = color.BGRED;
                     break;
                 case 3:
-                    advanceColor = color.ITALIC;
+                    backColor = color.BGLGREEN;
                     break;
                 case 4:
-                    advanceColor = color.UNDERLINE;
+                    backColor = color.BGORANGE;
                     break;
                 case 5:
-                    advanceColor = color.BDGREEN;
+                    backColor = color.BGLBLUE;
                     break;
                 case 6:
-                    advanceColor = color.IDGREEN;
+                    backColor = color.BGPINK;
                     break;
                 case 7:
-                    advanceColor = color.UDGREEN;
+                    backColor = color.BGDGREEN;
                     break;
                 case 8:
-                    advanceColor = color.BRED;
+                    backColor = color.BGWHITE;
                     break;
                 case 9:
-                    advanceColor = color.IRED;
-                    break;
-                case 10:
-                    advanceColor = color.URED;
-                    break;
-                case 11:
-                    advanceColor = color.BLGREEN;
-                    break;
-                case 12:
-                    advanceColor = color.ILGREEN;
-                    break;
-                case 13:
-                    advanceColor = color.ULGREEN;
-                    break;
-                case 14:    
-                    advanceColor = color.BYELLOW;
-                    break;
-                case 15:
-                    advanceColor = color.IYELLOW;
-                    break;
-                case 16:
-                    advanceColor = color.UYELLOW;
-                    break;
-                case 17:
-                    advanceColor = color.BBLUE;
-                    break;
-                case 18:
-                    advanceColor = color.IBLUE;
-                    break;
-                case 19:
-                    advanceColor = color.UBLUE;
-                    break;
-                case 20:
-                    advanceColor = color.BMAGENTA;
-                    break;
-                case 21:
-                    advanceColor = color.IMAGENTA;
-                    break;
-                case 22:
-                    advanceColor = color.UMAGENTA;
-                    break;
-                case 23:
-                    advanceColor = color.BCYAN;
-                    break;
-                case 24:
-                    advanceColor = color.ICYAN;
-                    break;
-                case 25:
-                    advanceColor = color.UCYAN;
-                    break;
+                    backColor = color.RESET;
                 default:
-                    throw new InvalidOptionException("Invalid option entered by the user");
+                    throw new InvalidOptionException("Invalid Background Color option");
             }
         }
-        catch(Exception e)
+        return backColor;
+    }
+
+    /**
+     * This function will change the colors of the game
+     * 
+     * @param in for scanner
+     * @param env for environment variables array
+     * @param index for env variable index
+     * 
+     * @exception exceptions to changeDefaultEnVariables() method
+     * 
+     * @return string for changed environment color
+     **/
+    private String changeDefaultColors(Scanner in,String[] env,int index) throws Exception
+    {
+        Rain color = new Rain();
+        String answer = env[index];
+
+        char option = in.next().charAt(0);
+        if(option=='Y')                 // changing color at the current index
         {
-            System.out.println(e);
+            System.out.println("Select one option");
+            System.out.println("0. No change");
+            System.out.println("1. DGREEN");
+            System.out.println("2. BLACK");
+            System.out.println("3. RED");
+            System.out.println("4. LGREEN");
+            System.out.println("5. YELLOW");
+            System.out.println("6. BLUE");
+            System.out.println("7. MAGENTA");
+            System.out.println("8. CYAN");
+            System.out.println("9. WHITE");
+            System.out.println("10. Advanced settings");
+
+            int opt = in.nextInt();
+            switch(opt)
+            {
+                case 0:
+                    break;
+                case 1:
+                    answer = color.DGREEN;
+                    break;
+                case 2:
+                    answer = color.BLACK;
+                    break;
+                case 3:
+                    answer = color.RED;
+                    break;
+                case 4:
+                    answer = color.LGREEN;
+                    break;
+                case 5:
+                    answer = color.YELLOW;
+                    break;
+                case 6:
+                    answer = color.BLUE;
+                    break;
+                case 7:
+                    answer = color.MAGENTA;
+                    break;
+                case 8:
+                    answer = color.CYAN;
+                    break;
+                case 9:
+                    answer = color.WHITE;
+                    break;
+                case 10:
+                    answer = advancedDefaultColorChangeSettings(in,env,index);
+                    break;
+                default:
+                    throw new InvalidOptionException("Invalid Color option");
+            }
+        }
+        return answer;
+    }
+
+    /**
+     * This function shows the advanced settings and return the color change done in this advanced colors.
+     * 
+     * @param in for scanner
+     * @param env for environment variables array
+     * @param index for environment varible index
+     * 
+     * @exception thrown to changeDefaultColors() method 
+     * 
+     * @return string for changed color
+     **/
+    private String advancedDefaultColorChangeSettings(Scanner in,String[] env,int index) throws Exception
+    {   
+        String advanceColor=env[index];
+        Rain color = new Rain();
+
+        System.out.println("Select one option");
+        System.out.println("0. No change");
+        System.out.println("1. RESET");
+        System.out.println("2. BOLD");
+        System.out.println("3. ITALIC");
+        System.out.println("4. UNDERLINE");
+        System.out.println("5. BDGREEN");
+        System.out.println("6. IDGREEN");
+        System.out.println("7. UDGREEN");
+        System.out.println("8. BRED");
+        System.out.println("9. IRED");
+        System.out.println("10. URED");
+        System.out.println("11. BLGREEN");
+        System.out.println("12. ILGREEN");
+        System.out.println("13. ULGREEN");
+        System.out.println("14. BYELLOW");
+        System.out.println("15. IYELLOW");
+        System.out.println("16. UYELLOW");
+        System.out.println("17. BBLUE");
+        System.out.println("18. IBLUE");
+        System.out.println("19. UBLUE");
+        System.out.println("20. BMAGENTA");
+        System.out.println("21. IMAGENTA");
+        System.out.println("22. UMAGENTA");
+        System.out.println("23. BCYAN");
+        System.out.println("24. ICYAN");
+        System.out.println("25. UCYAN");
+        int option = in.nextInt();
+        switch(option)
+        {
+            case 0:
+                break;
+            case 1:
+                advanceColor = color.RESET;
+                break;
+            case 2:
+                advanceColor = color.BOLD;
+                break;
+            case 3:
+                advanceColor = color.ITALIC;
+                break;
+            case 4:
+                advanceColor = color.UNDERLINE;
+                break;
+            case 5:
+                advanceColor = color.BDGREEN;
+                break;
+            case 6:
+                advanceColor = color.IDGREEN;
+                break;
+            case 7:
+                advanceColor = color.UDGREEN;
+                break;
+            case 8:
+                advanceColor = color.BRED;
+                break;
+            case 9:
+                advanceColor = color.IRED;
+                break;
+            case 10:
+                advanceColor = color.URED;
+                break;
+            case 11:
+                advanceColor = color.BLGREEN;
+                break;
+            case 12:
+                advanceColor = color.ILGREEN;
+                break;
+            case 13:
+                advanceColor = color.ULGREEN;
+                break;
+            case 14:    
+                advanceColor = color.BYELLOW;
+                break;
+            case 15:
+                advanceColor = color.IYELLOW;
+                break;
+            case 16:
+                advanceColor = color.UYELLOW;
+                break;
+            case 17:
+                advanceColor = color.BBLUE;
+                break;
+            case 18:
+                advanceColor = color.IBLUE;
+                break;
+            case 19:
+                advanceColor = color.UBLUE;
+                break;
+            case 20:
+                advanceColor = color.BMAGENTA;
+                break;
+            case 21:
+                advanceColor = color.IMAGENTA;
+                break;
+            case 22:
+                advanceColor = color.UMAGENTA;
+                break;
+            case 23:
+                advanceColor = color.BCYAN;
+                break;
+            case 24:
+                advanceColor = color.ICYAN;
+                break;
+            case 25:
+                advanceColor = color.UCYAN;
+                break;
+            default:
+                throw new InvalidOptionException("Invalid Advance option");
         }
         return advanceColor;
     }
 
-    private void changeUserEnVariables()
+    /**
+     * This function will reset the default colors of the game board by deleting the default.txt file
+     * 
+     * @exception exception to gameSettings()
+     **/
+    private void resetDefaultColors() throws Exception
+    {
+        //delete the default.txt
+        File file = new File("default.txt");
+        if(!file.delete())
+        {
+            throw new InvalidOptionException("Game is error prone try reset the game in settings");
+        }
+    }
+
+    private void showHistory()
     {
 
     }
 
-    private void showUserInfo()
-    {
-
-    }
-
-    private void compareTwoUsers()
-    {
-
-    }
-
-    private void deleteOldUser()
+    private void deleteHistory()
     {
 
     }
@@ -1610,7 +1703,239 @@ public class Tetris
 
     }
 
-    private void deleteHistory()
+    /**
+     * This function will show the user settings and catching all exceptions in options
+     **/
+    private void userSettings()
+    {
+        Scanner in = new Scanner(System.in);
+        Rain color = new Rain();
+        System.out.println("USER SETTINGS");
+        System.out.println("Select one option");
+        System.out.println("1. Show User Information");
+        System.out.println("2. Verify the User"); 
+        System.out.println("3. Change User's Environment Variables");
+        System.out.println("4. Compare two users");
+        System.out.println("5. Delete the old user");
+        System.out.println("6. Reset/Recover user password");
+        try
+        {
+            int option = in.nextInt();
+            switch(option)
+            {
+                case 1:                                                 // show user information
+                    showUserInfo();
+                    break;
+                case 2:
+                    verifyUser();
+                    break;
+                case 3:                                                 // change user environment variables 
+                    changeUserEnVariables();
+                    break;
+                case 4:                                                 // compare two users
+                    compareTwoUsers();
+                    break;
+                case 5:                                                 // delete the old user
+                    deleteOldUser();
+                    break;
+                case 6:                                                 // reset user password
+                    resetUserPassword();
+                    break;
+                default:
+                    throw new InvalidOptionException("Invalid user settings option");
+            }
+        }
+        catch(InputMismatchException e)
+        {
+            System.out.println(color.BRED+e+"\nInvalid User Settings option"+color.RESET);
+        }
+        catch(Exception e)
+        {
+            System.out.println(color.BRED+e+color.RESET);
+        }
+        finally
+        {
+            in.close();
+        }
+    }
+
+    /**
+     * This function parses the user file and display
+     * 
+     * @exception thrown to userSettings()
+     **/
+    private void showUserInfo() throws Exception
+    {
+        String filename = verifyUser();
+        BufferedReader br = new BufferedReader(new FileReader(filename));
+        String str="";
+        int linecount=1;
+        
+        //DECLARE VARIABLES FOR THE GAME DISPLAY
+        int rows=0;
+        int cols=0;
+        Board B = null;                                                                             // board created for displaying game
+        Block a=null;                                                                               // block created for making a shape
+        Block b=null;                                                                               // block created for making a shape
+        Block c=null;                                                                               // block created for making a shape
+        Block d=null;                                                                               // block created for making a shape
+        Shape LINE = null;                                                                          // LINE for initial shape position
+        int rowCount=0;
+        String[] parse = null;
+        while((str=br.readLine())!=null)
+        {
+            switch(linecount)
+            {
+                case 1:
+                    parse = str.split("[|]");
+                    System.out.println("USER NAME: "+parse[0]);
+                    System.out.println("USER ENTRY DATE: "+parse[1]);
+                    System.out.println("USER ID: "+parse[2]);
+                    System.out.println("USER SCORE: "+parse[4]);
+                    break;
+                case 2:
+                    parse = str.split("[|]");
+                    /**
+                     * SHAPE COORDS
+                     * parse[0]    parse[1]
+                     * parse[2]    parse[3]
+                     * parse[4]    parse[5]
+                     * parse[6]    parse[7]
+                     **/
+                    a = new Block(Integer.parseInt(parse[0]), Integer.parseInt(parse[1]));
+                    b = new Block(Integer.parseInt(parse[2]), Integer.parseInt(parse[3]));
+                    c = new Block(Integer.parseInt(parse[4]), Integer.parseInt(parse[5]));
+                    d = new Block(Integer.parseInt(parse[6]), Integer.parseInt(parse[7]));
+                    break;
+                case 3:
+                    parse = str.split("[|]");
+                    /**
+                     * parse[0]    ->  currentstate
+                     * parse[1]    ->  shapecounter
+                     **/
+                    LINE = new Shape(a, b, c, d, Integer.parseInt(parse[0]));                  // created line shape intially with 0
+                    break;
+                case 4:    
+                    parse = str.split("[|]");
+                    rows = Integer.parseInt(parse[0]);
+                    cols = Integer.parseInt(parse[1]);
+                    B = new Board(rows,cols);
+                    rowCount = rows-1;
+                    break;
+                case 5:
+                    {
+                        String[] env = str.split("[|]");
+                        B.setENV(env);
+                    }
+                    break;
+                default:
+                    if(linecount >= 6)
+                    {
+                        parse = str.split("[|]");
+                        for(int i=0;i<cols;i++)
+                        {
+                            B.getARR()[rowCount][i] = parse[i].charAt(0);                      // insert data of board from file
+                        }
+                        rowCount--;
+                    }
+                    break;
+            }
+            linecount++;
+        }
+        br.close();
+
+        if(!B.insertShape(LINE))                                                                // insert initial shape on board if it is possible
+        {
+            System.out.println("ERROR WHILE INSERTING THE SHAPE");
+            System.exit(0);
+        }                                  
+        B.printBoard();                                                                         // print the initial board
+        System.out.println();
+    }
+
+    /**
+     * This function returns user filename after user verification
+     * 
+     * @exception exception to userSettings()
+     * @return string for filename
+     **/
+    private String verifyUser() throws Exception
+    {
+        Scanner in = new Scanner(System.in);
+        String filename="";
+        try
+        {
+            System.out.println("Enter the username you want to verify:");
+            String name = in.nextLine();                                                                    // user name for verification
+            
+            int userid = scorelist.findIndexOfUser(name);                                                   // collect id from the highscores
+            
+            if(userid == -1)                                                                                // if user is not present in highscores
+            {
+                throw new InvalidOptionException("Sorry you haven't saved a game with this username yet...");
+            }
+
+            filename = "db/" + userid +".txt";                                                       // create new file name
+            File file = new File(filename);                                                                 // create new file structure
+        
+            if(!file.exists())                                                                              // check if userid file is present or not
+            {
+                throw new InvalidOptionException("Sorry your application is broken please reset the game");
+            }
+
+            //PASSWORD CHECKING
+            Console input = System.console();
+            if(input==null)
+            {
+                throw new IllegalStateException("no console available");
+            }
+            System.out.println("Enter your password");
+            char[] consolepassword = input.readPassword();                                              // read the password from the console
+            String passhash = getSHA256(consolepassword);                                               // encrypt the password
+            
+            // READING THE USER PASSHASH
+            BufferedReader read = new BufferedReader(new FileReader(file));
+            String string=read.readLine();                                                              // reading the first user line for getting password hash
+            String[] arr = string.split("[|]");
+            read.close();
+            
+            if(!passhash.equals(arr[3]))                                                                // compare arr[3]/hash in file and passhash entered by the user
+            {
+                throw new WrongPasswordException("Entered wrong password, recover it in settings");
+            }
+        }
+        catch(Exception e)
+        {
+            throw e;
+        }
+        finally
+        {
+            in.close();
+        }
+        return filename;
+    }
+
+    /**
+     * This function will change the individual user environment colors
+     **/
+    private void changeUserEnVariables() throws Exception
+    {
+        try
+        {
+            // String filename = verifyUser();
+        }
+        catch(Exception e)
+        {
+            throw e;
+        }
+    }
+
+    private void compareTwoUsers()
+    {
+
+    }
+
+    private void deleteOldUser()
     {
 
     }
