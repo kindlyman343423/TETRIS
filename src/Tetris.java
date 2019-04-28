@@ -2118,9 +2118,27 @@ public class Tetris
         in.close();
     }
 
+    /**
+     * This function will delete old user from this game
+     * 
+     * @exception exceptions thrown to userSettings()
+     * @return void
+     **/
     private void deleteOldUser() throws Exception
     {
+        Scanner in = new Scanner(System.in);
+        String userfile = verifyUser(in);
+        BufferedReader br = new BufferedReader(new FileReader(userfile));                                           // read user file
+        String read = br.readLine();
+        String[] parsedata = read.split("[|]");                                                                     // parse user data
+        br.close();
 
+        scorelist.removeHighScore(parsedata[0], Integer.parseInt(parsedata[2]), Integer.parseInt(parsedata[4]));    // delete user from scorelist
+        scorelist.saveHighScore();                                                                                  // save highscore list
+        
+        File file = new File(userfile);
+        file.delete();                                                                                              //delete userfile
+        in.close();
     }
 
     private void resetUserPassword() throws Exception

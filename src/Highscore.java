@@ -122,6 +122,15 @@ public class Highscore
         }
     }
 
+    /**
+     * This function will remove highscore from the list
+     * 
+     * @param username for username
+     * @param userid for user id
+     * @param score for userscore
+     * 
+     * @return void
+     **/
     public void removeHighScore(String username,int userid,int score)
     {
         int index=-1;
@@ -137,6 +146,7 @@ public class Highscore
             list.remove(index);
         }
     }
+
     /**
      * This function will display the highscore board
      * 
