@@ -1220,11 +1220,13 @@ public class Tetris
     }
 
     /**
-     * This function will handle settings
+     * This function will handle settings and exceptions
+     * 
+     * @return void
      **/
     private void settings()
     {
-        Rain color = new Rain();
+        Rain color = new Rain();                                                // for using colors on terminal
         settingTetris();
         System.out.println(color.BOLD);
         System.out.println("---------------------------------------------");
@@ -1240,14 +1242,14 @@ public class Tetris
             int option= in.nextInt();
             switch(option)
             {
-                case 0:                                                 // exit the game
-                    exitTetris(color.LGREEN);                           // display GAME EXITED logo
-                    System.exit(0);                                     // exit the game
+                case 0:                                                         // exit the game
+                    exitTetris(color.LGREEN);                                   // display GAME EXITED logo
+                    System.exit(0);                                             // exit the game
                     break;
-                case 1:                                                 // display game setting options
+                case 1:                                                         // display game setting options
                     gameSettings();
                     break;
-                case 2:                                                 // display user setting options
+                case 2:                                                         // display user setting options
                     userSettings();
                     break;
                 default:
@@ -1270,6 +1272,8 @@ public class Tetris
 
     /**
      * This function will show game settings and catching all options exceptions
+     * 
+     * @return void
      **/
     private void gameSettings()
     {
@@ -1490,7 +1494,7 @@ public class Tetris
         String answer = env[index];
         char option = in.next().charAt(0);
 
-        if(option=='Y')                 // changing color at the current index
+        if(option=='Y')                             // changing color at the current index
         {
             System.out.println("Select one option");
             System.out.println("0. No change");
@@ -1767,18 +1771,19 @@ public class Tetris
      * This function parses the user file and display
      * 
      * @exception thrown to userSettings()
+     * @return void
      **/
     private void showUserInfo() throws Exception
     {
         Scanner in = new Scanner(System.in);
-        String filename = verifyUser(in);
-        BufferedReader br = new BufferedReader(new FileReader(filename));
+        String filename = verifyUser(in);                                                           // verify user name and password
+        BufferedReader br = new BufferedReader(new FileReader(filename));                           // reading the userfile
         String str="";
-        int linecount=1;
+        int linecount=1;                                                                            // variable for linecounter
         
         //DECLARE VARIABLES FOR THE GAME DISPLAY
-        int rows=0;
-        int cols=0;
+        int rows=0;                                                                                 // for storing board rows
+        int cols=0;                                                                                 // for storing board cols
         Board B = null;                                                                             // board created for displaying game
         Block a=null;                                                                               // block created for making a shape
         Block b=null;                                                                               // block created for making a shape
@@ -1786,8 +1791,8 @@ public class Tetris
         Block d=null;                                                                               // block created for making a shape
         Shape LINE = null;                                                                          // LINE for initial shape position
         int rowCount=0;
-        String[] parse = null;
-        while((str=br.readLine())!=null)
+        String[] parse = null;                                                                      // string array for parsing
+        while((str=br.readLine())!=null)                                                            // parsing line by line and display
         {
             switch(linecount)
             {
@@ -1818,19 +1823,19 @@ public class Tetris
                      * parse[0]    ->  currentstate
                      * parse[1]    ->  shapecounter
                      **/
-                    LINE = new Shape(a, b, c, d, Integer.parseInt(parse[0]));                  // created line shape intially with 0
+                    LINE = new Shape(a, b, c, d, Integer.parseInt(parse[0]));                       // created line shape intially
                     break;
                 case 4:    
                     parse = str.split("[|]");
                     rows = Integer.parseInt(parse[0]);
                     cols = Integer.parseInt(parse[1]);
-                    B = new Board(rows,cols);
-                    rowCount = rows-1;
+                    B = new Board(rows,cols);                                                       // initalize new board for display
+                    rowCount = rows-1;                                                              // count rows for inserting board data
                     break;
                 case 5:
                     {
                         String[] env = str.split("[|]");
-                        B.setENV(env);
+                        B.setENV(env);                                                              // set new environment variables
                     }
                     break;
                 default:
@@ -1839,7 +1844,7 @@ public class Tetris
                         parse = str.split("[|]");
                         for(int i=0;i<cols;i++)
                         {
-                            B.getARR()[rowCount][i] = parse[i].charAt(0);                      // insert data of board from file
+                            B.getARR()[rowCount][i] = parse[i].charAt(0);                           // insert data of board from file
                         }
                         rowCount--;
                     }
@@ -1849,12 +1854,12 @@ public class Tetris
         }
         br.close();
 
-        if(!B.insertShape(LINE))                                                                // insert initial shape on board if it is possible
+        if(!B.insertShape(LINE))                                                                    // insert initial shape on board if it is possible
         {
             System.out.println("ERROR WHILE INSERTING THE SHAPE");
             System.exit(0);
         }                                  
-        B.printBoard();                                                                         // print the initial board
+        B.printBoard();                                                                             // print the initial board
         System.out.println();
     }
 
@@ -1894,16 +1899,16 @@ public class Tetris
             throw new IllegalStateException("no console available");
         }
         System.out.println("Enter your password");
-        char[] consolepassword = input.readPassword();                                              // read the password from the console
-        String passhash = getSHA256(consolepassword);                                               // encrypt the password
+        char[] consolepassword = input.readPassword();                                                  // read the password from the console
+        String passhash = getSHA256(consolepassword);                                                   // encrypt the password
         
         // READING THE USER PASSHASH
         BufferedReader read = new BufferedReader(new FileReader(file));
-        String string=read.readLine();                                                              // reading the first user line for getting password hash
+        String string=read.readLine();                                                                  // reading the first user line for getting password hash
         String[] arr = string.split("[|]");
         read.close();
         
-        if(!passhash.equals(arr[3]))                                                                // compare arr[3]/hash in file and passhash entered by the user
+        if(!passhash.equals(arr[3]))                                                                    // compare arr[3]/hash in file and passhash entered by the user
         {
             in.close();
             throw new WrongPasswordException("Entered wrong password, recover it in settings");
@@ -1914,23 +1919,26 @@ public class Tetris
 
     /**
      * This function will change the individual user environment colors
+     * 
+     * @exception exceptions userSettings()
+     * @return void;
      **/
     private void changeUserEnVariables() throws Exception
     {
-        Scanner in = new Scanner(System.in);   
-        String filename = verifyUser(in);
-        // File tempfile = new File("temp.txt");
-        File tempfile = File.createTempFile("hello", ".tmp");
+        Scanner in = new Scanner(System.in);                                                            // scanner for input
+        String filename = verifyUser(in);                                                               // verify new user
+
+        File tempfile = File.createTempFile("hello", ".tmp");                                           // create temp file
 
         // read and copy user userfile to tmp file
-        BufferedReader br = new BufferedReader(new FileReader(filename));
-        BufferedWriter bw = new BufferedWriter(new FileWriter(tempfile));
+        BufferedReader br = new BufferedReader(new FileReader(filename));                               // read user file
+        BufferedWriter bw = new BufferedWriter(new FileWriter(tempfile));                               // write the temp file
         String str="";
         int line=1;
         String[] env=null;
         while((str=br.readLine())!=null)
         {
-            if(line==5)
+            if(line==5)                                                                                 // extract user env variables from line 5
             {
                 env = str.split("[|]");
             }
@@ -1941,68 +1949,67 @@ public class Tetris
         bw.close();
 
         
-        Rain colors = new Rain();
+        Rain colors = new Rain();                                                                       // for colors on terminal
 
         for(int i=0;i<env.length;i++)
         {
-            // System.out.println(env[i]+"hello");
-            String result=env[i];
+            String result=env[i];                                                                       // store default variable
             switch(i)
             {
                 case 0:
                     System.out.println("Do you want to change user's"+env[i]+ " default board color " + colors.RESET +"(Y/N)");
-                    result = changeDefaultColors(in,env,i);                  // change the colors
+                    result = changeDefaultColors(in,env,i);                                             // change the colors
                     break;
                 case 1:
                     System.out.println("Do you want to change user's"+env[i]+" default shape color "+colors.RESET+"(Y/N)");
-                    result = changeDefaultColors(in,env,i);                  // change the colors
+                    result = changeDefaultColors(in,env,i);                                             // change the colors
                     break;
                 case 2:
                     System.out.println("Do you want to change user's"+env[i]+" default fixed shape color "+colors.RESET+"(Y/N)");
-                    result = changeDefaultColors(in,env,i);                  // change the colors
+                    result = changeDefaultColors(in,env,i);                                             // change the colors
                     break;
                 case 3:
                     System.out.println("Do you want to change user's"+env[i]+" default background color "+colors.RESET+"(Y/N)");
-                    result = changeDefaultBackgroundColors(in,env,i);       // change background colors
+                    result = changeDefaultBackgroundColors(in,env,i);                                   // change background colors
                     break;
                 case 4:
                     System.out.println("Do you want to change user's"+env[i]+" default GAME OVER logo color "+colors.RESET+"(Y/N)");
-                    result = changeDefaultColors(in,env,i);                  // change the colors
+                    result = changeDefaultColors(in,env,i);                                             // change the colors
                     break;
                 case 5:
                     System.out.println("Do you want to change user's"+env[i]+" default GAME EXITED logo color "+colors.RESET+"(Y/N)");
-                    result = changeDefaultColors(in,env,i);                  // change the colors
+                    result = changeDefaultColors(in,env,i);                                             // change the colors
                     break;
                 case 6:
                     System.out.println("Do you want to change user's"+env[i]+" default GAME SAVED logo color "+colors.RESET+"(Y/N)");
-                    result = changeDefaultColors(in,env,i);                  // change the colors
+                    result = changeDefaultColors(in,env,i);                                             // change the colors
                     break;
                 case 7:
                     System.out.println("Do you want to change user's"+env[i]+" default CONTROLS logo color "+colors.RESET+"(Y/N)");
-                    result = changeDefaultColors(in,env,i);                  // change the colors
+                    result = changeDefaultColors(in,env,i);                                             // change the colors
                     break;
                 case 8:
                     System.out.println("Do you want to change user's"+env[i]+" default HIGHSCORE logo color "+colors.RESET+"(Y/N)");
-                    result = changeDefaultColors(in,env,i);                  // change the colors
+                    result = changeDefaultColors(in,env,i);                                             // change the colors
                     break;
             }
-            if(result.equals(env[i]))
+            if(result.equals(env[i]))                                                                   // if same environment variable found
             {
                 System.out.println(colors.BRED+"No change occured !!!"+colors.RESET);
             }
-            env[i] = result;                                                // update the array
+            env[i] = result;                                                                            // update the env array
         }
 
         // copy temp file to userfile
-        br = new BufferedReader(new FileReader(tempfile));
-        bw = new BufferedWriter(new FileWriter(filename));
+        br = new BufferedReader(new FileReader(tempfile));                                              // open temp file for reading
+        bw = new BufferedWriter(new FileWriter(filename));                                              // open user file for writing
         line=1;
         str="";
         while((str = br.readLine())!=null)
         {
             switch(line)
             {
-                case 5:
+                case 5:                                                                                 // change env array for line 5
                     for(int i=0;i<env.length;i++)
                     {
                         bw.write(env[i]+"|");
@@ -2017,21 +2024,106 @@ public class Tetris
         }
         br.close();
         bw.close();
-        tempfile.delete();
+        tempfile.delete();                                                                              // delete temp file
         in.close();
     }
 
-    private void compareTwoUsers()
+    /**
+     * This function will compare two users
+     * 
+     * @exception exception to userSettings()
+     * @return void
+     **/
+    private void compareTwoUsers() throws Exception
+    {
+        Scanner in = new Scanner(System.in);                                                            // scanner for user input
+        
+        System.out.println("USER COMPARISON");
+        System.out.println("Enter data of USER 1");
+        String firstfile = verifyUser(in);                                                              // verify first username and password
+
+        System.out.println("Enter data of USER 2");
+        String secondfile = verifyUser(in);                                                             // verify second username and password
+
+        if(firstfile.equals(secondfile))                                                                // check for 2 same user
+        {
+            throw new SameNamePasswordException("Comparsion with same user is not allowed");
+        }
+        System.out.print("comparing");
+
+        Thread thread1 = new Thread(()->{                                                               // thread 1 for printing ...
+            for(int i=0;i<20;i++)
+            {
+                try
+                {
+                    System.out.print(".");                                                              // print after 500 ms
+                    Thread.sleep(500);
+                }
+                catch(Exception e)
+                {
+                    System.out.println(e);
+                }
+            }
+            System.out.println();
+        },"printthread");
+
+        Thread thread2 = new Thread(()->{                                                               // thread for reading data from the files
+
+            try
+            {
+                BufferedReader br1 = new BufferedReader(new FileReader(firstfile));                     // open first userfile
+                String first = br1.readLine();
+                String[] firstinfo = first.split("[|]");
+                br1.close();
+                BufferedReader br2 = new BufferedReader(new FileReader(secondfile));                    // open second userfile
+                String second = br2.readLine();
+                String[] secondinfo = second.split("[|]");
+                br2.close();
+
+                Thread.sleep(11000);
+
+                // DISPLAY USER INFORMATION
+                Rain color = new Rain();
+                System.out.println();
+                System.out.println(color.BLGREEN+"USER ID:\t\t"+color.RESET + firstinfo[2] +"\t\t\t\t\t"+secondinfo[2]);
+                System.out.println(color.BLGREEN+"USERNAME:\t\t"+color.RESET+firstinfo[0] + "\t\t\t\t" + secondinfo[0]);
+                System.out.println(color.BLGREEN+"ENTRY DATE:\t\t"+color.RESET+firstinfo[1] + "\t\t" + secondinfo[1]);
+                System.out.println(color.BLGREEN+"SCORE:\t\t\t"+color.RESET+firstinfo[4] +"\t\t\t\t\t"+secondinfo[4]);
+
+                System.out.println(color.BCYAN);
+                if(Integer.parseInt(firstinfo[4]) > Integer.parseInt(secondinfo[4]))
+                {
+                    System.out.println(firstinfo[0] +" USER IS GOOD PLAYER THAN THE USER " + secondinfo[0]);
+                }
+                else if(Integer.parseInt(firstinfo[4]) < Integer.parseInt(secondinfo[4]))
+                {
+                    System.out.println(secondinfo[0] +" USER IS GOOD PLAYER THAN THE USER " + firstinfo[0]);
+                }
+                else
+                {
+                    System.out.println("BOTH THE USERS " +firstinfo[0]+" & "+secondinfo[0]+" ARE GOOD PLAYERS");
+                }
+                System.out.println(color.RESET);
+            }
+            catch(Exception e)
+            {
+                System.out.println(e);
+            }
+        },"calculate");
+        thread1.start();
+        thread2.start();
+        thread1.join();
+        thread2.join();
+
+        in.close();
+    }
+
+    private void deleteOldUser() throws Exception
     {
 
     }
 
-    private void deleteOldUser()
-    {
-
-    }
-
-    private void resetUserPassword()
+    private void resetUserPassword() throws Exception
     {
 
     }
