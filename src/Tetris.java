@@ -241,7 +241,7 @@ public class Tetris
             }
 
             String passwordhash = getSHA256(charpass);
-            User user = new User(username,password,new Date(),passwordhash,0);                              // created a new user
+            User user = new User(username,password,new Date(),passwordhash,0);                          // created a new user
 
             System.out.println("Enter the size of the board in format i.e 20 20");                      // getting desired size from the user
             int R = in.nextInt();                                                                       // input number of rows
@@ -1263,6 +1263,7 @@ public class Tetris
     {
         Rain color = new Rain();
         Scanner in = new Scanner(System.in);
+        System.out.println(color.BOLD);
         System.out.println("GAME SETTINGS");
         System.out.println("Select one option");
         System.out.println("0. No change");
@@ -1271,12 +1272,14 @@ public class Tetris
         System.out.println("3. Show game history");
         System.out.println("4. Delete all History");
         System.out.println("5. Reset the Tetris Game");
+        System.out.println(color.RESET);
         try
         {
             int option = in.nextInt();
             switch(option)
             {
                 case 0:
+                    exitTetris(color.BLGREEN);
                     break;
                 case 1:
                     changeDefaultEnVariables();                         // change User Interface
@@ -1689,9 +1692,55 @@ public class Tetris
 
     }
 
-    private void resetAllGame()
+    /**
+     * This function will reset the whole game
+     * 
+     * @exception exception to gameSettings()
+     * @return void
+     **/
+    private void resetAllGame() throws Exception
     {
+        Scanner in = new Scanner(System.in);                                                            // scanner for input
+        Rain colors = new Rain();                                                                       // included rainbow library
+        
+        System.out.println(colors.BRED);                                                                // printing the message
+        System.out.println("Do you want to reset the game(Y/N), by doing reset:");
+        System.out.println("=> all the saved games will be deleted");
+        System.out.println("=> all the highscores are erased");
+        System.out.println("=> all the history will be deleted");
+        System.out.println("So carefully answer it !!!");
+        System.out.println(colors.RESET);
 
+        char option = in.next().charAt(0);
+        in.close();
+
+        if(option!='Y')                                                                                  // if option is not 'Y' then exception is thrown
+        {
+            throw new InvalidOptionException("Invalid option entered !!! game is not reset, try again");
+        }
+
+        // DELETE tetris.txt
+        File tetris = new File("tetris.txt");
+        tetris.delete();
+
+        // DELETE highscore.txt
+        File highscore = new File("highscore.txt");
+        highscore.delete();
+
+        // DELETE default.txt
+        File defaultfile = new File("default.txt");
+        defaultfile.delete();
+
+        // DELETE DB
+        File dir = new File("db");
+        String[] enteries = dir.list();
+        for(String s:enteries)
+        {
+            // System.out.println(s);
+            File newfile = new File(dir.getPath(),s);
+            newfile.delete();
+        }
+        dir.delete();
     }
 
     /**
@@ -1701,6 +1750,7 @@ public class Tetris
     {
         Scanner in = new Scanner(System.in);
         Rain color = new Rain();
+        System.out.println(color.BOLD);
         System.out.println("USER SETTINGS");
         System.out.println("Select one option");
         System.out.println("0. No change");
@@ -1710,11 +1760,15 @@ public class Tetris
         System.out.println("4. Compare two users");
         System.out.println("5. Delete the old user");
         System.out.println("6. Reset/Recover user password");
+        System.out.println(color.RESET);
         try
         {
             int option = in.nextInt();
             switch(option)
             {
+                case 0:
+                    exitTetris(color.BCYAN);
+                    break;
                 case 1:                                                 // show user information
                     showUserInfo();
                     break;
