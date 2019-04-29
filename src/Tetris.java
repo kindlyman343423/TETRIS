@@ -7,8 +7,7 @@ import RAINBOW.*;
 import java.text.*;
 public class Tetris
 {
-    private Highscore scorelist = new Highscore();                                                      // created highscore object for storing highscores
-    
+    private Highscore scorelist = new Highscore();                                                      // created highscore object for storing highscores   
     /**
      * New tetris game is created 
      **/
@@ -216,8 +215,8 @@ public class Tetris
 
             System.out.println(color.BOLD + "Create new password e.g: abcdef" + color.RESET);
             Console con = System.console();                                                             // used for taking password as an input
-            char[] pass = con.readPassword();                                                           // reading password from the user
-            String password = String.valueOf(pass);                                                     // convert password to string
+            char[] charpass = con.readPassword();                                                       // reading password from the user
+            String password = String.valueOf(charpass);                                                 // convert password to string
             
             //CHECKING PASSWORD VALIDITY
             if(username.equals(password))                                                               // check password cannot be same as username
@@ -233,31 +232,16 @@ public class Tetris
                 throw new SameNamePasswordException("Make your own password don't use example");
             }
 
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");                                // create sha 256 hash algo instance
-            byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));                     // hash algo sha 256
-            
-            BigInteger hashno = new BigInteger(1,hash);
-            String passhash = hashno.toString(16);                                                      // make sha 256 password string
-            while (passhash.length() < 32) { 
-                passhash = "0" + passhash; 
-            } 
-
             System.out.println(color.BOLD+"Confirm password"+color.RESET);                              // confirming password
-            char[] reenterpass = con.readPassword();                                                    // reading password again from console
-            String reenterpassword = String.valueOf(reenterpass);                                       // convert char array to string
-            byte[] rehash = digest.digest(reenterpassword.getBytes(StandardCharsets.UTF_8));            // hash algo sha 256
-            hashno = new BigInteger(1,rehash);
-            String passrehash = hashno.toString(16);
-            while (passrehash.length() < 32) { 
-                passrehash = "0" + passrehash; 
-            } 
-
-            User user = new User(username,password,new Date(),passhash,0);                              // created a new user
-
-            if(!user.matchPassword(passrehash))                                                         // check password is right or not
+            char[] confirmcharpassword = con.readPassword();                                            // reading password again from console
+            String repassword = String.valueOf(confirmcharpassword);                                    // convert char array to string
+            if(!password.equals(repassword))                                                            // check password is right or not
             {
                 throw new WrongPasswordException("Entered wrong password");
-            }        
+            }
+
+            String passwordhash = getSHA256(charpass);
+            User user = new User(username,password,new Date(),passwordhash,0);                              // created a new user
 
             System.out.println("Enter the size of the board in format i.e 20 20");                      // getting desired size from the user
             int R = in.nextInt();                                                                       // input number of rows
@@ -2141,8 +2125,145 @@ public class Tetris
         in.close();
     }
 
+    /**
+     * This function will reset the user password
+     * with authenication and password verification
+     * 
+     * @exception exceptions to userSettings()
+     * 
+     * @return void 
+     **/
     private void resetUserPassword() throws Exception
     {
+        Scanner in = new Scanner(System.in);                                                                        // scanner for input
+        Rain color = new Rain();                                                                                    // rain for displaying colors
+        System.out.println("RESET USER PASSWORD");
+        
+        System.out.println("Enter the username");
+        String username = in.nextLine();                                                                            // enter username for reset
 
+        int highscoreid = scorelist.findIndexOfUser(username);                                                      // find the id of this user in highscore list
+        if(highscoreid == -1)                                                                                       // if user is not present in highscores
+        {
+            in.close();
+            throw new InvalidOptionException("Sorry you haven't saved a game with this username yet...");
+        }
+
+        System.out.println("Enter the USER ID");
+        int userid = in.nextInt();                                                                                  // entering userid for verification
+        if(userid!=highscoreid)                                                                                     // verify user entered id and highscorelist id
+        {
+            in.close();
+            throw new InvalidOptionException("Invalid id entered by the user enter the another one");
+        }
+
+        System.out.println("Enter the USER HIGHSCORE");
+        int userscore = in.nextInt();                                                                               // verify user highscore
+        int highscore = scorelist.findScoreOfUser(username, userid);                                                // find user score in highscore list
+        if(highscore==-1 || userscore!=highscore)
+        {
+            in.close();   
+            throw new InvalidOptionException("Invalid user score");
+        }
+
+        System.out.println("USER AUTHENTICATED !!!");
+        
+        // READING HASHSTRING FROM THE FILE
+        String filename = "db/"+userid+".txt";
+        if(!new File(filename).exists())                                                                            // if user file don't exists
+        {
+            in.close();
+            throw new InvalidOptionException("Try reseting the game");
+        }
+
+        // READ USER FILE FOR PASSOWRD HASH
+        BufferedReader br = new BufferedReader(new FileReader(filename));
+        String read = br.readLine();
+        String[] arr = read.split("[|]");
+        String hashstring = arr[3];                                                                                 // readed hashstring from the user id file
+        br.close();
+        
+        System.out.println(color.BOLD + "Create new password e.g: abcdef" + color.RESET);
+        Console con = System.console();                                                                             // used for taking password as an input
+        char[] pass = con.readPassword();                                                                           // reading password from the user
+        String password = String.valueOf(pass);                                                                     // change char array to string
+        String passhashstring = getSHA256(pass);                                                                    // calculate hash 256 of entered password
+        
+        //CHECKING PASSWORD VALIDITY
+        if(username.equals(password))                                                                               // check password cannot be same as username
+        {
+            in.close();
+            throw new SameNamePasswordException("Password cannot be same as username");
+        }
+        else if(password.length() < 5)                                                                              // check password length
+        {
+            in.close();
+            throw new WrongPasswordException("Invalid length of the password");
+        }
+        else if(password.equals("abcdef"))                                                                          // check password will not be same as password
+        {
+            in.close();
+            throw new SameNamePasswordException("Make your own password don't use example");
+        }
+        else if(hashstring.equals(passhashstring))                                                                 // match entered password with userid password hash
+        {
+            in.close();
+            throw new SameNamePasswordException("This password cannot be assigned, try new one");
+        }
+        
+        // PASSWORD CONFIRMATION
+        System.out.println(color.BOLD+"Confirm password"+color.RESET);                                              // confirming password
+        char[] confirmpassword = con.readPassword();                                                                // reading password again from console
+        String confirmpasswordstring = String.valueOf(confirmpassword);
+        
+        if(password.equals(confirmpasswordstring))
+        {
+            System.out.println("Password Verified !!!");
+        }
+        
+        // update password in userfile
+        File tempfile = File.createTempFile("copy", ".tmp");
+        
+        arr[3] = passhashstring;                                                                                    // updated hashvalue
+        
+        // read and copy user userfile to tmp file
+        BufferedReader BR = new BufferedReader(new FileReader(filename));                                           // read user file
+        BufferedWriter BW = new BufferedWriter(new FileWriter(tempfile));                                           // write the temp file
+        String str="";
+        while((str=BR.readLine())!=null)
+        {
+            BW.write(str+"\n");
+        }
+        BR.close();
+        BW.close();
+
+        // copy temp file to userfile
+        BR = new BufferedReader(new FileReader(tempfile));                                                          // open temp file for reading
+        BW = new BufferedWriter(new FileWriter(filename));                                                          // open user file for writing
+        int line=1;
+        str="";
+        while((str = BR.readLine())!=null)
+        {
+            switch(line)
+            {
+                case 1:                                                                                             // change user array for line 1
+                    for(int i=0;i<arr.length;i++)
+                    {
+                        BW.write(arr[i]+"|");
+                    }
+                    BW.write("\n");
+                    break;
+                default:
+                    BW.write(str+"\n");
+                    break;
+            }
+            line++;
+        }
+        BR.close();
+        BW.close();
+        tempfile.delete();                                                                              // delete temporary files
+
+        System.out.println("PASSWORD CHANGED !!!");
+        in.close();
     }
 }

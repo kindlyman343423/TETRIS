@@ -173,28 +173,21 @@ public class Highscore
     public void displayHighScore()
     {
         highScore();                                                                                    // display the highscore board
-        System.out.println("\tUser ID\t\t|\tUser Name\t|\tScore\t");
+        System.out.println("\tUser Name\t\t|\tScore\t");
         System.out.println("----------------------------------------------------------------------");
         //print the list
         int idlength = 0;                                                                               // variable maintatining tabs
         for(int i=0;i<list.size();i++)
-        {
-            System.out.print("\t"+list.get(i).getHighScoreUserId());                                             // print the user id
-            idlength = 16 - (list.get(i).getHighScoreUserId()+"").length();
-            for(int j=0;j<idlength;j++)
-            {
-                System.out.print(" ");
-            }
-            
-            System.out.print("|\t"+list.get(i).getHighScoreUserName());                                          // print the username on scoreboard
-            idlength = 16 - list.get(i).getHighScoreUserName().length();
+        {   
+            System.out.print("\t"+list.get(i).getHighScoreUserName());                                          // print the username on scoreboard
+            idlength = 24 - list.get(i).getHighScoreUserName().length();
             for(int j=0;j<idlength;j++)
             {
                 System.out.print(" ");
             }
 
             System.out.print("|\t"+list.get(i).getHighScore());                                           // print the user highscore
-            idlength = 16 - list.get(i).getHighScore();
+            idlength = 24 - list.get(i).getHighScore();
             for(int j=0;j<idlength;j++)
             {
                 System.out.print(" ");
@@ -272,6 +265,18 @@ public class Highscore
             if(list.get(i).getHighScoreUserName().equals(name))
             {
                 return list.get(i).getHighScoreUserId();
+            }
+        }
+        return -1;
+    }
+
+    public int findScoreOfUser(String name,int userid)
+    {
+        for(int i=0;i<list.size();i++)
+        {
+            if(list.get(i).getHighScoreUserName().equals(name) && list.get(i).getHighScoreUserId()==userid)
+            {
+                return list.get(i).getHighScore();
             }
         }
         return -1;

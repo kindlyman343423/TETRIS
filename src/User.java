@@ -203,20 +203,4 @@ public class User
     {
         this.entryDate = d;
     }
-
-    /**
-     * This function matches the password of the user with the given password
-     * 
-     * @param hash for hash string
-     * 
-     * @return boolean whether hash is matched or not
-     **/
-    public boolean matchPassword(String hash)
-    {
-        if(passhash.equals(hash))
-        {
-            return true;
-        }
-        return false;
-    }
 }
