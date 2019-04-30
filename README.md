@@ -1,6 +1,17 @@
-# TETRIS GAME [![Build Status](https://travis-ci.com/GauravWalia19/TETRIS.svg?token=BG8gK8FxkjPDgn2Gszpj&branch=master)](https://travis-ci.com/GauravWalia19/TETRIS)
+<p align="center">
+    <img src="docs/hello.png" alt="tetris logo"/>
+    <h1 align="center">TETRIS GAME</h1>
+    <h4 align="center"><i>The Game that kids play and programmers love to code</i></h4>
+    <h4 align="right"><a href="https://travis-ci.com/GauravWalia19/TETRIS"><img src="https://travis-ci.com/GauravWalia19/TETRIS.svg?branch=master" alt="travis"></a> <a href="https://github.com/GauravWalia19/TETRIS/releases">VERSION 1.0.0</a></h4>
+</p>
 
-This repository contains the code for tetris game in java.
+Tetris is a tile-matching puzzle video game originally designed and programmed by Soviet Russian game designer Alexey Pajitnov. The first playable version was completed on June 6, 1984, while he was working for the Dorodnitsyn Computing Centre of the Academy of Science of the Soviet Union in Moscow. He derived its name from the Greek numerical prefix tetra- (all of the game's pieces contain four segments) and tennis, Pajitnov's favorite sport. The name is also used in-game to refer to the play where four lines (the maximum simultaneous clearance number) are cleared at once.
+
+## DEPENDECIES
+
+* javac compiler
+* RAINBOW package
+* LINUX/UNIX cli
 
 ## BUILD
 
