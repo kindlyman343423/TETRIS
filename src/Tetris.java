@@ -21,6 +21,7 @@ public class Tetris
         System.out.println("  #    #        #    #  #     #        #");
         System.out.println("  #    #####    #    #   #  #####  #####");
         System.out.println(color.RESET);
+        createHistory();
     }
 
     /**
@@ -37,6 +38,23 @@ public class Tetris
         System.out.println("  #    #        #    #  #     #        #");
         System.out.println("  #    #####    #    #   #  #####  #####");
         System.out.println(color.RESET);
+        createHistory();
+    }
+
+    /**
+     * This function will create user tetris history file if not present
+     **/
+    private void createHistory()
+    {
+        try
+        {
+            File history = new File("history.txt");
+            history.createNewFile();
+        }
+        catch(Exception e)
+        {
+            System.out.println("unpredictable stage !!!");
+        }
     }
 
     /**
@@ -1481,7 +1499,7 @@ public class Tetris
         String answer = env[index];
         char option = in.next().charAt(0);
 
-        if(option=='Y')                             // changing color at the current index
+        if(option=='Y')                                                     // changing color at the current index
         {
             System.out.println("Select one option");
             System.out.println("0. No change");
@@ -1682,14 +1700,69 @@ public class Tetris
         }
     }
 
-    private void showHistory()
+    /**
+     * This function will print history board
+     * 
+     * @return void
+     **/
+    private void printHistoryBoard()
     {
-
+        System.out.println();
+        System.out.println("\t\tH   H H HHHHH HHHHH HHHHH HHHH  H   H");
+        System.out.println("\t\tH   H H H       H   H   H H   H  H H ");
+        System.out.println("\t\tHHHHH H HHHHH   H   H   H HHHH    H  ");
+        System.out.println("\t\tH   H H     H   H   H   H H  H    H  ");
+        System.out.println("\t\tH   H H HHHHH   H   HHHHH H   H   H  ");
+        for(int i=0;i<76;i++)
+        {
+            System.out.print("~");
+        }
+        System.out.println();
     }
 
-    private void deleteHistory()
+    /**
+     * This function will show history
+     * 
+     * @exception exceptions thrown to gameSettings()
+     * @return void
+     **/
+    private void showHistory() throws Exception
     {
+        printHistoryBoard();
+        
+        BufferedReader br = new BufferedReader(new FileReader("history.txt"));      // read history file
+        String str="";
+        int len=0;                                                                  // varibles for space adjustment
+        int count=0;
+        while((str=br.readLine())!=null)
+        {
+            String[] arr = str.split("[|]");
+            System.out.print("\t"+arr[0]);
+            len = 32-arr[0].length();
+            
+            for(int i=0;i<len;i++)
+            {
+                System.out.print(" ");
+            }
+            System.out.println("|\t"+arr[1]);
+            count++;
+        }
+        if(count==0)
+        {
+            System.out.println("NO HISTORY PRESENT !!!");
+        }
+        br.close();
+    }
 
+    /**
+     * This function will erase the history
+     * 
+     * @return void
+     **/
+    private void deleteHistory() throws Exception
+    {
+        File history = new File("history.txt");
+        history.delete();                                               // delete history file
     }
 
     /**
@@ -1722,6 +1795,10 @@ public class Tetris
         // DELETE tetris.txt
         File tetris = new File("tetris.txt");
         tetris.delete();
+
+        //DELETE history.txt
+        File history = new File("history.txt");
+        history.delete();
 
         // DELETE highscore.txt
         File highscore = new File("highscore.txt");
