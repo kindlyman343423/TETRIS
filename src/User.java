@@ -34,7 +34,7 @@ public class User
 
     /**
      * This constructor will create the new user and take new id from tetris.txt file
-     * 
+     * It will also add user history to history.txt file
      * @param String name of the user
      * @param String password of the user
      * @param Date of entrydate of the user
@@ -69,6 +69,10 @@ public class User
                 this.userId = ++id;
                 br.close();
             }
+            //APPEND data to history.txt file
+            BufferedWriter bw = new BufferedWriter(new FileWriter("history.txt",true));
+            bw.write(name+"|"+entryDate+"|\n");
+            bw.close();
         }
         catch(Exception e)
         {
@@ -202,21 +206,5 @@ public class User
     public void setDate(Date d)
     {
         this.entryDate = d;
-    }
-
-    /**
-     * This function matches the password of the user with the given password
-     * 
-     * @param hash for hash string
-     * 
-     * @return boolean whether hash is matched or not
-     **/
-    public boolean matchPassword(String hash)
-    {
-        if(passhash.equals(hash))
-        {
-            return true;
-        }
-        return false;
     }
 }

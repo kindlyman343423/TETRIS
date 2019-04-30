@@ -7,8 +7,7 @@ import RAINBOW.*;
 import java.text.*;
 public class Tetris
 {
-    private Highscore scorelist = new Highscore();                                                      // created highscore object for storing highscores
-    
+    private Highscore scorelist = new Highscore();                                                      // created highscore object for storing highscores   
     /**
      * New tetris game is created 
      **/
@@ -22,6 +21,7 @@ public class Tetris
         System.out.println("  #    #        #    #  #     #        #");
         System.out.println("  #    #####    #    #   #  #####  #####");
         System.out.println(color.RESET);
+        createHistory();
     }
 
     /**
@@ -38,6 +38,23 @@ public class Tetris
         System.out.println("  #    #        #    #  #     #        #");
         System.out.println("  #    #####    #    #   #  #####  #####");
         System.out.println(color.RESET);
+        createHistory();
+    }
+
+    /**
+     * This function will create user tetris history file if not present
+     **/
+    private void createHistory()
+    {
+        try
+        {
+            File history = new File("history.txt");
+            history.createNewFile();
+        }
+        catch(Exception e)
+        {
+            System.out.println("unpredictable stage !!!");
+        }
     }
 
     /**
@@ -216,8 +233,8 @@ public class Tetris
 
             System.out.println(color.BOLD + "Create new password e.g: abcdef" + color.RESET);
             Console con = System.console();                                                             // used for taking password as an input
-            char[] pass = con.readPassword();                                                           // reading password from the user
-            String password = String.valueOf(pass);                                                     // convert password to string
+            char[] charpass = con.readPassword();                                                       // reading password from the user
+            String password = String.valueOf(charpass);                                                 // convert password to string
             
             //CHECKING PASSWORD VALIDITY
             if(username.equals(password))                                                               // check password cannot be same as username
@@ -233,31 +250,16 @@ public class Tetris
                 throw new SameNamePasswordException("Make your own password don't use example");
             }
 
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");                                // create sha 256 hash algo instance
-            byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));                     // hash algo sha 256
-            
-            BigInteger hashno = new BigInteger(1,hash);
-            String passhash = hashno.toString(16);                                                      // make sha 256 password string
-            while (passhash.length() < 32) { 
-                passhash = "0" + passhash; 
-            } 
-
             System.out.println(color.BOLD+"Confirm password"+color.RESET);                              // confirming password
-            char[] reenterpass = con.readPassword();                                                    // reading password again from console
-            String reenterpassword = String.valueOf(reenterpass);                                       // convert char array to string
-            byte[] rehash = digest.digest(reenterpassword.getBytes(StandardCharsets.UTF_8));            // hash algo sha 256
-            hashno = new BigInteger(1,rehash);
-            String passrehash = hashno.toString(16);
-            while (passrehash.length() < 32) { 
-                passrehash = "0" + passrehash; 
-            } 
-
-            User user = new User(username,password,new Date(),passhash,0);                              // created a new user
-
-            if(!user.matchPassword(passrehash))                                                         // check password is right or not
+            char[] confirmcharpassword = con.readPassword();                                            // reading password again from console
+            String repassword = String.valueOf(confirmcharpassword);                                    // convert char array to string
+            if(!password.equals(repassword))                                                            // check password is right or not
             {
                 throw new WrongPasswordException("Entered wrong password");
-            }        
+            }
+
+            String passwordhash = getSHA256(charpass);
+            User user = new User(username,password,new Date(),passwordhash,0);                          // created a new user
 
             System.out.println("Enter the size of the board in format i.e 20 20");                      // getting desired size from the user
             int R = in.nextInt();                                                                       // input number of rows
@@ -1220,24 +1222,21 @@ public class Tetris
     }
 
     /**
-     * This function will handle settings
+     * This function will handle settings and exceptions
+     * 
+     * @return void
      **/
     private void settings()
     {
-        Rain color = new Rain();
+        Rain color = new Rain();                                                // for using colors on terminal
         settingTetris();
         System.out.println(color.BOLD);
         System.out.println("---------------------------------------------");
         System.out.println("Enter one option:");
         System.out.println("0. Exit");
-        System.out.println("1. Change Default Environment Variables");
-        System.out.println("2. Change User's Environment Variables");
-        System.out.println("3. Collect Information of the user");
-        System.out.println("4. Compare two users");
-        System.out.println("5. Delete the old user");
-        System.out.println("6. Reset all users and highscores");
-        System.out.println("7. Delete all History");
-        System.out.println("8. Reset user password");
+        System.out.println("1. Game Settings");
+        System.out.println("2. User Settings");
+
         System.out.println(color.RESET);
         Scanner in = new Scanner(System.in);
         try
@@ -1245,23 +1244,15 @@ public class Tetris
             int option= in.nextInt();
             switch(option)
             {
-                case 0:
-                    exitTetris(color.BRED);
-                    System.exit(0);
+                case 0:                                                         // exit the game
+                    exitTetris(color.LGREEN);                                   // display GAME EXITED logo
+                    System.exit(0);                                             // exit the game
                     break;
-                case 1:
+                case 1:                                                         // display game setting options
+                    gameSettings();
                     break;
-                case 2: 
-                    break;
-                case 3:
-                    break;
-                case 4:
-                    break;
-                case 5:
-                    break;
-                case 6: 
-                    break;
-                case 7:
+                case 2:                                                         // display user setting options
+                    userSettings();
                     break;
                 default:
                     throw new InvalidOptionException("Invalid Settings Option entered by the user");
@@ -1279,5 +1270,1131 @@ public class Tetris
         {
             in.close();
         }
+    }
+
+    /**
+     * This function will show game settings and catching all options exceptions
+     * 
+     * @return void
+     **/
+    private void gameSettings()
+    {
+        Rain color = new Rain();
+        Scanner in = new Scanner(System.in);
+        System.out.println(color.BOLD);
+        System.out.println("GAME SETTINGS");
+        System.out.println("Select one option");
+        System.out.println("0. No change");
+        System.out.println("1. Change User Interface");
+        System.out.println("2. Reset the Default Environment Variables");
+        System.out.println("3. Show game history");
+        System.out.println("4. Delete all History");
+        System.out.println("5. Reset the Tetris Game");
+        System.out.println(color.RESET);
+        try
+        {
+            int option = in.nextInt();
+            switch(option)
+            {
+                case 0:
+                    exitTetris(color.BLGREEN);
+                    break;
+                case 1:
+                    changeDefaultEnVariables();                         // change User Interface
+                    break;
+                case 2:                                                 // reset the default variables
+                    resetDefaultColors();
+                    break;    
+                case 3:                                                 // show user history
+                    showHistory();
+                    break;
+                case 4:                                                 // delete all history
+                    deleteHistory();
+                    break;
+                case 5:                                                 // reset all the game
+                    resetAllGame();
+                    break;
+                default:
+                    throw new InvalidOptionException("Invalid Game Settings option");
+            }
+        }
+        catch(InputMismatchException e)
+        {
+            System.out.println(color.BRED+e+"\nInvalid Game Settings option"+color.RESET);
+        }
+        catch(Exception e)
+        {
+            System.out.println(color.BRED+e+color.RESET);
+        }
+        finally
+        {
+            in.close();
+        }
+    }
+
+    /**
+     * This function will change the default environment variables of every new game. 
+     * It changes colors of shape, board and game logos.
+     * 
+     * @throws exception
+     * @return void
+     **/
+    private void changeDefaultEnVariables() throws Exception
+    {
+        Rain colors = new Rain();
+        Scanner in = new Scanner(System.in);
+        
+        //READ DEFAULT.TXT TO env
+        String[] env = new String[9];
+        int envcounter=0;
+        BufferedReader br = new BufferedReader(new FileReader("default.txt"));
+        String str="";
+        while((str = br.readLine())!=null)
+        {
+            String[] arr = str.split("[,]");
+            env[envcounter++] = arr[0];
+        }
+        br.close();
+        
+        // ITERATE AND ASK USER FOR CHANGE
+        for(int i=0;i<env.length;i++)
+        {
+            String result ="";
+            switch(i)
+            {
+                case 0:
+                    System.out.println("Do you want to change"+env[i]+ " default board color " + colors.RESET +"(Y/N)");
+                    result = changeDefaultColors(in,env,i);                  // change the colors
+                    break;
+                case 1:
+                    System.out.println("Do you want to change"+env[i]+" default shape color "+colors.RESET+"(Y/N)");
+                    result = changeDefaultColors(in,env,i);                  // change the colors
+                    break;
+                case 2:
+                    System.out.println("Do you want to change"+env[i]+" default fixed shape color "+colors.RESET+"(Y/N)");
+                    result = changeDefaultColors(in,env,i);                  // change the colors
+                    break;
+                case 3:
+                    System.out.println("Do you want to change"+env[i]+" default background color "+colors.RESET+"(Y/N)");
+                    result = changeDefaultBackgroundColors(in,env,i);       // change background colors
+                    break;
+                case 4:
+                    System.out.println("Do you want to change"+env[i]+" default GAME OVER logo color "+colors.RESET+"(Y/N)");
+                    result = changeDefaultColors(in,env,i);                  // change the colors
+                    break;
+                case 5:
+                    System.out.println("Do you want to change"+env[i]+" default GAME EXITED logo color "+colors.RESET+"(Y/N)");
+                    result = changeDefaultColors(in,env,i);                  // change the colors
+                    break;
+                case 6:
+                    System.out.println("Do you want to change"+env[i]+" default GAME SAVED logo color "+colors.RESET+"(Y/N)");
+                    result = changeDefaultColors(in,env,i);                  // change the colors
+                    break;
+                case 7:
+                    System.out.println("Do you want to change"+env[i]+" default CONTROLS logo color "+colors.RESET+"(Y/N)");
+                    result = changeDefaultColors(in,env,i);                  // change the colors
+                    break;
+                case 8:
+                    System.out.println("Do you want to change"+env[i]+" default HIGHSCORE logo color "+colors.RESET+"(Y/N)");
+                    result = changeDefaultColors(in,env,i);                  // change the colors
+                    break;
+            }
+            if(result.equals(env[i]))
+            {
+                System.out.println(colors.BRED+"No change occured !!!"+colors.RESET);
+            }
+            env[i] = result;                                                // update the array
+        }
+
+        // WRITE env to default.txt
+        BufferedWriter bw = new BufferedWriter(new FileWriter("default.txt"));
+        for(int i=0;i<env.length;i++)
+        {
+            bw.write(env[i]+"\n");
+        }
+        bw.close();
+        in.close();
+    }
+
+    /**
+     * This function will change the default background color of the game board
+     * 
+     * @param in for scanner
+     * @param env for taking environment variables
+     * @param index for changing the env variable
+     * 
+     * @exception thrown to changeDefaultEnVariables() method
+     * @return string for changed color
+     **/
+    private String changeDefaultBackgroundColors(Scanner in,String[] env,int index) throws Exception
+    {
+        String backColor = env[index];
+        Rain color = new Rain();
+        char opt = in.next().charAt(0);
+        if(opt=='Y')
+        {
+            System.out.println("Select one option");
+            System.out.println("0. No Change");
+            System.out.println("1. BGGREEN");
+            System.out.println("2. BGRED");
+            System.out.println("3. BGLGREEN");
+            System.out.println("4. BGORANGE");
+            System.out.println("5. BGLBLUE");
+            System.out.println("6. BGPINK");
+            System.out.println("7. BGDGREEN");
+            System.out.println("8. BGWHITE");
+            System.out.println("9. RESET");
+            int option = in.nextInt();
+            switch(option)
+            {
+                case 0:
+                    break;
+                case 1:
+                    backColor = color.BGGREEN;
+                    break;
+                case 2:
+                    backColor = color.BGRED;
+                    break;
+                case 3:
+                    backColor = color.BGLGREEN;
+                    break;
+                case 4:
+                    backColor = color.BGORANGE;
+                    break;
+                case 5:
+                    backColor = color.BGLBLUE;
+                    break;
+                case 6:
+                    backColor = color.BGPINK;
+                    break;
+                case 7:
+                    backColor = color.BGDGREEN;
+                    break;
+                case 8:
+                    backColor = color.BGWHITE;
+                    break;
+                case 9:
+                    backColor = color.RESET;
+                default:
+                    in.close();
+                    throw new InvalidOptionException("Invalid Background Color option");
+            }
+        }
+        return backColor;
+    }
+
+    /**
+     * This function will change the colors of the game
+     * 
+     * @param env for environment variables array
+     * @param index for env variable index
+     * 
+     * @exception exceptions to changeDefaultEnVariables() method
+     * 
+     * @return string for changed environment color
+     **/
+    private String changeDefaultColors(Scanner in,String[] env,int index) throws Exception
+    {
+        Rain color = new Rain();
+        String answer = env[index];
+        char option = in.next().charAt(0);
+
+        if(option=='Y')                                                     // changing color at the current index
+        {
+            System.out.println("Select one option");
+            System.out.println("0. No change");
+            System.out.println("1. DGREEN");
+            System.out.println("2. BLACK");
+            System.out.println("3. RED");
+            System.out.println("4. LGREEN");
+            System.out.println("5. YELLOW");
+            System.out.println("6. BLUE");
+            System.out.println("7. MAGENTA");
+            System.out.println("8. CYAN");
+            System.out.println("9. WHITE");
+            System.out.println("10. Advanced settings");
+
+            int opt = in.nextInt();
+            switch(opt)
+            {
+                case 0:
+                    break;
+                case 1:
+                    answer = color.DGREEN;
+                    break;
+                case 2:
+                    answer = color.BLACK;
+                    break;
+                case 3:
+                    answer = color.RED;
+                    break;
+                case 4:
+                    answer = color.LGREEN;
+                    break;
+                case 5:
+                    answer = color.YELLOW;
+                    break;
+                case 6:
+                    answer = color.BLUE;
+                    break;
+                case 7:
+                    answer = color.MAGENTA;
+                    break;
+                case 8:
+                    answer = color.CYAN;
+                    break;
+                case 9:
+                    answer = color.WHITE;
+                    break;
+                case 10:
+                    answer = advancedDefaultColorChangeSettings(in,env,index);
+                    break;
+                default:
+                    throw new InvalidOptionException("Invalid Color option");
+            }
+        }
+        return answer;
+    }
+
+    /**
+     * This function shows the advanced settings and return the color change done in this advanced colors.
+     * 
+     * @param in for scanner
+     * @param env for environment variables array
+     * @param index for environment varible index
+     * 
+     * @exception thrown to changeDefaultColors() method 
+     * 
+     * @return string for changed color
+     **/
+    private String advancedDefaultColorChangeSettings(Scanner in,String[] env,int index) throws Exception
+    {   
+        String advanceColor=env[index];
+        Rain color = new Rain();
+        System.out.println("Select one option");
+        System.out.println("0. No change");
+        System.out.println("1. RESET");
+        System.out.println("2. BOLD");
+        System.out.println("3. ITALIC");
+        System.out.println("4. UNDERLINE");
+        System.out.println("5. BDGREEN");
+        System.out.println("6. IDGREEN");
+        System.out.println("7. UDGREEN");
+        System.out.println("8. BRED");
+        System.out.println("9. IRED");
+        System.out.println("10. URED");
+        System.out.println("11. BLGREEN");
+        System.out.println("12. ILGREEN");
+        System.out.println("13. ULGREEN");
+        System.out.println("14. BYELLOW");
+        System.out.println("15. IYELLOW");
+        System.out.println("16. UYELLOW");
+        System.out.println("17. BBLUE");
+        System.out.println("18. IBLUE");
+        System.out.println("19. UBLUE");
+        System.out.println("20. BMAGENTA");
+        System.out.println("21. IMAGENTA");
+        System.out.println("22. UMAGENTA");
+        System.out.println("23. BCYAN");
+        System.out.println("24. ICYAN");
+        System.out.println("25. UCYAN");
+        int option = in.nextInt();
+        
+        switch(option)
+        {
+            case 0:
+                break;
+            case 1:
+                advanceColor = color.RESET;
+                break;
+            case 2:
+                advanceColor = color.BOLD;
+                break;
+            case 3:
+                advanceColor = color.ITALIC;
+                break;
+            case 4:
+                advanceColor = color.UNDERLINE;
+                break;
+            case 5:
+                advanceColor = color.BDGREEN;
+                break;
+            case 6:
+                advanceColor = color.IDGREEN;
+                break;
+            case 7:
+                advanceColor = color.UDGREEN;
+                break;
+            case 8:
+                advanceColor = color.BRED;
+                break;
+            case 9:
+                advanceColor = color.IRED;
+                break;
+            case 10:
+                advanceColor = color.URED;
+                break;
+            case 11:
+                advanceColor = color.BLGREEN;
+                break;
+            case 12:
+                advanceColor = color.ILGREEN;
+                break;
+            case 13:
+                advanceColor = color.ULGREEN;
+                break;
+            case 14:    
+                advanceColor = color.BYELLOW;
+                break;
+            case 15:
+                advanceColor = color.IYELLOW;
+                break;
+            case 16:
+                advanceColor = color.UYELLOW;
+                break;
+            case 17:
+                advanceColor = color.BBLUE;
+                break;
+            case 18:
+                advanceColor = color.IBLUE;
+                break;
+            case 19:
+                advanceColor = color.UBLUE;
+                break;
+            case 20:
+                advanceColor = color.BMAGENTA;
+                break;
+            case 21:
+                advanceColor = color.IMAGENTA;
+                break;
+            case 22:
+                advanceColor = color.UMAGENTA;
+                break;
+            case 23:
+                advanceColor = color.BCYAN;
+                break;
+            case 24:
+                advanceColor = color.ICYAN;
+                break;
+            case 25:
+                advanceColor = color.UCYAN;
+                break;
+            default:
+                throw new InvalidOptionException("Invalid Advance option");
+        }
+        return advanceColor;
+    }
+
+    /**
+     * This function will reset the default colors of the game board by deleting the default.txt file
+     * 
+     * @exception exception to gameSettings()
+     **/
+    private void resetDefaultColors() throws Exception
+    {
+        //delete the default.txt
+        File file = new File("default.txt");
+        if(!file.delete())
+        {
+            throw new InvalidOptionException("Game is error prone try reset the game in settings");
+        }
+    }
+
+    /**
+     * This function will print history board
+     * 
+     * @return void
+     **/
+    private void printHistoryBoard()
+    {
+        System.out.println();
+        System.out.println("\t\tH   H H HHHHH HHHHH HHHHH HHHH  H   H");
+        System.out.println("\t\tH   H H H       H   H   H H   H  H H ");
+        System.out.println("\t\tHHHHH H HHHHH   H   H   H HHHH    H  ");
+        System.out.println("\t\tH   H H     H   H   H   H H  H    H  ");
+        System.out.println("\t\tH   H H HHHHH   H   HHHHH H   H   H  ");
+        for(int i=0;i<76;i++)
+        {
+            System.out.print("~");
+        }
+        System.out.println();
+    }
+
+    /**
+     * This function will show history
+     * 
+     * @exception exceptions thrown to gameSettings()
+     * @return void
+     **/
+    private void showHistory() throws Exception
+    {
+        printHistoryBoard();
+        
+        BufferedReader br = new BufferedReader(new FileReader("history.txt"));      // read history file
+        String str="";
+        int len=0;                                                                  // varibles for space adjustment
+        int count=0;
+        while((str=br.readLine())!=null)
+        {
+            String[] arr = str.split("[|]");
+            System.out.print("\t"+arr[0]);
+            len = 32-arr[0].length();
+            
+            for(int i=0;i<len;i++)
+            {
+                System.out.print(" ");
+            }
+            System.out.println("|\t"+arr[1]);
+            count++;
+        }
+        if(count==0)
+        {
+            System.out.println("NO HISTORY PRESENT !!!");
+        }
+        br.close();
+    }
+
+    /**
+     * This function will erase the history
+     * 
+     * @return void
+     **/
+    private void deleteHistory() throws Exception
+    {
+        File history = new File("history.txt");
+        history.delete();                                               // delete history file
+    }
+
+    /**
+     * This function will reset the whole game
+     * 
+     * @exception exception to gameSettings()
+     * @return void
+     **/
+    private void resetAllGame() throws Exception
+    {
+        Scanner in = new Scanner(System.in);                                                            // scanner for input
+        Rain colors = new Rain();                                                                       // included rainbow library
+        
+        System.out.println(colors.BRED);                                                                // printing the message
+        System.out.println("Do you want to reset the game(Y/N), by doing reset:");
+        System.out.println("=> all the saved games will be deleted");
+        System.out.println("=> all the highscores are erased");
+        System.out.println("=> all the history will be deleted");
+        System.out.println("So carefully answer it !!!");
+        System.out.println(colors.RESET);
+
+        char option = in.next().charAt(0);
+        in.close();
+
+        if(option!='Y')                                                                                  // if option is not 'Y' then exception is thrown
+        {
+            throw new InvalidOptionException("Invalid option entered !!! game is not reset, try again");
+        }
+
+        // DELETE tetris.txt
+        File tetris = new File("tetris.txt");
+        tetris.delete();
+
+        //DELETE history.txt
+        File history = new File("history.txt");
+        history.delete();
+
+        // DELETE highscore.txt
+        File highscore = new File("highscore.txt");
+        highscore.delete();
+
+        // DELETE default.txt
+        File defaultfile = new File("default.txt");
+        defaultfile.delete();
+
+        // DELETE DB
+        File dir = new File("db");
+        String[] enteries = dir.list();
+        for(String s:enteries)
+        {
+            // System.out.println(s);
+            File newfile = new File(dir.getPath(),s);
+            newfile.delete();
+        }
+        dir.delete();
+    }
+
+    /**
+     * This function will show the user settings and catching all exceptions in options
+     **/
+    private void userSettings()
+    {
+        Scanner in = new Scanner(System.in);
+        Rain color = new Rain();
+        System.out.println(color.BOLD);
+        System.out.println("USER SETTINGS");
+        System.out.println("Select one option");
+        System.out.println("0. No change");
+        System.out.println("1. Show User Information");
+        System.out.println("2. Verify the User"); 
+        System.out.println("3. Change User's Environment Variables");
+        System.out.println("4. Compare two users");
+        System.out.println("5. Delete the old user");
+        System.out.println("6. Reset/Recover user password");
+        System.out.println(color.RESET);
+        try
+        {
+            int option = in.nextInt();
+            switch(option)
+            {
+                case 0:
+                    exitTetris(color.BCYAN);
+                    break;
+                case 1:                                                 // show user information
+                    showUserInfo();
+                    break;
+                case 2:
+                    verifyUser(in);
+                    break;
+                case 3:                                                 // change user environment variables 
+                    changeUserEnVariables();
+                    break;
+                case 4:                                                 // compare two users
+                    compareTwoUsers();
+                    break;
+                case 5:                                                 // delete the old user
+                    deleteOldUser();
+                    break;
+                case 6:                                                 // reset user password
+                    resetUserPassword();
+                    break;
+                default:
+                    throw new InvalidOptionException("Invalid user settings option");
+            }
+        }
+        catch(InputMismatchException e)
+        {
+            System.out.println(color.BRED+e+"\nInvalid User Settings option"+color.RESET);
+        }
+        catch(Exception e)
+        {
+            System.out.println(color.BRED+e+color.RESET);
+        }
+        finally
+        {
+            in.close();
+        }
+    }
+
+    /**
+     * This function parses the user file and display
+     * 
+     * @exception thrown to userSettings()
+     * @return void
+     **/
+    private void showUserInfo() throws Exception
+    {
+        Scanner in = new Scanner(System.in);
+        String filename = verifyUser(in);                                                           // verify user name and password
+        BufferedReader br = new BufferedReader(new FileReader(filename));                           // reading the userfile
+        String str="";
+        int linecount=1;                                                                            // variable for linecounter
+        
+        //DECLARE VARIABLES FOR THE GAME DISPLAY
+        int rows=0;                                                                                 // for storing board rows
+        int cols=0;                                                                                 // for storing board cols
+        Board B = null;                                                                             // board created for displaying game
+        Block a=null;                                                                               // block created for making a shape
+        Block b=null;                                                                               // block created for making a shape
+        Block c=null;                                                                               // block created for making a shape
+        Block d=null;                                                                               // block created for making a shape
+        Shape LINE = null;                                                                          // LINE for initial shape position
+        int rowCount=0;
+        String[] parse = null;                                                                      // string array for parsing
+        while((str=br.readLine())!=null)                                                            // parsing line by line and display
+        {
+            switch(linecount)
+            {
+                case 1:
+                    parse = str.split("[|]");
+                    System.out.println("USER NAME: "+parse[0]);
+                    System.out.println("USER ENTRY DATE: "+parse[1]);
+                    System.out.println("USER ID: "+parse[2]);
+                    System.out.println("USER SCORE: "+parse[4]);
+                    break;
+                case 2:
+                    parse = str.split("[|]");
+                    /**
+                     * SHAPE COORDS
+                     * parse[0]    parse[1]
+                     * parse[2]    parse[3]
+                     * parse[4]    parse[5]
+                     * parse[6]    parse[7]
+                     **/
+                    a = new Block(Integer.parseInt(parse[0]), Integer.parseInt(parse[1]));
+                    b = new Block(Integer.parseInt(parse[2]), Integer.parseInt(parse[3]));
+                    c = new Block(Integer.parseInt(parse[4]), Integer.parseInt(parse[5]));
+                    d = new Block(Integer.parseInt(parse[6]), Integer.parseInt(parse[7]));
+                    break;
+                case 3:
+                    parse = str.split("[|]");
+                    /**
+                     * parse[0]    ->  currentstate
+                     * parse[1]    ->  shapecounter
+                     **/
+                    LINE = new Shape(a, b, c, d, Integer.parseInt(parse[0]));                       // created line shape intially
+                    break;
+                case 4:    
+                    parse = str.split("[|]");
+                    rows = Integer.parseInt(parse[0]);
+                    cols = Integer.parseInt(parse[1]);
+                    B = new Board(rows,cols);                                                       // initalize new board for display
+                    rowCount = rows-1;                                                              // count rows for inserting board data
+                    break;
+                case 5:
+                    {
+                        String[] env = str.split("[|]");
+                        B.setENV(env);                                                              // set new environment variables
+                    }
+                    break;
+                default:
+                    if(linecount >= 6)
+                    {
+                        parse = str.split("[|]");
+                        for(int i=0;i<cols;i++)
+                        {
+                            B.getARR()[rowCount][i] = parse[i].charAt(0);                           // insert data of board from file
+                        }
+                        rowCount--;
+                    }
+                    break;
+            }
+            linecount++;
+        }
+        br.close();
+
+        if(!B.insertShape(LINE))                                                                    // insert initial shape on board if it is possible
+        {
+            System.out.println("ERROR WHILE INSERTING THE SHAPE");
+            System.exit(0);
+        }                                  
+        B.printBoard();                                                                             // print the initial board
+        System.out.println();
+    }
+
+    /**
+     * This function returns user filename after user verification
+     * 
+     * @exception exception to userSettings()
+     * @return string for filename
+     **/
+    private String verifyUser(Scanner in) throws Exception
+    {
+        System.out.println("Enter the username you want to verify:");
+        String name = in.nextLine();                                                                    // user name for verification
+            
+        int userid = scorelist.findIndexOfUser(name);                                                   // collect id from the highscores
+            
+        if(userid == -1)                                                                                // if user is not present in highscores
+        {
+            in.close();
+            throw new InvalidOptionException("Sorry you haven't saved a game with this username yet...");
+        }
+
+        String filename = "db/" + userid +".txt";                                                       // create new file name
+        File file = new File(filename);                                                                 // create new file structure
+        
+        if(!file.exists())                                                                              // check if userid file is present or not
+        {
+            in.close();
+            throw new InvalidOptionException("Sorry your application is broken please reset the game");
+        }
+
+        //PASSWORD CHECKING
+        Console input = System.console();
+        if(input==null)
+        {
+            in.close();
+            throw new IllegalStateException("no console available");
+        }
+        System.out.println("Enter your password");
+        char[] consolepassword = input.readPassword();                                                  // read the password from the console
+        String passhash = getSHA256(consolepassword);                                                   // encrypt the password
+        
+        // READING THE USER PASSHASH
+        BufferedReader read = new BufferedReader(new FileReader(file));
+        String string=read.readLine();                                                                  // reading the first user line for getting password hash
+        String[] arr = string.split("[|]");
+        read.close();
+        
+        if(!passhash.equals(arr[3]))                                                                    // compare arr[3]/hash in file and passhash entered by the user
+        {
+            in.close();
+            throw new WrongPasswordException("Entered wrong password, recover it in settings");
+        }
+
+        return filename;
+    }
+
+    /**
+     * This function will change the individual user environment colors
+     * 
+     * @exception exceptions userSettings()
+     * @return void;
+     **/
+    private void changeUserEnVariables() throws Exception
+    {
+        Scanner in = new Scanner(System.in);                                                            // scanner for input
+        String filename = verifyUser(in);                                                               // verify new user
+
+        File tempfile = File.createTempFile("hello", ".tmp");                                           // create temp file
+
+        // read and copy user userfile to tmp file
+        BufferedReader br = new BufferedReader(new FileReader(filename));                               // read user file
+        BufferedWriter bw = new BufferedWriter(new FileWriter(tempfile));                               // write the temp file
+        String str="";
+        int line=1;
+        String[] env=null;
+        while((str=br.readLine())!=null)
+        {
+            if(line==5)                                                                                 // extract user env variables from line 5
+            {
+                env = str.split("[|]");
+            }
+            bw.write(str+"\n");
+            line++;
+        }
+        br.close();
+        bw.close();
+
+        
+        Rain colors = new Rain();                                                                       // for colors on terminal
+
+        for(int i=0;i<env.length;i++)
+        {
+            String result=env[i];                                                                       // store default variable
+            switch(i)
+            {
+                case 0:
+                    System.out.println("Do you want to change user's"+env[i]+ " default board color " + colors.RESET +"(Y/N)");
+                    result = changeDefaultColors(in,env,i);                                             // change the colors
+                    break;
+                case 1:
+                    System.out.println("Do you want to change user's"+env[i]+" default shape color "+colors.RESET+"(Y/N)");
+                    result = changeDefaultColors(in,env,i);                                             // change the colors
+                    break;
+                case 2:
+                    System.out.println("Do you want to change user's"+env[i]+" default fixed shape color "+colors.RESET+"(Y/N)");
+                    result = changeDefaultColors(in,env,i);                                             // change the colors
+                    break;
+                case 3:
+                    System.out.println("Do you want to change user's"+env[i]+" default background color "+colors.RESET+"(Y/N)");
+                    result = changeDefaultBackgroundColors(in,env,i);                                   // change background colors
+                    break;
+                case 4:
+                    System.out.println("Do you want to change user's"+env[i]+" default GAME OVER logo color "+colors.RESET+"(Y/N)");
+                    result = changeDefaultColors(in,env,i);                                             // change the colors
+                    break;
+                case 5:
+                    System.out.println("Do you want to change user's"+env[i]+" default GAME EXITED logo color "+colors.RESET+"(Y/N)");
+                    result = changeDefaultColors(in,env,i);                                             // change the colors
+                    break;
+                case 6:
+                    System.out.println("Do you want to change user's"+env[i]+" default GAME SAVED logo color "+colors.RESET+"(Y/N)");
+                    result = changeDefaultColors(in,env,i);                                             // change the colors
+                    break;
+                case 7:
+                    System.out.println("Do you want to change user's"+env[i]+" default CONTROLS logo color "+colors.RESET+"(Y/N)");
+                    result = changeDefaultColors(in,env,i);                                             // change the colors
+                    break;
+                case 8:
+                    System.out.println("Do you want to change user's"+env[i]+" default HIGHSCORE logo color "+colors.RESET+"(Y/N)");
+                    result = changeDefaultColors(in,env,i);                                             // change the colors
+                    break;
+            }
+            if(result.equals(env[i]))                                                                   // if same environment variable found
+            {
+                System.out.println(colors.BRED+"No change occured !!!"+colors.RESET);
+            }
+            env[i] = result;                                                                            // update the env array
+        }
+
+        // copy temp file to userfile
+        br = new BufferedReader(new FileReader(tempfile));                                              // open temp file for reading
+        bw = new BufferedWriter(new FileWriter(filename));                                              // open user file for writing
+        line=1;
+        str="";
+        while((str = br.readLine())!=null)
+        {
+            switch(line)
+            {
+                case 5:                                                                                 // change env array for line 5
+                    for(int i=0;i<env.length;i++)
+                    {
+                        bw.write(env[i]+"|");
+                    }
+                    bw.write("\n");
+                    break;
+                default:
+                    bw.write(str+"\n");
+                    break;
+            }
+            line++;
+        }
+        br.close();
+        bw.close();
+        tempfile.delete();                                                                              // delete temp file
+        in.close();
+    }
+
+    /**
+     * This function will compare two users
+     * 
+     * @exception exception to userSettings()
+     * @return void
+     **/
+    private void compareTwoUsers() throws Exception
+    {
+        Scanner in = new Scanner(System.in);                                                            // scanner for user input
+        
+        System.out.println("USER COMPARISON");
+        System.out.println("Enter data of USER 1");
+        String firstfile = verifyUser(in);                                                              // verify first username and password
+
+        System.out.println("Enter data of USER 2");
+        String secondfile = verifyUser(in);                                                             // verify second username and password
+
+        if(firstfile.equals(secondfile))                                                                // check for 2 same user
+        {
+            throw new SameNamePasswordException("Comparsion with same user is not allowed");
+        }
+        System.out.print("comparing");
+
+        Thread thread1 = new Thread(()->{                                                               // thread 1 for printing ...
+            for(int i=0;i<20;i++)
+            {
+                try
+                {
+                    System.out.print(".");                                                              // print after 500 ms
+                    Thread.sleep(500);
+                }
+                catch(Exception e)
+                {
+                    System.out.println(e);
+                }
+            }
+            System.out.println();
+        },"printthread");
+
+        Thread thread2 = new Thread(()->{                                                               // thread for reading data from the files
+
+            try
+            {
+                BufferedReader br1 = new BufferedReader(new FileReader(firstfile));                     // open first userfile
+                String first = br1.readLine();
+                String[] firstinfo = first.split("[|]");
+                br1.close();
+                BufferedReader br2 = new BufferedReader(new FileReader(secondfile));                    // open second userfile
+                String second = br2.readLine();
+                String[] secondinfo = second.split("[|]");
+                br2.close();
+
+                Thread.sleep(11000);
+
+                // DISPLAY USER INFORMATION
+                Rain color = new Rain();
+                System.out.println();
+                System.out.println(color.BLGREEN+"USER ID:\t\t"+color.RESET + firstinfo[2] +"\t\t\t\t\t"+secondinfo[2]);
+                System.out.println(color.BLGREEN+"USERNAME:\t\t"+color.RESET+firstinfo[0] + "\t\t\t\t" + secondinfo[0]);
+                System.out.println(color.BLGREEN+"ENTRY DATE:\t\t"+color.RESET+firstinfo[1] + "\t\t" + secondinfo[1]);
+                System.out.println(color.BLGREEN+"SCORE:\t\t\t"+color.RESET+firstinfo[4] +"\t\t\t\t\t"+secondinfo[4]);
+
+                System.out.println(color.BCYAN);
+                if(Integer.parseInt(firstinfo[4]) > Integer.parseInt(secondinfo[4]))
+                {
+                    System.out.println(firstinfo[0] +" USER IS GOOD PLAYER THAN THE USER " + secondinfo[0]);
+                }
+                else if(Integer.parseInt(firstinfo[4]) < Integer.parseInt(secondinfo[4]))
+                {
+                    System.out.println(secondinfo[0] +" USER IS GOOD PLAYER THAN THE USER " + firstinfo[0]);
+                }
+                else
+                {
+                    System.out.println("BOTH THE USERS " +firstinfo[0]+" & "+secondinfo[0]+" ARE GOOD PLAYERS");
+                }
+                System.out.println(color.RESET);
+            }
+            catch(Exception e)
+            {
+                System.out.println(e);
+            }
+        },"calculate");
+        thread1.start();
+        thread2.start();
+        thread1.join();
+        thread2.join();
+
+        in.close();
+    }
+
+    /**
+     * This function will delete old user from this game
+     * 
+     * @exception exceptions thrown to userSettings()
+     * @return void
+     **/
+    private void deleteOldUser() throws Exception
+    {
+        Scanner in = new Scanner(System.in);
+        String userfile = verifyUser(in);
+        BufferedReader br = new BufferedReader(new FileReader(userfile));                                           // read user file
+        String read = br.readLine();
+        String[] parsedata = read.split("[|]");                                                                     // parse user data
+        br.close();
+
+        scorelist.removeHighScore(parsedata[0], Integer.parseInt(parsedata[2]), Integer.parseInt(parsedata[4]));    // delete user from scorelist
+        scorelist.saveHighScore();                                                                                  // save highscore list
+        
+        File file = new File(userfile);
+        file.delete();                                                                                              //delete userfile
+        in.close();
+    }
+
+    /**
+     * This function will reset the user password
+     * with authenication and password verification
+     * 
+     * @exception exceptions to userSettings()
+     * 
+     * @return void 
+     **/
+    private void resetUserPassword() throws Exception
+    {
+        Scanner in = new Scanner(System.in);                                                                        // scanner for input
+        Rain color = new Rain();                                                                                    // rain for displaying colors
+        System.out.println("RESET USER PASSWORD");
+        
+        System.out.println("Enter the username");
+        String username = in.nextLine();                                                                            // enter username for reset
+
+        int highscoreid = scorelist.findIndexOfUser(username);                                                      // find the id of this user in highscore list
+        if(highscoreid == -1)                                                                                       // if user is not present in highscores
+        {
+            in.close();
+            throw new InvalidOptionException("Sorry you haven't saved a game with this username yet...");
+        }
+
+        System.out.println("Enter the USER ID");
+        int userid = in.nextInt();                                                                                  // entering userid for verification
+        if(userid!=highscoreid)                                                                                     // verify user entered id and highscorelist id
+        {
+            in.close();
+            throw new InvalidOptionException("Invalid id entered by the user enter the another one");
+        }
+
+        System.out.println("Enter the USER HIGHSCORE");
+        int userscore = in.nextInt();                                                                               // verify user highscore
+        int highscore = scorelist.findScoreOfUser(username, userid);                                                // find user score in highscore list
+        if(highscore==-1 || userscore!=highscore)
+        {
+            in.close();   
+            throw new InvalidOptionException("Invalid user score");
+        }
+
+        System.out.println("USER AUTHENTICATED !!!");
+        
+        // READING HASHSTRING FROM THE FILE
+        String filename = "db/"+userid+".txt";
+        if(!new File(filename).exists())                                                                            // if user file don't exists
+        {
+            in.close();
+            throw new InvalidOptionException("Try reseting the game");
+        }
+
+        // READ USER FILE FOR PASSOWRD HASH
+        BufferedReader br = new BufferedReader(new FileReader(filename));
+        String read = br.readLine();
+        String[] arr = read.split("[|]");
+        String hashstring = arr[3];                                                                                 // readed hashstring from the user id file
+        br.close();
+        
+        System.out.println(color.BOLD + "Create new password e.g: abcdef" + color.RESET);
+        Console con = System.console();                                                                             // used for taking password as an input
+        char[] pass = con.readPassword();                                                                           // reading password from the user
+        String password = String.valueOf(pass);                                                                     // change char array to string
+        String passhashstring = getSHA256(pass);                                                                    // calculate hash 256 of entered password
+        
+        //CHECKING PASSWORD VALIDITY
+        if(username.equals(password))                                                                               // check password cannot be same as username
+        {
+            in.close();
+            throw new SameNamePasswordException("Password cannot be same as username");
+        }
+        else if(password.length() < 5)                                                                              // check password length
+        {
+            in.close();
+            throw new WrongPasswordException("Invalid length of the password");
+        }
+        else if(password.equals("abcdef"))                                                                          // check password will not be same as password
+        {
+            in.close();
+            throw new SameNamePasswordException("Make your own password don't use example");
+        }
+        else if(hashstring.equals(passhashstring))                                                                 // match entered password with userid password hash
+        {
+            in.close();
+            throw new SameNamePasswordException("This password cannot be assigned, try new one");
+        }
+        
+        // PASSWORD CONFIRMATION
+        System.out.println(color.BOLD+"Confirm password"+color.RESET);                                              // confirming password
+        char[] confirmpassword = con.readPassword();                                                                // reading password again from console
+        String confirmpasswordstring = String.valueOf(confirmpassword);
+        
+        if(password.equals(confirmpasswordstring))
+        {
+            System.out.println("Password Verified !!!");
+        }
+        
+        // update password in userfile
+        File tempfile = File.createTempFile("copy", ".tmp");
+        
+        arr[3] = passhashstring;                                                                                    // updated hashvalue
+        
+        // read and copy user userfile to tmp file
+        BufferedReader BR = new BufferedReader(new FileReader(filename));                                           // read user file
+        BufferedWriter BW = new BufferedWriter(new FileWriter(tempfile));                                           // write the temp file
+        String str="";
+        while((str=BR.readLine())!=null)
+        {
+            BW.write(str+"\n");
+        }
+        BR.close();
+        BW.close();
+
+        // copy temp file to userfile
+        BR = new BufferedReader(new FileReader(tempfile));                                                          // open temp file for reading
+        BW = new BufferedWriter(new FileWriter(filename));                                                          // open user file for writing
+        int line=1;
+        str="";
+        while((str = BR.readLine())!=null)
+        {
+            switch(line)
+            {
+                case 1:                                                                                             // change user array for line 1
+                    for(int i=0;i<arr.length;i++)
+                    {
+                        BW.write(arr[i]+"|");
+                    }
+                    BW.write("\n");
+                    break;
+                default:
+                    BW.write(str+"\n");
+                    break;
+            }
+            line++;
+        }
+        BR.close();
+        BW.close();
+        tempfile.delete();                                                                              // delete temporary files
+
+        System.out.println("PASSWORD CHANGED !!!");
+        in.close();
     }
 }
