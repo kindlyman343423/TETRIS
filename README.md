@@ -7,17 +7,17 @@
 
 Tetris is a tile-matching puzzle video game originally designed and programmed by Soviet Russian game designer Alexey Pajitnov. The first playable version was completed on June 6, 1984, while he was working for the Dorodnitsyn Computing Centre of the Academy of Science of the Soviet Union in Moscow. He derived its name from the Greek numerical prefix tetra- (all of the game's pieces contain four segments) and tennis, Pajitnov's favorite sport. The name is also used in-game to refer to the play where four lines (the maximum simultaneous clearance number) are cleared at once.
 
-## DEPENDENCIES
+## ![image](docs/icon.ico) DEPENDENCIES
 
 * javac compiler
 * [RAINBOW package](https://github.com/GauravWalia19/RAINBOW)
 * LINUX/UNIX Command Line Interface
 
-## Documentation
+## ![image](docs/icon.ico) Documentation
 
 working...
 
-## BUILD
+## ![image](docs/icon.ico) BUILD
 
 ### BUILD IN LINUX / UNIX
 
@@ -47,7 +47,7 @@ For building run build script using
 pwsh build.ps1
 ```
 
-## TEST
+## ![image](docs/icon.ico) TEST
 
 ### Testing in Linux / Unix
 
@@ -77,7 +77,7 @@ For testing in windows use test script
 pwsh test.ps1
 ```
 
-## RUN
+## ![image](docs/icon.ico) RUN
 
 ### Running in Linux/Unix
 
@@ -104,7 +104,7 @@ cd release                  # go to release directory
 java -jar Tetris.jar        # run the jar file
 ```
 
-## CONTRIBUTION
+## ![image](docs/icon.ico) CONTRIBUTION
 
 See [contribution details](CONTRIBUTING.md)
 

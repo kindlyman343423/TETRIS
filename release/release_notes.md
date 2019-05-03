@@ -1,6 +1,6 @@
 # RELEASE NOTES
 
-## VERSION 1.0.0
+## ![image](../docs/icon.ico) VERSION 1.0.0
 
 * Individual account creation system
 * Simple tetris game
