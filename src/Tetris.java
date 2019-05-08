@@ -8,6 +8,7 @@ import java.text.*;
 public class Tetris
 {
     private Highscore scorelist = new Highscore();                                                      // created highscore object for storing highscores   
+    
     /**
      * New tetris game is created 
      **/
@@ -21,7 +22,7 @@ public class Tetris
         System.out.println("  #    #        #    #  #     #        #");
         System.out.println("  #    #####    #    #   #  #####  #####");
         System.out.println(color.RESET);
-        createHistory();
+        createHistoryFile();                                                                       
     }
 
     /**
@@ -38,13 +39,15 @@ public class Tetris
         System.out.println("  #    #        #    #  #     #        #");
         System.out.println("  #    #####    #    #   #  #####  #####");
         System.out.println(color.RESET);
-        createHistory();
+        createHistoryFile();                                                                            
     }
 
     /**
-     * This function will create user tetris history file if not present
+     * This function will create user tetris history file if not present for maintaining the history
+     * 
+     * @return void
      **/
-    private void createHistory()
+    private void createHistoryFile()
     {
         try
         {
@@ -62,7 +65,7 @@ public class Tetris
      * @param envcolor for setting logo color
      * @return void
      **/
-    private void endTetris(String envcolor)
+    private void displayGameOverLogo(String envcolor)
     {
         Rain color = new Rain();                                                                        // use of rainbow package class for displaying colors on terminal
         System.out.println(envcolor);
@@ -79,7 +82,7 @@ public class Tetris
      * @param envcolor for setting logo color
      * @return void
      **/
-    private void exitTetris(String envcolor)
+    private void displayGameExitedLogo(String envcolor)
     {
         Rain color = new Rain();                                                                        // use of rainbow package class for displaying colors on terminal
         System.out.println(envcolor);
@@ -96,7 +99,7 @@ public class Tetris
      * @param envcolor for setting logo color 
      * @return void
      **/
-    private void saveTetris(String envcolor)
+    private void displayGameSavedLogo(String envcolor)
     {
         Rain color = new Rain();                                                                        // use of rainbow package class for displaying colors on terminal
         System.out.println(color.BCYAN);
@@ -123,7 +126,6 @@ public class Tetris
         System.out.println("  $      $   $  $  $$    $    $  $   $   $  $          $  ");
         System.out.println("  $$$$$  $$$$$  $   $    $    $   $  $$$$$  $$$$$  $$$$$  ");
 
-        System.out.println(color.BLGREEN);
         System.out.println("**********************************************************");
         System.out.println("*                                                        *");
         System.out.println("*           D/d     --      Shape will go right          *");
@@ -141,7 +143,7 @@ public class Tetris
      * This function will display the banner of the settings
      * @param envcolor for printing the specific color
      **/
-    private void settingTetris()
+    private void displaySettingLogo()
     {
         Rain color = new Rain();                                                                        // use of rainbow package class for displaying colors on terminal
         System.out.println(color.BYELLOW);
@@ -176,7 +178,7 @@ public class Tetris
             switch(option)
             {
                 case 0:
-                    exitTetris(color.BDGREEN);
+                    displayGameExitedLogo(color.BDGREEN);
                     System.exit(0);
                 case 1:
                     playNewGame();
@@ -209,19 +211,18 @@ public class Tetris
     }
 
     /**
-     * This function will start a new tetris game
+     * This function will start a new tetris game for a new user
      * 
      * @return void
      **/
     private void playNewGame()
     {
-        Scanner in = new Scanner(System.in);                                                            // scanner for input in tetris
-        Rain color = new Rain();                                                                        // for using rainbow
+        Scanner in = new Scanner(System.in);                                                            
+        Rain color = new Rain();                                                                        // for using rainbow library
         try
         {
-            //user data entry
             System.out.println(color.BOLD + "Enter the username" + color.RESET);
-            String username = in.nextLine();                                                            // for entered username
+            String username = in.nextLine();                                                            
             if(scorelist.checkDuplicateHighScoreName(username))                                         // check for duplicate name in highscore list
             {
                 throw new DuplicateNameException("User Name cannot be duplicate");
@@ -262,18 +263,18 @@ public class Tetris
             User user = new User(username,password,new Date(),passwordhash,0);                          // created a new user
 
             System.out.println("Enter the size of the board in format i.e 20 20");                      // getting desired size from the user
-            int R = in.nextInt();                                                                       // input number of rows
-            int C = in.nextInt();                                                                       // input number of cols
+            int ROWS = in.nextInt();                                                                    // input number of rows
+            int COLS = in.nextInt();                                                                    // input number of cols
             
-            if(R<10 || C<10 || R>100 || C>100)                                                          // input validation
+            if(ROWS<10 || COLS<10 || ROWS>100 || COLS>100)                                              // input validation
             {
                 throw new IndexOutofBoardException("Wrong Input Valid size should be 0-100");
             }
 
             //the main game
-            Board board = new Board(R, C);                                                              // initialize the board size
-            boolean flag_shape_fixed = false;                                                           // initial shape is now fixed
-            int shape_counter = 0;                                                                      // for counting and changing different shapes
+            Board board = new Board(ROWS, COLS);                                                        // initialize the board size
+            boolean flagShapeFixed = false;                                                             // initial shape is now fixed
+            int shapeCounter = 0;                                                                       // for counting and changing different shapes
 
             displayControls(board.getControlsColor());                                                  // displays the controls of the game
 
@@ -289,49 +290,63 @@ public class Tetris
              * 5 |
              * 6 |
              **/
-            Shape[][] rotation = new Shape[7][4];                                                       // array maintained for rotations of the shape
-            rotation = makeRotationArray(rotation);                                                     // making initial array for rotation
+            final int ROTATION_ARRAY_COLS = 4;
+            final int ROTATION_ARRAY_ROWS = 7;
+            Shape[][] rotationArray = new Shape[ROTATION_ARRAY_ROWS][ROTATION_ARRAY_COLS];              // array maintained for rotations of the shape
+            rotationArray = makeRotationArray(rotationArray);                                           // making initial array for rotation
 
-            int pivot = (C/2) - 1;                                                                      // value for setting initial position of the shape
-            // building the line blocks
-            Block a = new Block(0, pivot);
-            Block b = new Block(0, pivot+1);
-            Block c = new Block(0, pivot+2);
-            Block d = new Block(0, pivot+3);
-            Shape LINE = new Shape(a, b, c, d, 0);                                                      // created line shape intially with 0
+            final int pivot = (COLS/2) - 1;                                                             // value for setting initial position of the shape
+            
+            /**
+             * BUILDING LINE BLOCKS
+             * 
+             * MAKING INITIAL SHAPE
+             * [][][][]
+             **/
+            final int INITIAL_ROW  = 0;                                                                 // for initial shape row
+            final int INITIAL_COL1 = pivot;                                                             // for initial shape col1
+            final int INITIAL_COL2 = pivot + 1;                                                         // for initial shape col2
+            final int INITIAL_COL3 = pivot + 2;                                                         // for initial shape col3
+            final int INITIAL_COL4 = pivot + 3;                                                         // for initial shape col4
+            Block firstBlock    = new Block(INITIAL_ROW, INITIAL_COL1);
+            Block secondBlock   = new Block(INITIAL_ROW, INITIAL_COL2);
+            Block thirdBlock    = new Block(INITIAL_ROW, INITIAL_COL3);
+            Block fourthBlock   = new Block(INITIAL_ROW, INITIAL_COL4);
+            
+            final int INITIAL_STATE = 0;
+            Shape SHAPE = new Shape(firstBlock, secondBlock, thirdBlock, fourthBlock, INITIAL_STATE);   // created line shape intially with 0
 
-            if(!board.insertShape(LINE))                                                                // insert initial shape on board if it is possible
+            if(!board.insertShape(SHAPE))                                                               // insert initial shape on board if it is possible
             {
                 System.out.println(color.BRED + "ERROR WHILE INSERTING THE SHAPE" + color.RESET);
                 System.exit(0);
             }                                  
+
             board.printBoard();                                                                         // print the initial board
-            System.out.println();
-            
-            flag_shape_fixed = false;                                                                   // shape is fixed or not
+            flagShapeFixed = false;                                                                     // shape is not fixed
             
             // GAME LOOPING
             while (true) 
             {
                 board.clearboard();                                                                     // clear board for above
-                flag_shape_fixed = board.movedown(LINE);                                                // default move down
+                flagShapeFixed = board.movedown(SHAPE);                                                 // default move down
 
-                if(flag_shape_fixed)                                                                    // if flag shape cannot move down so making it fixed when it reach boundary
+                if(flagShapeFixed)                                                                      // if flag shape cannot move down so making it fixed when it reach boundary
                 {
-                    board.insertFixedShape(LINE);                                                       // insert the fixed shape on board
+                    board.insertFixedShape(SHAPE);                                                      // insert the fixed shape on board
                     board.printBoard();                                                                 // print the board
                     
-                    if(shape_counter==6)                                                                // set shape counter to 0 when it becomes 6
+                    if(shapeCounter==6)                                                                 // set shape counter to 0 when it becomes 6
                     {
-                        shape_counter=0;
+                        shapeCounter=0;
                     }
                     else
                     {
-                        shape_counter++;
+                        shapeCounter++;
                     }
-                    LINE = create_shape(LINE, shape_counter,pivot);                                     // creating new shape for second move with current state 0
+                    SHAPE = create_shape(SHAPE, shapeCounter,pivot);                                    // creating new shape for second move with current state 0
 
-                    flag_shape_fixed=false;                                                             // set shape fixed to false for next shape
+                    flagShapeFixed=false;                                                               // set shape fixed to false for next shape
                 }
 
                 System.out.println("ENTER THE OPTION");                                                 // displaying the options
@@ -348,17 +363,17 @@ public class Tetris
                 {
                     case 'D':
                     case 'd':
-                        board.moveright(LINE);                                                          // this function will move the shape to right
+                        board.moveright(SHAPE);                                                         // this function will move the shape to right
                         break;
                     case 'A':
                     case 'a':
-                        board.moveleft(LINE);                                                           // this function will move the shape to left
+                        board.moveleft(SHAPE);                                                          // this function will move the shape to left
                         break;
                     case 'W':
                     case 'w':
                         {
                             //rotation of shape
-                            int currentstate = LINE.getcurrentstate();                                  // get current state of the shape
+                            int currentstate = SHAPE.getcurrentstate();                                 // get current state of the shape
                             if(currentstate >= 3)
                             {
                                 currentstate=0;
@@ -367,48 +382,46 @@ public class Tetris
                             {
                                 currentstate++;
                             }
-                            // System.out.println(LINE);
-                            // System.out.println("CURRENTSTATE: " +currentstate);
 
                             // MAKE NEW COORDS FOR THE SHAPE FROM ROTATION ARRAY
-                            int ex = LINE.getarrofblock()[0].getX() + rotation[shape_counter][currentstate].getarrofblock()[0].getX();
-                            int ey = LINE.getarrofblock()[0].getY() + rotation[shape_counter][currentstate].getarrofblock()[0].getY();
-                            int fx = LINE.getarrofblock()[1].getX() + rotation[shape_counter][currentstate].getarrofblock()[1].getX();
-                            int fy = LINE.getarrofblock()[1].getY() + rotation[shape_counter][currentstate].getarrofblock()[1].getY();
-                            int gx = LINE.getarrofblock()[2].getX() + rotation[shape_counter][currentstate].getarrofblock()[2].getX();
-                            int gy = LINE.getarrofblock()[2].getY() + rotation[shape_counter][currentstate].getarrofblock()[2].getY();
-                            int hx = LINE.getarrofblock()[3].getX() + rotation[shape_counter][currentstate].getarrofblock()[3].getX();
-                            int hy = LINE.getarrofblock()[3].getY() + rotation[shape_counter][currentstate].getarrofblock()[3].getY();
+                            int ex = SHAPE.getarrofblock()[0].getX() + rotationArray[shapeCounter][currentstate].getarrofblock()[0].getX();
+                            int ey = SHAPE.getarrofblock()[0].getY() + rotationArray[shapeCounter][currentstate].getarrofblock()[0].getY();
+                            int fx = SHAPE.getarrofblock()[1].getX() + rotationArray[shapeCounter][currentstate].getarrofblock()[1].getX();
+                            int fy = SHAPE.getarrofblock()[1].getY() + rotationArray[shapeCounter][currentstate].getarrofblock()[1].getY();
+                            int gx = SHAPE.getarrofblock()[2].getX() + rotationArray[shapeCounter][currentstate].getarrofblock()[2].getX();
+                            int gy = SHAPE.getarrofblock()[2].getY() + rotationArray[shapeCounter][currentstate].getarrofblock()[2].getY();
+                            int hx = SHAPE.getarrofblock()[3].getX() + rotationArray[shapeCounter][currentstate].getarrofblock()[3].getX();
+                            int hy = SHAPE.getarrofblock()[3].getY() + rotationArray[shapeCounter][currentstate].getarrofblock()[3].getY();
                             Block e = null;
                             Block f = null;
                             Block g = null;
                             Block h = null;
                             
                             if( board.checkValidCoords(ex, ey) && board.checkValidCoords(fx, fy) && board.checkValidCoords(gx, gy) 
-                            && board.checkValidCoords(hx, hy))                                          // check for all valid coords
+                            && board.checkValidCoords(hx, hy))                                          // check for all valid coordinates
                             {
                                 e = new Block(ex,ey);
                                 f = new Block(fx,fy);
                                 g = new Block(gx,gy);
                                 h = new Block(hx,hy);
                             }
-                            else                                                                        // else set old coords
+                            else                                                                        // else set old coordinates
                             {
-                                ex = LINE.getarrofblock()[0].getX();
-                                ey = LINE.getarrofblock()[0].getY();
-                                fx = LINE.getarrofblock()[1].getX();
-                                fy = LINE.getarrofblock()[1].getY();
-                                gx = LINE.getarrofblock()[2].getX();
-                                gy = LINE.getarrofblock()[2].getY();
-                                hx = LINE.getarrofblock()[3].getX();
-                                hy = LINE.getarrofblock()[3].getY();
+                                ex = SHAPE.getarrofblock()[0].getX();
+                                ey = SHAPE.getarrofblock()[0].getY();
+                                fx = SHAPE.getarrofblock()[1].getX();
+                                fy = SHAPE.getarrofblock()[1].getY();
+                                gx = SHAPE.getarrofblock()[2].getX();
+                                gy = SHAPE.getarrofblock()[2].getY();
+                                hx = SHAPE.getarrofblock()[3].getX();
+                                hy = SHAPE.getarrofblock()[3].getY();
                                 e = new Block(ex,ey);
                                 f = new Block(fx,fy);
                                 g = new Block(gx,gy);
                                 h = new Block(hx,hy);
                                 System.out.println("SORRY INVALID ROTATION !!!");
                             }
-                            LINE = new Shape(e,f,g,h,currentstate);                                     // update the rotated shape
+                            SHAPE = new Shape(e,f,g,h,currentstate);                                    // update the rotated shape
                         }
                         break;
                     case 'g':
@@ -416,27 +429,27 @@ public class Tetris
                         int score = board.getPoints();                                                  // get the socre from the board
                         user.setUserScore(score);                                                       // set the score from board to user
 
-                        saveGame(user,board,LINE,shape_counter);                                        // save the game
+                        saveGame(user,board,SHAPE,shapeCounter);                                        // save the game
 
                         scorelist.addHighScore(user.getName(),user.getUserId(),user.getUserScore());    // add highscore to the highscore list
                         
                         scorelist.saveHighScore();                                                      // save the highscore
                         
-                        saveTetris(board.getGameSavedColor());                                          // display the SAVED TETRIS on screen
+                        displayGameSavedLogo(board.getGameSavedColor());                                // display the SAVED TETRIS on screen
                         System.exit(0);                                                                 // exit the game
                         break;
                     case 'q':
                     case 'Q':
-                        exitTetris(board.getGameExitedColor());                                         // display exit tetris on game
+                        displayGameExitedLogo(board.getGameExitedColor());                              // display exit tetris on game
                         System.exit(0);
                         break;
                     default:
                         break;
                 }
 
-                if(!board.insertShape(LINE))                                                            // insert initial shape on board if it is possible means game finished
+                if(!board.insertShape(SHAPE))                                                           // insert initial shape on board if it is possible means game finished
                 {
-                    endTetris(board.getGameOverColor());                                                // display END TETRIS on screen
+                    displayGameOverLogo(board.getGameOverColor());                                     
 
                     //set the score scored from board to user
                     int score = board.getPoints();                                                      // get the current score from the baord
@@ -445,8 +458,7 @@ public class Tetris
                     scorelist.addHighScore(user.getName(),user.getUserId(),user.getUserScore());        // add the highscore to the highscore list
                     System.exit(0);
                 }
-                board.printBoard();                                                                     // print board
-                System.out.println();
+                board.printBoard();                                                                 
             }
         }
         catch(Exception e)
@@ -462,10 +474,12 @@ public class Tetris
     /**
      * This function will save the game and save game variables
      * 
-     * @param U for User data
-     * @param B for Board
+     * @param user for User data
+     * @param board for Board
+     * @param SHAPE for shape
+     * @param shapeCounter for shape counter
      **/
-    private void saveGame(User U,Board B,Shape LINE,int shape_counter)
+    private void saveGame(User user,Board board,Shape SHAPE,int shapeCounter)
     {
         /**
          * FILE SAVING FORMAT
@@ -481,67 +495,66 @@ public class Tetris
          **/
         try
         {   
-            String filename = "db/"+U.getUserId()+".txt";                                               // create new filename
+            String filename = "db/"+user.getUserId()+".txt";                                            // create new filename
             
             File file = new File(filename);
             file.getParentFile().mkdirs();
             file.createNewFile();                                                                       // create new file if not present
 
-            BufferedWriter geeks_out1 = new BufferedWriter(new FileWriter(file));                       // open the file for output
+            BufferedWriter out = new BufferedWriter(new FileWriter(file));                              // open the file for output
             
             /**
              * saving user info
              **/
-            geeks_out1.write(U.getName()+"|"+U.getDate()+"|"+U.getUserId()+"|"+U.getPassHash()+"|"+U.getUserScore()+"|\n");
+            out.write(user.getName()+"|"+user.getDate()+"|"+user.getUserId()+"|"+user.getPassHash()+"|"+user.getUserScore()+"|\n");
 
-            for(int i=0;i<4;i++)                                                                        // saving line coords
+            final int BLOCK_COUNT_IN_BLOCK = 4;
+            for(int i=0;i<BLOCK_COUNT_IN_BLOCK;i++)                                                     // saving line coords
             {
-                int x = LINE.getarrofblock()[i].getX();
-                int y = LINE.getarrofblock()[i].getY();
-                geeks_out1.write(x +"|"+y+"|");
+                int xCoordinate = SHAPE.getarrofblock()[i].getX();
+                int yCoordinate = SHAPE.getarrofblock()[i].getY();
+                out.write(xCoordinate + "|" + yCoordinate + "|");
             }
-            geeks_out1.write("\n");                                                         
-            geeks_out1.write(LINE.getcurrentstate()+"|"+shape_counter+"|\n");                           // saving current state and shape counter
+            out.write("\n");                                                         
+            out.write(SHAPE.getcurrentstate() + "|" + shapeCounter + "|\n");                            // saving current state and shape counter
 
             //check for limit
-            int limit = B.getUpperLimit();                                                              // get upperlimit
-            int R = B.getRows();                                                                        // get board rows
-            int C = B.getCols();                                                                        // get board cols
+            int limit = board.getUpperLimit();                                                          // get upperlimit
+            int ROWS = board.getRows();                                                                 // get board rows
+            int COLS = board.getCols();                                                                 // get board cols
             
-            geeks_out1.write(R +"|"+ C +"|\n");                                                         // saving rows and cols of current board
+            out.write(ROWS +"|"+ COLS +"|\n");                                                          // saving rows and cols of current board
             
             //saving env variables
-            String[] envcolors = B.getENV();                                                            // getting board env color array
-
+            String[] envcolors = board.getENV();                                                        // getting board env color array
             for(int i=0;i<envcolors.length;i++)                                                         // write the board env variables in file
             {
-                geeks_out1.write(envcolors[i]+"|");
+                out.write(envcolors[i]+"|");
             }
-            geeks_out1.write("\n");
+            out.write("\n");
 
             if(limit!=-1)                                                                               // if fixed blocks exists only save then
             {
-                for(int i=R-1;i>=limit;i--)                                                             // storing the board array
+                for(int i=ROWS-1;i>=limit;i--)                                                          // storing the board array
                 {
-                    for(int j=0;j<C;j++)
+                    for(int j=0;j<COLS;j++)
                     {
-                        geeks_out1.write(B.getARR()[i][j]+"|");                                         // store the array one by one
-                        if(j==C-1)
+                        out.write(board.getARR()[i][j]+"|");                                            // store the array one by one
+                        if(j==COLS-1)
                         {
-                            geeks_out1.write("\n");
+                            out.write("\n");
                         }
                     }
                 }
             }
-            
-            geeks_out1.flush();                                                                         // flush  the stream
-            geeks_out1.close();                                                                         // close the file stream
+            out.flush();                                                                                // flush  the stream
+            out.close();                                                                                // close the file stream
 
             //SAVE ID OF THE USER IN tetris.txt
             File savefile = new File("tetris.txt");                                                     // open the tetris.txt file
-            BufferedWriter out = new BufferedWriter(new FileWriter(savefile));
-            out.write(U.getUserId()+"");                                                                // store user id to tetris.txt in string format
-            out.close();                                                                                // close the tetris.txt file
+            BufferedWriter outSaveFile = new BufferedWriter(new FileWriter(savefile));
+            outSaveFile.write(user.getUserId()+"");                                                     // store user id to tetris.txt in string format
+            outSaveFile.close();                                                                        // close the tetris.txt file
         }
         catch(Exception e)
         {
@@ -554,141 +567,142 @@ public class Tetris
      *              SHAPES IN THE GAME               *
      *                                               *                    
      *                   LINE  0                     *
-     *                   # # # #                     *
+     *                   [][][][]                    *
      *                                               *
      *                   SQUARE 1                    *
-     *                   # #                         *
-     *                   # #                         *
+     *                   [][]                        *
+     *                   [][]                        *
      *                                               *
      *                   LR SHAPE 2                  *
-     *                   #                           *
-     *                   #                           *
-     *                   # #                         *
+     *                   []                          *
+     *                   []                          *
+     *                   [][]                        *
      *                                               *
      *                   LL SHAPE 3                  *
-     *                     #                         *
-     *                     #                         *
-     *                   # #                         *
+     *                     []                        *
+     *                     []                        *
+     *                   [][]                        *
      *                                               *
      *                   T SHAPE 4                   *
-     *                   # # #                       *
-     *                     #                         *
+     *                   [][][]                      *
+     *                     []                        *
      *                                               *
      *                   ZL SHAPE 5                  *
-     *                   # #                         *
-     *                     # #                       *
+     *                   [][]                        *
+     *                     [][]                      *
      *                                               *
      *                   ZR SHAPE 6                  *
-     *                     # #                       *
-     *                   # #                         *
+     *                     [][]                      *
+     *                   [][]                        *
      *************************************************/
 
     /**
      * This function will create initial shapes
+     * WARNING: Don't change this function magic values it will destroy shape coordinates
      * 
-     * @param sh for shape
-     * @param num integer for shapeno
+     * @param SHAPE for shape
+     * @param shapeno integer for shape number
      * @param pivot for initial position of the shape
      * 
      * @return the build shape
      **/
-    private Shape create_shape(Shape sh,int num,int pivot)
+    private Shape create_shape(Shape SHAPE,int shapeno,int pivot)
     {
-        switch(num)
+        switch(shapeno)
         {
             case 0:
                 //LINE SHAPE
-                sh.getarrofblock()[0].setX(1);
-                sh.getarrofblock()[0].setY(pivot);
-                sh.getarrofblock()[1].setX(1);
-                sh.getarrofblock()[1].setY(pivot+1);
-                sh.getarrofblock()[2].setX(1);
-                sh.getarrofblock()[2].setY(pivot+2);
-                sh.getarrofblock()[3].setX(1);
-                sh.getarrofblock()[3].setY(pivot+3);
+                SHAPE.getarrofblock()[0].setX(1);
+                SHAPE.getarrofblock()[0].setY(pivot);
+                SHAPE.getarrofblock()[1].setX(1);
+                SHAPE.getarrofblock()[1].setY(pivot+1);
+                SHAPE.getarrofblock()[2].setX(1);
+                SHAPE.getarrofblock()[2].setY(pivot+2);
+                SHAPE.getarrofblock()[3].setX(1);
+                SHAPE.getarrofblock()[3].setY(pivot+3);
                 break;
             case 1:
                 //SQUARE SHAPE
-                sh.getarrofblock()[0].setX(1);
-                sh.getarrofblock()[0].setY(pivot);
-                sh.getarrofblock()[1].setX(1);
-                sh.getarrofblock()[1].setY(pivot+1);
-                sh.getarrofblock()[2].setX(2);
-                sh.getarrofblock()[2].setY(pivot);
-                sh.getarrofblock()[3].setX(2);
-                sh.getarrofblock()[3].setY(pivot+1);
+                SHAPE.getarrofblock()[0].setX(1);
+                SHAPE.getarrofblock()[0].setY(pivot);
+                SHAPE.getarrofblock()[1].setX(1);
+                SHAPE.getarrofblock()[1].setY(pivot+1);
+                SHAPE.getarrofblock()[2].setX(2);
+                SHAPE.getarrofblock()[2].setY(pivot);
+                SHAPE.getarrofblock()[3].setX(2);
+                SHAPE.getarrofblock()[3].setY(pivot+1);
                 break;
             case 2:
                 //LR SHAPE
-                sh.getarrofblock()[0].setX(2);
-                sh.getarrofblock()[0].setY(pivot);
-                sh.getarrofblock()[1].setX(3);
-                sh.getarrofblock()[1].setY(pivot);
-                sh.getarrofblock()[2].setX(4);
-                sh.getarrofblock()[2].setY(pivot);
-                sh.getarrofblock()[3].setX(4);
-                sh.getarrofblock()[3].setY(pivot+1);
+                SHAPE.getarrofblock()[0].setX(2);
+                SHAPE.getarrofblock()[0].setY(pivot);
+                SHAPE.getarrofblock()[1].setX(3);
+                SHAPE.getarrofblock()[1].setY(pivot);
+                SHAPE.getarrofblock()[2].setX(4);
+                SHAPE.getarrofblock()[2].setY(pivot);
+                SHAPE.getarrofblock()[3].setX(4);
+                SHAPE.getarrofblock()[3].setY(pivot+1);
                 break;
             case 3:
                 //LL SHAPE
-                sh.getarrofblock()[0].setX(2);
-                sh.getarrofblock()[0].setY(pivot);
-                sh.getarrofblock()[1].setX(3);
-                sh.getarrofblock()[1].setY(pivot);
-                sh.getarrofblock()[2].setX(4);
-                sh.getarrofblock()[2].setY(pivot);
-                sh.getarrofblock()[3].setX(4);
-                sh.getarrofblock()[3].setY(pivot-1);
+                SHAPE.getarrofblock()[0].setX(2);
+                SHAPE.getarrofblock()[0].setY(pivot);
+                SHAPE.getarrofblock()[1].setX(3);
+                SHAPE.getarrofblock()[1].setY(pivot);
+                SHAPE.getarrofblock()[2].setX(4);
+                SHAPE.getarrofblock()[2].setY(pivot);
+                SHAPE.getarrofblock()[3].setX(4);
+                SHAPE.getarrofblock()[3].setY(pivot-1);
                 break;
             case 4:
                 //T SHAPE
-                sh.getarrofblock()[0].setX(1);
-                sh.getarrofblock()[0].setY(pivot);
-                sh.getarrofblock()[1].setX(1);
-                sh.getarrofblock()[1].setY(pivot+1);
-                sh.getarrofblock()[2].setX(1);
-                sh.getarrofblock()[2].setY(pivot+2);
-                sh.getarrofblock()[3].setX(2);
-                sh.getarrofblock()[3].setY(pivot+1);
+                SHAPE.getarrofblock()[0].setX(1);
+                SHAPE.getarrofblock()[0].setY(pivot);
+                SHAPE.getarrofblock()[1].setX(1);
+                SHAPE.getarrofblock()[1].setY(pivot+1);
+                SHAPE.getarrofblock()[2].setX(1);
+                SHAPE.getarrofblock()[2].setY(pivot+2);
+                SHAPE.getarrofblock()[3].setX(2);
+                SHAPE.getarrofblock()[3].setY(pivot+1);
                 break;
             case 5:
                 //ZL SHAPE
-                sh.getarrofblock()[0].setX(1);
-                sh.getarrofblock()[0].setY(pivot);
-                sh.getarrofblock()[1].setX(1);
-                sh.getarrofblock()[1].setY(pivot+1);
-                sh.getarrofblock()[2].setX(2);
-                sh.getarrofblock()[2].setY(pivot+1);
-                sh.getarrofblock()[3].setX(2);
-                sh.getarrofblock()[3].setY(pivot+2);
+                SHAPE.getarrofblock()[0].setX(1);
+                SHAPE.getarrofblock()[0].setY(pivot);
+                SHAPE.getarrofblock()[1].setX(1);
+                SHAPE.getarrofblock()[1].setY(pivot+1);
+                SHAPE.getarrofblock()[2].setX(2);
+                SHAPE.getarrofblock()[2].setY(pivot+1);
+                SHAPE.getarrofblock()[3].setX(2);
+                SHAPE.getarrofblock()[3].setY(pivot+2);
                 break;
             case 6:
                 //ZR SHAPE
-                sh.getarrofblock()[0].setX(1);
-                sh.getarrofblock()[0].setY(pivot);
-                sh.getarrofblock()[1].setX(1);
-                sh.getarrofblock()[1].setY(pivot+1);
-                sh.getarrofblock()[2].setX(2);
-                sh.getarrofblock()[2].setY(pivot-1);
-                sh.getarrofblock()[3].setX(2);
-                sh.getarrofblock()[3].setY(pivot);
+                SHAPE.getarrofblock()[0].setX(1);
+                SHAPE.getarrofblock()[0].setY(pivot);
+                SHAPE.getarrofblock()[1].setX(1);
+                SHAPE.getarrofblock()[1].setY(pivot+1);
+                SHAPE.getarrofblock()[2].setX(2);
+                SHAPE.getarrofblock()[2].setY(pivot-1);
+                SHAPE.getarrofblock()[3].setX(2);
+                SHAPE.getarrofblock()[3].setY(pivot);
                 break;
             default:
                 System.exit(0);
-
         }
-        sh.setcurrentstate(0);
-        return sh;
+        SHAPE.setcurrentstate(0);
+        return SHAPE;
     }
 
     /**
      * This function will make the rotation array
      * @implSpec WARNING DON'T CHANGE THIS FUNCTION AS ROTATION OF SHAPE WILL NOT OCCUR IF U CHANGE IT
      * 
-     * @param rotation array for rotating the shapes
+     * @param rotationArray for rotating the shapes
+     * 
      * @return shapes array
      **/
-    private Shape[][] makeRotationArray(Shape[][] rotation)
+    private Shape[][] makeRotationArray(Shape[][] rotationArray)
     {
         //initial shapes of the block
         Block e = new Block(0,0);
@@ -701,159 +715,159 @@ public class Tetris
         f = new Block(-1,0);
         g = new Block(0,1);
         h = new Block(1,2);
-        rotation[0][0] = new Shape(e,f,g,h,0);
+        rotationArray[0][0] = new Shape(e,f,g,h,0);
         e = new Block(-1,1);
         f = new Block(0,0);
         g = new Block(1,-1);
         h = new Block(2,-2);
-        rotation[0][1] = new Shape(e,f,g,h,1);
+        rotationArray[0][1] = new Shape(e,f,g,h,1);
         e = new Block(1,2);
         f = new Block(0,1);
         g = new Block(-1,0);
         h = new Block(-2,-1);
-        rotation[0][2] = new Shape(e,f,g,h,2);
+        rotationArray[0][2] = new Shape(e,f,g,h,2);
         e = new Block(2,-2);
         f = new Block(1,-1);
         g = new Block(0,0);
         h = new Block(-1,1);
-        rotation[0][3] = new Shape(e,f,g,h,3);
+        rotationArray[0][3] = new Shape(e,f,g,h,3);
         
         //SQUARE SHAPE 1
         e = new Block(0,0);
         f = new Block(0,0);
         g = new Block(0,0);
         h = new Block(0,0);
-        rotation[1][0] = new Shape(e,f,g,h,0);
-        rotation[1][1] = new Shape(e,f,g,h,1);
-        rotation[1][2] = new Shape(e,f,g,h,2);
-        rotation[1][3] = new Shape(e,f,g,h,3);
+        rotationArray[1][0] = new Shape(e,f,g,h,0);
+        rotationArray[1][1] = new Shape(e,f,g,h,1);
+        rotationArray[1][2] = new Shape(e,f,g,h,2);
+        rotationArray[1][3] = new Shape(e,f,g,h,3);
 
         //LR SHAPE 2
         e = new Block(-2,0);
         f = new Block(-1,-1);
         g = new Block(0,-2);
         h = new Block(1,-1);
-        rotation[2][0] = new Shape(e,f,g,h,0);
+        rotationArray[2][0] = new Shape(e,f,g,h,0);
         
         e = new Block(1,2);
         f = new Block(0,1);
         g = new Block(-1,0);
         h = new Block(0,-1);
-        rotation[2][1] = new Shape(e,f,g,h,1);
+        rotationArray[2][1] = new Shape(e,f,g,h,1);
         
         e = new Block(1,0);
         f = new Block(0,1);
         g = new Block(-1,2);
         h = new Block(-2,1);
-        rotation[2][2] = new Shape(e,f,g,h,2);
+        rotationArray[2][2] = new Shape(e,f,g,h,2);
         
         e = new Block(0,-2);
         f = new Block(1,-1);
         g = new Block(2,0);
         h = new Block(1,1);
-        rotation[2][3] = new Shape(e,f,g,h,3);
+        rotationArray[2][3] = new Shape(e,f,g,h,3);
 
         // LL SHAPE 3
         e = new Block(0,2);
         f = new Block(1,1);
         g = new Block(2,0);
         h = new Block(1,-1);
-        rotation[3][0] = new Shape(e,f,g,h,0);
+        rotationArray[3][0] = new Shape(e,f,g,h,0);
 
         e = new Block(2,0);
         f = new Block(1,-1);
         g = new Block(0,-2);
         h = new Block(-1,-1);
-        rotation[3][1] = new Shape(e,f,g,h,1);
+        rotationArray[3][1] = new Shape(e,f,g,h,1);
 
         e = new Block(0,-2);
         f = new Block(-1,-1);
         g = new Block(-2,0);
         h = new Block(-1,1);
-        rotation[3][2] = new Shape(e,f,g,h,2);
+        rotationArray[3][2] = new Shape(e,f,g,h,2);
         
         e = new Block(-2,0);
         f = new Block(-1,1);
         g = new Block(0,2);
         h = new Block(1,1);
-        rotation[3][3] = new Shape(e,f,g,h,3);
+        rotationArray[3][3] = new Shape(e,f,g,h,3);
 
         // T SHAPE 4
         e = new Block(-2, 0);
         f = new Block(-1, 1);
         g = new Block(0, 2);
         h = new Block(0, 0);
-        rotation[4][0] = new Shape(e,f,g,h,0);
+        rotationArray[4][0] = new Shape(e,f,g,h,0);
 
         e = new Block(0, 2);
         f = new Block(1, 1);
         g = new Block(2, 0);
         h = new Block(0, 0);
-        rotation[4][1] = new Shape(e,f,g,h,1);
+        rotationArray[4][1] = new Shape(e,f,g,h,1);
 
         e = new Block(2, 0);
         f = new Block(1, -1);
         g = new Block(0, -2);
         h = new Block(0, 0);
-        rotation[4][2] = new Shape(e,f,g,h,2);
+        rotationArray[4][2] = new Shape(e,f,g,h,2);
 
         e = new Block(0, -2);
         f = new Block(-1, -1);
         g = new Block(-2, 0);
         h = new Block(0, 0);
-        rotation[4][3] = new Shape(e,f,g,h,3);
+        rotationArray[4][3] = new Shape(e,f,g,h,3);
 
         // ZL SHAPE 5
         e = new Block(-2, 0);
         f = new Block(-1, 1);
         g = new Block(0, 0);
         h = new Block(1, 1);
-        rotation[5][0] = new Shape(e,f,g,h,0);
+        rotationArray[5][0] = new Shape(e,f,g,h,0);
 
         e = new Block(0, 2);
         f = new Block(1, 1);
         g = new Block(0, 0);
         h = new Block(1,-1);
-        rotation[5][1] = new Shape(e,f,g,h,1);
+        rotationArray[5][1] = new Shape(e,f,g,h,1);
 
         e = new Block(2, 0);
         f = new Block(1,-1);
         g = new Block(0, 0);
         h = new Block(-1,-1);
-        rotation[5][2] = new Shape(e,f,g,h,2);
+        rotationArray[5][2] = new Shape(e,f,g,h,2);
 
         e = new Block(0,-2);
         f = new Block(-1, -1);
         g = new Block(0, 0);
         h = new Block(-1,1);
-        rotation[5][3] = new Shape(e,f,g,h,3);
+        rotationArray[5][3] = new Shape(e,f,g,h,3);
 
         // ZR SHAPE 6
         e = new Block(-1, 1);
         f = new Block(0, 2);
         g = new Block(-1, -1);
         h = new Block(0, 0);
-        rotation[6][0] = new Shape(e,f,g,h,0);
+        rotationArray[6][0] = new Shape(e,f,g,h,0);
 
         e = new Block(1, 1);
         f = new Block(2, 0);
         g = new Block(-1, 1);
         h = new Block(0, 0);
-        rotation[6][1] = new Shape(e,f,g,h,1);
+        rotationArray[6][1] = new Shape(e,f,g,h,1);
 
         e = new Block(1, -1);
         f = new Block(0, -2);
         g = new Block(1, 1);
         h = new Block(0, 0);
-        rotation[6][2] = new Shape(e,f,g,h,2);
+        rotationArray[6][2] = new Shape(e,f,g,h,2);
 
         e = new Block(-1, -1);
         f = new Block(-2, 0);
         g = new Block(1, -1);
         h = new Block(0, 0);
-        rotation[6][3] = new Shape(e,f,g,h,3);
+        rotationArray[6][3] = new Shape(e,f,g,h,3);
         
-        return rotation;
+        return rotationArray;
     }
 
     /**
@@ -872,8 +886,12 @@ public class Tetris
             MessageDigest digest = MessageDigest.getInstance("SHA-256");                                // create sha 256 hash algo instance
             byte[] bytearr = digest.digest(str.getBytes(StandardCharsets.UTF_8));
             BigInteger hashno = new BigInteger(1,bytearr);
-            passhash = hashno.toString(16);                                                             // make sha 256 password string
-            while (passhash.length() < 32) { 
+            
+            final int LENGTH_OF_HASHNO = 16;
+            passhash = hashno.toString(LENGTH_OF_HASHNO);                                               // make sha 256 password string
+            
+            final int TOTAL_LENGTH = 32;
+            while (passhash.length() < TOTAL_LENGTH) { 
                 passhash = "0" + passhash; 
             }
         }
@@ -892,7 +910,7 @@ public class Tetris
      **/
     private void playExistingGame()
     {
-        Scanner in = new Scanner(System.in);                                                            // scanner for user inputs
+        Scanner in = new Scanner(System.in);                                                        
         Rain color = new Rain();
 
         try
@@ -1183,12 +1201,12 @@ public class Tetris
                         
                         scorelist.saveHighScore();                                                                  // save the user highscore to the userfile
                         
-                        saveTetris(board.getGameSavedColor());                                                      // display GAME SAVED on board
+                        displayGameSavedLogo(board.getGameSavedColor());                                                      // display GAME SAVED on board
                         System.exit(0);
                         break;
                     case 'q':
                     case 'Q':
-                        exitTetris(board.getGameExitedColor());
+                        displayGameExitedLogo(board.getGameExitedColor());
                         System.exit(0);
                         break;
                     default:
@@ -1197,7 +1215,7 @@ public class Tetris
 
                 if(!board.insertShape(LINE))                                                                        // insert initial shape on board if it is possible means game finished
                 {
-                    endTetris(board.getGameOverColor());
+                    displayGameOverLogo(board.getGameOverColor());
 
                     //set the score scored from board to user
                     int score = board.getPoints() + oldUser.getUserScore();                                         // get user old score and update it
@@ -1229,7 +1247,7 @@ public class Tetris
     private void settings()
     {
         Rain color = new Rain();                                                // for using colors on terminal
-        settingTetris();
+        displaySettingLogo();
         System.out.println(color.BOLD);
         System.out.println("---------------------------------------------");
         System.out.println("Enter one option:");
@@ -1245,7 +1263,7 @@ public class Tetris
             switch(option)
             {
                 case 0:                                                         // exit the game
-                    exitTetris(color.LGREEN);                                   // display GAME EXITED logo
+                    displayGameExitedLogo(color.LGREEN);                                   // display GAME EXITED logo
                     System.exit(0);                                             // exit the game
                     break;
                 case 1:                                                         // display game setting options
@@ -1297,7 +1315,7 @@ public class Tetris
             switch(option)
             {
                 case 0:
-                    exitTetris(color.BLGREEN);
+                    displayGameExitedLogo(color.BLGREEN);
                     break;
                 case 1:
                     changeDefaultEnVariables();                         // change User Interface
@@ -1844,7 +1862,7 @@ public class Tetris
             switch(option)
             {
                 case 0:
-                    exitTetris(color.BCYAN);
+                    displayGameExitedLogo(color.BCYAN);
                     break;
                 case 1:                                                 // show user information
                     showUserInfo();
