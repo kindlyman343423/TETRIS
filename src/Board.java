@@ -1,14 +1,13 @@
 import RAINBOW.*;
 import java.io.*;
-/**
- * Board class for making board
- **/
+
+//Board class for making board
 public class Board
 {
     private int rows;                                               // rows of the board
     private int cols;                                               // cols of the board
-    private char[][] arr;                                           // array for making board
-    private int[] count_block;                                      // store count the number of fixed block in the line
+    private char[][] boardArray;                                    // array for making board
+    private int[] fixedBlockCount;                                  // store count the number of fixed block in the line
     private int points;                                             // points of collecting during game play
     private String[] ENV;                                           // array for environment variables
 
@@ -22,19 +21,21 @@ public class Board
     {
         this.rows=rows;
         this.cols=cols;
-        arr = new char[rows][cols];                                 // create dynamic array for printing board
-        count_block = new int[rows];                                // set array for storing count of fixed blocks in each rows
+        boardArray = new char[rows][cols];                          // create dynamic array for printing board
+        fixedBlockCount = new int[rows];                            // set array for storing count of fixed blocks in each rows
         points=0;                                                   // initially scored points on the board
         for(int i=0;i<rows;i++)
         {
             for(int j=0;j<cols;j++)
             {
-                arr[i][j]=' ';                                      // setting space in the board array
+                boardArray[i][j]=' ';                               // setting space in the board array
             }
         }
 
         //read default colors from default.txt
-        ENV = new String[9];
+        final int ENV_ARRAY_SIZE = 9;
+        
+        ENV = new String[ENV_ARRAY_SIZE];
         File file = new File("default.txt");
         try
         {
@@ -45,26 +46,29 @@ public class Board
                 Rain color = new Rain();
                 BufferedWriter out = new BufferedWriter(new FileWriter(file));
                 out.write(color.BYELLOW + ",\n");                   // ENV[0] for board color -
-                out.write(color.BWHITE + ",\n");                    // ENV[1] for shape color -
-                out.write(color.BWHITE + ",\n");                    // ENV[2] for fixed shape color -
-                out.write(color.RESET + ",\n");                     // ENV[3] for background of the board -
-                out.write(color.BRED + ",\n");                      // ENV[4] for game over logo
-                out.write(color.DGREEN + ",\n");                    // ENV[5] for game exited
-                out.write(color.BCYAN + ",\n");                     // ENV[6] for game saved
+                out.write(color.BWHITE  + ",\n");                   // ENV[1] for shape color -
+                out.write(color.BWHITE  + ",\n");                   // ENV[2] for fixed shape color -
+                out.write(color.RESET   + ",\n");                   // ENV[3] for background of the board -
+                out.write(color.BRED    + ",\n");                   // ENV[4] for game over logo
+                out.write(color.DGREEN  + ",\n");                   // ENV[5] for game exited
+                out.write(color.BCYAN   + ",\n");                   // ENV[6] for game saved
                 out.write(color.BYELLOW + ",\n");                   // ENV[7] for controls
                 out.write(color.BMAGENTA + ",\n");                  // ENV[8] for highscore
                 out.close();
             }
+
             //read the default.txt file and save the variables to board
             BufferedReader in = new BufferedReader(new FileReader(file));
             String str="";
             int i=0;
+            
             while((str = in.readLine())!=null)
             {
                 String[] arr = str.split(",");
                 ENV[i] = arr[0];
                 i++;
             }
+            
             in.close();
         }
         catch(Exception e)
@@ -72,6 +76,57 @@ public class Board
             e.printStackTrace();
             System.out.println(e);
         }
+    }
+
+    /**
+     * This function will return the board rows
+     * 
+     * @return int for board rows
+     **/
+    public int getRows()
+    {
+        return this.rows;
+    }
+
+    /**
+     * This function will return the board cols
+     * 
+     * @return int for board cols
+     **/
+    public int getCols()
+    {
+        return this.cols;
+    }
+
+    /**
+     * This function will return board array
+     * 
+     * @return char array
+     **/
+    public char[][] getBoardArray()
+    {
+        return boardArray;
+    }
+
+    /**
+     * This function sets param array for the board
+     * 
+     * @param arr for char array 
+     * @return void
+     **/
+    public void setBoardArray(char[][] boardArray)
+    {
+        this.boardArray=boardArray;
+    }
+
+    /**
+     * This function will return the points earned by the user
+     * 
+     * @return int for points
+     **/
+    public int getPoints()
+    {
+        return this.points;
     }
 
     /**
@@ -87,9 +142,9 @@ public class Board
      * This function will initialize the environment variables array
      * @param arr for setting ENV array
      **/
-    public void setENV(String[] arr)
+    public void setENV(String[] envArray)
     {
-        this.ENV = arr.clone();
+        this.ENV = envArray.clone();
     }
 
     /**
@@ -177,67 +232,27 @@ public class Board
      * This function will set the board color
      * @param string for board color
      **/
-    public void setBoardColor(String str)
+    public void setBoardColor(String boardColor)
     {
-        this.ENV[0] = str;
+        this.ENV[0] = boardColor;
     }
 
     /**
      * This function will set the shape color
      * @param string for new shape color
      **/
-    public void setShapeColor(String str)
+    public void setShapeColor(String shapeColor)
     {
-        this.ENV[1] = str;
+        this.ENV[1] = shapeColor;
     }
 
     /**
      * This function will set the fixed shape color
      * @param string for fixed shape color
      **/
-    public void setFixedShapeColor(String str)
+    public void setFixedShapeColor(String fixedShapeColor)
     {
-        this.ENV[2] = str;
-    }
-
-    /**
-     * This function will return board array
-     * 
-     * @return char array
-     **/
-    public char[][] getARR()
-    {
-        return arr;
-    }
-
-    /**
-     * This function will return the board rows
-     * 
-     * @return int for board rows
-     **/
-    public int getRows()
-    {
-        return this.rows;
-    }
-
-    /**
-     * This function will return the board cols
-     * 
-     * @return int for board cols
-     **/
-    public int getCols()
-    {
-        return this.cols;
-    }
-
-    /**
-     * This function will return the points earned by the user
-     * 
-     * @return int for points
-     **/
-    public int getPoints()
-    {
-        return this.points;
+        this.ENV[2] = fixedShapeColor;
     }
 
     /**
@@ -248,26 +263,15 @@ public class Board
     public int getUpperLimit()
     {
         int limit=-1;
-        for(int i=0;i<count_block.length;i++)
+        for(int i=0;i<fixedBlockCount.length;i++)
         {
-            if(count_block[i]!=0)
+            if(fixedBlockCount[i]!=0)
             {
                 limit = i;
                 break;
             }
         }
         return limit;
-    }
-
-    /**
-     * This function sets param array for the board
-     * 
-     * @param arr for char array 
-     * @return void
-     **/
-    public void setARR(char[][] arr)
-    {
-        this.arr=arr;
     }
     
     /**
@@ -278,42 +282,41 @@ public class Board
     public void printBoard()
     {
         Rain R = new Rain();                                        // making object of rain class for using colors from rainbow
-        System.out.print(ENV[3]+ENV[0]);
+        System.out.print(ENV[3] + ENV[0]);
+
         for(int i=0;i<cols+2;i++)                                   // printing the above == line
         {
             System.out.print("=");
         }
-        System.out.print(R.RESET);
-        System.out.println();
+        System.out.println(R.RESET);
         
         for(int i=0;i<rows;i++)                                     // printing the left and right | | lines
         {
-            System.out.print(ENV[3]+ENV[0]+"|"+R.RESET);
+            System.out.print(ENV[3] + ENV[0] + "|" + R.RESET);
             for(int j=0;j<cols;j++)
             {
-                switch(arr[i][j])
+                switch(boardArray[i][j])
                 {
                     case '@':
-                        System.out.print(ENV[3]+ENV[2]+arr[i][j]+R.RESET);
+                        System.out.print(ENV[3] + ENV[2] + boardArray [i][j] + R.RESET);
                         break;
                     case '#':
-                        System.out.print(ENV[3]+ENV[1]+arr[i][j]+R.RESET);
+                        System.out.print(ENV[3] + ENV[1] + boardArray[i][j] + R.RESET);
                         break;
                     default:
-                        System.out.print(ENV[3]+arr[i][j]);    
+                        System.out.print(ENV[3] + boardArray[i][j]);    
                         break;
                 }
             }
-            System.out.println(ENV[3]+ENV[0]+"|"+R.RESET+count_block[i]);
+            System.out.println(ENV[3] + ENV[0] + "|" + R.RESET);
         }
 
-        System.out.print(ENV[3]+ENV[0]);
+        System.out.print(ENV[3] + ENV[0]);
         for(int i=0;i<cols+2;i++)                                   // printing the below == line
         {
             System.out.print("=");
         }
-        System.out.print(R.RESET);
-        System.out.println();
+        System.out.println(R.RESET);
     }
 
     /**
@@ -327,9 +330,9 @@ public class Board
         {
             for(int j=0;j<cols;j++)
             {
-                if(arr[i][j]!='@')                                  // if fixed char don't found
+                if(boardArray[i][j]!='@')                           // if fixed char don't found
                 {
-                    arr[i][j]=' ';                                  // printing space char for clearing
+                    boardArray[i][j]=' ';                           // printing space char for clearing
                 }
             }
         }
@@ -342,18 +345,18 @@ public class Board
      *  <li>It will also check whether the new coords are on fixed shape or not
      *  <li>If it returns true then it will ensure that the block inserted in right coords
      * 
-     * @param x for x coordinate
-     * @param y for y coordinate
+     * @param xCoordinate for board x coordinate
+     * @param yCoordinate for baord y coordinate
      * 
      * @return boolean 
      **/
-    public boolean checkValidCoords(int x,int y)
+    public boolean checkValidCoords(int xCoordinate,int yCoordinate)
     {
-        if(x<0 || y<0 || x>=rows || y>=cols)
+        if(xCoordinate < 0 || yCoordinate < 0 || xCoordinate >= rows || yCoordinate >= cols)
         {
             return false;
         }
-        switch(arr[x][y])
+        switch(boardArray[xCoordinate][yCoordinate])
         {
             case '#':
             case '|':
@@ -367,21 +370,24 @@ public class Board
     /**
      * This function will insert shape on board for runtime with '#'
      * 
-     * @param S for getting Shape for printing
+     * @param shape for getting Shape for printing
      * 
      * @return boolean
      **/
-    public boolean insertShape(Shape S)
+    public boolean insertShape(Shape shape)
     {
-        for(int i=0;i<4;i++)
+        final int BLOCKS_IN_SHAPE = 4;
+
+        for(int i=0;i<BLOCKS_IN_SHAPE;i++)
         {
-            int r = S.getarrofblock()[i].getX();                    // get x coordinate of the block
-            int c = S.getarrofblock()[i].getY();                    // get y coordinate of the block
-            if(checkValidCoords(r, c))
+            int xCoordinate = shape.getBlockArray()[i].getXCoordinate();    // get x coordinate of the block
+            int yCoordinate = shape.getBlockArray()[i].getYCoordinate();    // get y coordinate of the block
+            
+            if(checkValidCoords(xCoordinate, yCoordinate))
             {
-                arr[r][c] = '#';                                    // printing the block with # block for runtime    
+                boardArray[xCoordinate][yCoordinate] = '#';                 // printing the block with # block for runtime    
             }
-            else                                                    // if shape cannot be inserted
+            else                                                            // if shape cannot be inserted
             {
                 return false;
             }
@@ -392,44 +398,46 @@ public class Board
     /**
      * This function will insert the fixed shape with '@'
      * 
-     * @param S for Shape to printed as fixed
+     * @param shape for Shape to printed as fixed
      * 
      * @return boolean
      **/
-    public void insertFixedShape(Shape S)
+    public void insertFixedShape(Shape shape)
     {
-        for(int i=0;i<4;i++)
+        final int BLOCKS_IN_SHAPE = 4;
+        
+        for(int i=0;i<BLOCKS_IN_SHAPE;i++)
         {
-            int r = S.getarrofblock()[i].getX();                    // get x coordinate of the block
-            int c = S.getarrofblock()[i].getY();                    // get y coordinate of the block
-            count_block[r]++;                                       // increment the line blocks counter
-            arr[r][c] = '@';                                        // printing @ for fixed shape
+            int xCoordinate = shape.getBlockArray()[i].getXCoordinate();      // get x coordinate of the block
+            int yCoordinate = shape.getBlockArray()[i].getYCoordinate();      // get y coordinate of the block
+            
+            fixedBlockCount[xCoordinate]++;                         // increment the line blocks counter
+            
+            boardArray[xCoordinate][yCoordinate] = '@';             // printing @ for fixed shape
         }
         
-        deleteLines();                                               // check for line deletion
-        System.out.println("POINTS: "+points);
+        deleteLines();                                              // check and delete lines
     }
 
     /**
      * This function will delete the line if the line is full of fixed blocks or not
      * 
      * @return boolean whether the lines are deleted or not
-     * @bug below line don't work
      **/
     private boolean deleteLines()
     {
         boolean deleted = false;                                    // boolean for whether the line is deleted or not
-        for(int i=0;i<count_block.length;i++)
+        for(int i=0;i<fixedBlockCount.length;i++)
         {
-            if(count_block[i]==cols)                                // if the line gets full
+            if(fixedBlockCount[i]==cols)                            // if the line gets full
             {
                 deleted=true;                                       // set boolean to true as line is deleted
 
                 // DELETING THE i LINE WHICH IS FULL                 
                 for(int j=0;j<cols;j++)
                 {
-                    arr[i][j] = ' ';                                // reset the spaces
-                    count_block[i]--;                               // decrease the count
+                    boardArray[i][j] = ' ';                         // reset the spaces
+                    fixedBlockCount[i]--;                           // decrease the count
                 }
 
                 //SHIFTING THE 2D ARRAY DOWN
@@ -437,19 +445,19 @@ public class Board
                 {
                     for(int k=0;k<cols;k++)
                     {
-                        arr[j][k] = arr[j-1][k];
+                        boardArray[j][k] = boardArray[j-1][k];
                     }
                 }
 
                 //SHIFTING THE COUNT BLOCK ARRAY TO RIGHT
                 for(int j=i;j>0;j--)
                 {
-                    count_block[j] = count_block[j-1];
+                    fixedBlockCount[j] = fixedBlockCount[j-1];
                 }
 
                 points++;                                           // increase the points by 1
             }
-            else if(count_block[i]>cols)
+            else if(fixedBlockCount[i]>cols)
             {
                 System.out.println("GAME OVER !!!");
                 System.exit(0);
@@ -461,50 +469,51 @@ public class Board
     /**
      * This function will move the block down
      * 
-     * @param S for Shape movement
+     * @param shape for Shape movement
      * 
      * @return boolean to check whether shape get fixed or not
      **/
-    public boolean movedown(Shape S)
+    public boolean movedown(Shape shape)
     {
-        boolean flag_touched = false;                               // flag for checking block touching
-        for(int i=0;i<4;i++)
+        boolean flagTouched = false;                               // flag for checking block touching
+        final int BLOCKS_IN_SHAPE = 4;
+
+        for(int i=0;i<BLOCKS_IN_SHAPE;i++)
         {
             //Get block coordinates 
-            int x = S.getarrofblock()[i].getX();                    // get x coords of every block
-            int y = S.getarrofblock()[i].getY();                    // get y coords of every block
+            int xCoordinate = shape.getBlockArray()[i].getXCoordinate();      // get x coords of every block
+            int yCoordinate = shape.getBlockArray()[i].getYCoordinate();      // get y coords of every block
 
             /**
              * Generate new coords for checking
              * x incremented by one
              * y remain unchanged
              **/
-            x=x+1; 
+            xCoordinate=xCoordinate+1; 
 
-            /**
-             * Checking next down coordinates
-             **/
-            if(x==rows || arr[x][y]=='=' || arr[x][y]=='@')
+            //Checking next down coordinates
+            if(xCoordinate == rows || boardArray[xCoordinate][yCoordinate] == '=' || boardArray[xCoordinate][yCoordinate] =='@' )
             {
-                flag_touched=true;                                  // shape touched to end or fixed block or rows
+                flagTouched=true;                                  // shape touched to end or fixed block or rows
                 break;
             }
         }
-        if(!flag_touched)                                           // if shape don't touch to anything then move down
+        
+        if(!flagTouched)                                           // if shape don't touch to anything then move down
         {
-            for(int i=0;i<4;i++)
+            for(int i=0;i<BLOCKS_IN_SHAPE;i++)
             { 
                 //Get block coordinates 
-                int x = S.getarrofblock()[i].getX();
-                int y = S.getarrofblock()[i].getY();
+                int xCoordinate = shape.getBlockArray()[i].getXCoordinate();
+                int yCoordinate = shape.getBlockArray()[i].getYCoordinate();
                 
                 /**
                  * Generate new coords for down movement
                  * x incremented by one
                  * y remain unchanged
                  **/
-                S.getarrofblock()[i].setX(x+1);
-                S.getarrofblock()[i].setY(y);
+                shape.getBlockArray()[i].setXCoordinate(xCoordinate+1);
+                shape.getBlockArray()[i].setYCoordinate(yCoordinate);
             }
             return false;                                           // returning false as shape not fixed see @Tetris.java
         }
@@ -517,35 +526,38 @@ public class Board
     /**
      * This function will move the shape right
      * 
-     * @param S for moving Shape right
+     * @param shape for moving Shape right
      * @return boolean whether the shape moved right or not
      **/
-    public void moveright(Shape S)
+    public void moveright(Shape shape)
     {
-        boolean invalid_flag = false;
-        for(int i=0;i<4;i++)
+        final int BLOCKS_IN_SHAPE = 4;
+        boolean invalidFlag = false;
+        
+        for(int i=0;i<BLOCKS_IN_SHAPE;i++)
         {
-            int x = S.getarrofblock()[i].getX();
-            int y = S.getarrofblock()[i].getY();
+            int xCoordinate = shape.getBlockArray()[i].getXCoordinate();
+            int yCoordinate = shape.getBlockArray()[i].getYCoordinate();
 
-            y=y+1;
+            yCoordinate=yCoordinate+1;
 
-            if(y==cols || arr[x][y]=='@')                           // if y coordinate get equals to cols
+            if(yCoordinate==cols || boardArray[xCoordinate][yCoordinate]=='@') // if y coordinate get equals to cols
             {
-                invalid_flag = true;
+                invalidFlag = true;
             }
         }
-        if(!invalid_flag)                                           // if new shape will be true
+
+        if(!invalidFlag)                                                // if new shape will be true
         {
-            for(int i=0;i<4;i++)
+            for(int i=0;i<BLOCKS_IN_SHAPE;i++)
             {
                 //Get block coordinates
-                int x = S.getarrofblock()[i].getX();
-                int y = S.getarrofblock()[i].getY();
+                int xCoordinate = shape.getBlockArray()[i].getXCoordinate();
+                int yCoordinate = shape.getBlockArray()[i].getYCoordinate();
                 
                 //setting coords to the block
-                S.getarrofblock()[i].setX(x);
-                S.getarrofblock()[i].setY(y+1);
+                shape.getBlockArray()[i].setXCoordinate(xCoordinate);
+                shape.getBlockArray()[i].setYCoordinate(yCoordinate+1);
             }
         }
     }
@@ -553,35 +565,38 @@ public class Board
     /**
      * This function will move the shape left
      * 
-     * @param S for moving Shape left
+     * @param shape for moving Shape left
      * @return boolean whether the shape moved left or not
      **/
-    public void moveleft(Shape S)
+    public void moveleft(Shape shape)
     {
-        boolean invalid_flag = false;
-        for(int i=0;i<4;i++)
+        final int BLOCKS_IN_SHAPE = 4;
+        boolean invalidFlag = false;
+        
+        for(int i=0;i<BLOCKS_IN_SHAPE;i++)
         {
-            int x = S.getarrofblock()[i].getX();
-            int y = S.getarrofblock()[i].getY();
+            int xCoordinate = shape.getBlockArray()[i].getXCoordinate();
+            int yCoordinate = shape.getBlockArray()[i].getYCoordinate();
 
-            y=y-1;
+            yCoordinate=yCoordinate-1;
 
-            if(y==-1 || arr[x][y]=='@')                             // if y coordinate get equals to cols
+            if(yCoordinate==-1 || boardArray[xCoordinate][yCoordinate]=='@')   // if y coordinate get equals to cols
             {
-                invalid_flag = true;
+                invalidFlag = true;
             }
         }
-        if(!invalid_flag)                                           // if new shape will be true
+
+        if(!invalidFlag)                                                // if new shape will be true
         {
-            for(int i=0;i<4;i++)
+            for(int i=0;i<BLOCKS_IN_SHAPE;i++)
             {
-                //Get block coordinates
-                int x = S.getarrofblock()[i].getX();
-                int y = S.getarrofblock()[i].getY();
+                // Get block coordinates
+                int xCoordinate = shape.getBlockArray()[i].getXCoordinate();
+                int yCoordinate = shape.getBlockArray()[i].getYCoordinate();
                 
-                //setting coords to the block
-                S.getarrofblock()[i].setX(x);
-                S.getarrofblock()[i].setY(y-1);
+                // setting coords to the block
+                shape.getBlockArray()[i].setXCoordinate(xCoordinate);
+                shape.getBlockArray()[i].setYCoordinate(yCoordinate-1);
             }
         }
     }
@@ -598,12 +613,12 @@ public class Board
             int count=0;
             for(int j=0;j<cols;j++)
             {
-                if(arr[i][j]=='@')
+                if(boardArray[i][j]=='@')
                 {
                     count++;
                 }
             }
-            count_block[i] = count;
+            fixedBlockCount[i] = count;
         }   
     }
 }
