@@ -1,6 +1,10 @@
 # RELEASE NOTES
 
-## ![image](../docs/icon.ico) VERSION 1.0.0
+## ![image](../docs/icon.ico) VERSION 1.0.1
+
+* Updated var names and updated the game ui
+
+### ![image](../docs/icon.ico) VERSION 1.0.0
 
 * Individual account creation system
 * Simple tetris game
