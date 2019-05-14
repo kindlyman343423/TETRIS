@@ -1,21 +1,28 @@
 public class Shape
 {
-    private Block[] arrofblock;
-    private int currentstate;
+    private Block[] blockArray;
+    private int currentState;
 
-    public Shape(Block a,Block b,Block c,Block d,int currentstate)
+    public Shape(Block firstBlock,Block secondBlock,Block thirdBlock,Block fourthBlock,int currentState)
     {
-        arrofblock = new Block[4];
-        this.arrofblock[0] = a;
-        this.arrofblock[1] = b;
-        this.arrofblock[2] = c;
-        this.arrofblock[3] = d;
-        this.currentstate = currentstate;
+        final int BLOCK_ARRAY_SIZE = 4;
+        blockArray = new Block[BLOCK_ARRAY_SIZE];
+
+        this.blockArray[0] = firstBlock;
+        this.blockArray[1] = secondBlock;
+        this.blockArray[2] = thirdBlock;
+        this.blockArray[3] = fourthBlock;
+        this.currentState = currentState;
     }
-    //getters
-    public int getcurrentstate()
+    
+    /**
+     * This function will return the current state of the shape
+     * 
+     * @return int for current state
+     **/
+    public int getCurrentState()
     {
-        return currentstate;
+        return currentState;
     }
 
     /**
@@ -24,9 +31,9 @@ public class Shape
      * @param state for setting state
      * @param void 
      **/
-    public void setcurrentstate(int state)
+    public void setCurrentState(int currentState)
     {
-        this.currentstate = state;
+        this.currentState = currentState;
     }
 
     /**
@@ -34,9 +41,9 @@ public class Shape
      * 
      * @return blocks array
      **/
-    public Block[] getarrofblock()
+    public Block[] getBlockArray()
     {
-        return arrofblock;
+        return blockArray;
     }
     
     /**
@@ -46,6 +53,6 @@ public class Shape
      **/
     public String toString()
     {
-        return "["+arrofblock[0].toString()+arrofblock[1].toString()+arrofblock[2].toString()+arrofblock[3].toString()+"]";
+        return "[" + blockArray[0].toString() + blockArray[1].toString() + blockArray[2].toString() + blockArray[3].toString() + "]";
     }
 }

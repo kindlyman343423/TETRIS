@@ -373,7 +373,7 @@ public class Tetris
                     case 'w':
                         {
                             //rotation of shape
-                            int currentstate = SHAPE.getcurrentstate();                                 // get current state of the shape
+                            int currentstate = SHAPE.getCurrentState();                                 // get current state of the shape
                             if(currentstate >= 3)
                             {
                                 currentstate=0;
@@ -384,14 +384,14 @@ public class Tetris
                             }
 
                             // MAKE NEW COORDS FOR THE SHAPE FROM ROTATION ARRAY
-                            int ex = SHAPE.getarrofblock()[0].getX() + rotationArray[shapeCounter][currentstate].getarrofblock()[0].getX();
-                            int ey = SHAPE.getarrofblock()[0].getY() + rotationArray[shapeCounter][currentstate].getarrofblock()[0].getY();
-                            int fx = SHAPE.getarrofblock()[1].getX() + rotationArray[shapeCounter][currentstate].getarrofblock()[1].getX();
-                            int fy = SHAPE.getarrofblock()[1].getY() + rotationArray[shapeCounter][currentstate].getarrofblock()[1].getY();
-                            int gx = SHAPE.getarrofblock()[2].getX() + rotationArray[shapeCounter][currentstate].getarrofblock()[2].getX();
-                            int gy = SHAPE.getarrofblock()[2].getY() + rotationArray[shapeCounter][currentstate].getarrofblock()[2].getY();
-                            int hx = SHAPE.getarrofblock()[3].getX() + rotationArray[shapeCounter][currentstate].getarrofblock()[3].getX();
-                            int hy = SHAPE.getarrofblock()[3].getY() + rotationArray[shapeCounter][currentstate].getarrofblock()[3].getY();
+                            int ex = SHAPE.getBlockArray()[0].getXCoordinate() + rotationArray[shapeCounter][currentstate].getBlockArray()[0].getXCoordinate();
+                            int ey = SHAPE.getBlockArray()[0].getYCoordinate() + rotationArray[shapeCounter][currentstate].getBlockArray()[0].getYCoordinate();
+                            int fx = SHAPE.getBlockArray()[1].getXCoordinate() + rotationArray[shapeCounter][currentstate].getBlockArray()[1].getXCoordinate();
+                            int fy = SHAPE.getBlockArray()[1].getYCoordinate() + rotationArray[shapeCounter][currentstate].getBlockArray()[1].getYCoordinate();
+                            int gx = SHAPE.getBlockArray()[2].getXCoordinate() + rotationArray[shapeCounter][currentstate].getBlockArray()[2].getXCoordinate();
+                            int gy = SHAPE.getBlockArray()[2].getYCoordinate() + rotationArray[shapeCounter][currentstate].getBlockArray()[2].getYCoordinate();
+                            int hx = SHAPE.getBlockArray()[3].getXCoordinate() + rotationArray[shapeCounter][currentstate].getBlockArray()[3].getXCoordinate();
+                            int hy = SHAPE.getBlockArray()[3].getYCoordinate() + rotationArray[shapeCounter][currentstate].getBlockArray()[3].getYCoordinate();
                             Block e = null;
                             Block f = null;
                             Block g = null;
@@ -407,14 +407,14 @@ public class Tetris
                             }
                             else                                                                        // else set old coordinates
                             {
-                                ex = SHAPE.getarrofblock()[0].getX();
-                                ey = SHAPE.getarrofblock()[0].getY();
-                                fx = SHAPE.getarrofblock()[1].getX();
-                                fy = SHAPE.getarrofblock()[1].getY();
-                                gx = SHAPE.getarrofblock()[2].getX();
-                                gy = SHAPE.getarrofblock()[2].getY();
-                                hx = SHAPE.getarrofblock()[3].getX();
-                                hy = SHAPE.getarrofblock()[3].getY();
+                                ex = SHAPE.getBlockArray()[0].getXCoordinate();
+                                ey = SHAPE.getBlockArray()[0].getYCoordinate();
+                                fx = SHAPE.getBlockArray()[1].getXCoordinate();
+                                fy = SHAPE.getBlockArray()[1].getYCoordinate();
+                                gx = SHAPE.getBlockArray()[2].getXCoordinate();
+                                gy = SHAPE.getBlockArray()[2].getYCoordinate();
+                                hx = SHAPE.getBlockArray()[3].getXCoordinate();
+                                hy = SHAPE.getBlockArray()[3].getYCoordinate();
                                 e = new Block(ex,ey);
                                 f = new Block(fx,fy);
                                 g = new Block(gx,gy);
@@ -511,12 +511,12 @@ public class Tetris
             final int BLOCK_COUNT_IN_BLOCK = 4;
             for(int i=0;i<BLOCK_COUNT_IN_BLOCK;i++)                                                     // saving line coords
             {
-                int xCoordinate = SHAPE.getarrofblock()[i].getX();
-                int yCoordinate = SHAPE.getarrofblock()[i].getY();
+                int xCoordinate = SHAPE.getBlockArray()[i].getXCoordinate();
+                int yCoordinate = SHAPE.getBlockArray()[i].getYCoordinate();
                 out.write(xCoordinate + "|" + yCoordinate + "|");
             }
             out.write("\n");                                                         
-            out.write(SHAPE.getcurrentstate() + "|" + shapeCounter + "|\n");                            // saving current state and shape counter
+            out.write(SHAPE.getCurrentState() + "|" + shapeCounter + "|\n");                            // saving current state and shape counter
 
             //check for limit
             int limit = board.getUpperLimit();                                                          // get upperlimit
@@ -539,7 +539,7 @@ public class Tetris
                 {
                     for(int j=0;j<COLS;j++)
                     {
-                        out.write(board.getARR()[i][j]+"|");                                            // store the array one by one
+                        out.write(board.getBoardArray()[i][j]+"|");                                            // store the array one by one
                         if(j==COLS-1)
                         {
                             out.write("\n");
@@ -612,85 +612,85 @@ public class Tetris
         {
             case 0:
                 //LINE SHAPE
-                SHAPE.getarrofblock()[0].setX(1);
-                SHAPE.getarrofblock()[0].setY(pivot);
-                SHAPE.getarrofblock()[1].setX(1);
-                SHAPE.getarrofblock()[1].setY(pivot+1);
-                SHAPE.getarrofblock()[2].setX(1);
-                SHAPE.getarrofblock()[2].setY(pivot+2);
-                SHAPE.getarrofblock()[3].setX(1);
-                SHAPE.getarrofblock()[3].setY(pivot+3);
+                SHAPE.getBlockArray()[0].setXCoordinate(1);
+                SHAPE.getBlockArray()[0].setYCoordinate(pivot);
+                SHAPE.getBlockArray()[1].setXCoordinate(1);
+                SHAPE.getBlockArray()[1].setYCoordinate(pivot+1);
+                SHAPE.getBlockArray()[2].setXCoordinate(1);
+                SHAPE.getBlockArray()[2].setYCoordinate(pivot+2);
+                SHAPE.getBlockArray()[3].setXCoordinate(1);
+                SHAPE.getBlockArray()[3].setYCoordinate(pivot+3);
                 break;
             case 1:
                 //SQUARE SHAPE
-                SHAPE.getarrofblock()[0].setX(1);
-                SHAPE.getarrofblock()[0].setY(pivot);
-                SHAPE.getarrofblock()[1].setX(1);
-                SHAPE.getarrofblock()[1].setY(pivot+1);
-                SHAPE.getarrofblock()[2].setX(2);
-                SHAPE.getarrofblock()[2].setY(pivot);
-                SHAPE.getarrofblock()[3].setX(2);
-                SHAPE.getarrofblock()[3].setY(pivot+1);
+                SHAPE.getBlockArray()[0].setXCoordinate(1);
+                SHAPE.getBlockArray()[0].setYCoordinate(pivot);
+                SHAPE.getBlockArray()[1].setXCoordinate(1);
+                SHAPE.getBlockArray()[1].setYCoordinate(pivot+1);
+                SHAPE.getBlockArray()[2].setXCoordinate(2);
+                SHAPE.getBlockArray()[2].setYCoordinate(pivot);
+                SHAPE.getBlockArray()[3].setXCoordinate(2);
+                SHAPE.getBlockArray()[3].setYCoordinate(pivot+1);
                 break;
             case 2:
                 //LR SHAPE
-                SHAPE.getarrofblock()[0].setX(2);
-                SHAPE.getarrofblock()[0].setY(pivot);
-                SHAPE.getarrofblock()[1].setX(3);
-                SHAPE.getarrofblock()[1].setY(pivot);
-                SHAPE.getarrofblock()[2].setX(4);
-                SHAPE.getarrofblock()[2].setY(pivot);
-                SHAPE.getarrofblock()[3].setX(4);
-                SHAPE.getarrofblock()[3].setY(pivot+1);
+                SHAPE.getBlockArray()[0].setXCoordinate(2);
+                SHAPE.getBlockArray()[0].setYCoordinate(pivot);
+                SHAPE.getBlockArray()[1].setXCoordinate(3);
+                SHAPE.getBlockArray()[1].setYCoordinate(pivot);
+                SHAPE.getBlockArray()[2].setXCoordinate(4);
+                SHAPE.getBlockArray()[2].setYCoordinate(pivot);
+                SHAPE.getBlockArray()[3].setXCoordinate(4);
+                SHAPE.getBlockArray()[3].setYCoordinate(pivot+1);
                 break;
             case 3:
                 //LL SHAPE
-                SHAPE.getarrofblock()[0].setX(2);
-                SHAPE.getarrofblock()[0].setY(pivot);
-                SHAPE.getarrofblock()[1].setX(3);
-                SHAPE.getarrofblock()[1].setY(pivot);
-                SHAPE.getarrofblock()[2].setX(4);
-                SHAPE.getarrofblock()[2].setY(pivot);
-                SHAPE.getarrofblock()[3].setX(4);
-                SHAPE.getarrofblock()[3].setY(pivot-1);
+                SHAPE.getBlockArray()[0].setXCoordinate(2);
+                SHAPE.getBlockArray()[0].setYCoordinate(pivot);
+                SHAPE.getBlockArray()[1].setXCoordinate(3);
+                SHAPE.getBlockArray()[1].setYCoordinate(pivot);
+                SHAPE.getBlockArray()[2].setXCoordinate(4);
+                SHAPE.getBlockArray()[2].setYCoordinate(pivot);
+                SHAPE.getBlockArray()[3].setXCoordinate(4);
+                SHAPE.getBlockArray()[3].setYCoordinate(pivot-1);
                 break;
             case 4:
                 //T SHAPE
-                SHAPE.getarrofblock()[0].setX(1);
-                SHAPE.getarrofblock()[0].setY(pivot);
-                SHAPE.getarrofblock()[1].setX(1);
-                SHAPE.getarrofblock()[1].setY(pivot+1);
-                SHAPE.getarrofblock()[2].setX(1);
-                SHAPE.getarrofblock()[2].setY(pivot+2);
-                SHAPE.getarrofblock()[3].setX(2);
-                SHAPE.getarrofblock()[3].setY(pivot+1);
+                SHAPE.getBlockArray()[0].setXCoordinate(1);
+                SHAPE.getBlockArray()[0].setYCoordinate(pivot);
+                SHAPE.getBlockArray()[1].setXCoordinate(1);
+                SHAPE.getBlockArray()[1].setYCoordinate(pivot+1);
+                SHAPE.getBlockArray()[2].setXCoordinate(1);
+                SHAPE.getBlockArray()[2].setYCoordinate(pivot+2);
+                SHAPE.getBlockArray()[3].setXCoordinate(2);
+                SHAPE.getBlockArray()[3].setYCoordinate(pivot+1);
                 break;
             case 5:
                 //ZL SHAPE
-                SHAPE.getarrofblock()[0].setX(1);
-                SHAPE.getarrofblock()[0].setY(pivot);
-                SHAPE.getarrofblock()[1].setX(1);
-                SHAPE.getarrofblock()[1].setY(pivot+1);
-                SHAPE.getarrofblock()[2].setX(2);
-                SHAPE.getarrofblock()[2].setY(pivot+1);
-                SHAPE.getarrofblock()[3].setX(2);
-                SHAPE.getarrofblock()[3].setY(pivot+2);
+                SHAPE.getBlockArray()[0].setXCoordinate(1);
+                SHAPE.getBlockArray()[0].setYCoordinate(pivot);
+                SHAPE.getBlockArray()[1].setXCoordinate(1);
+                SHAPE.getBlockArray()[1].setYCoordinate(pivot+1);
+                SHAPE.getBlockArray()[2].setXCoordinate(2);
+                SHAPE.getBlockArray()[2].setYCoordinate(pivot+1);
+                SHAPE.getBlockArray()[3].setXCoordinate(2);
+                SHAPE.getBlockArray()[3].setYCoordinate(pivot+2);
                 break;
             case 6:
                 //ZR SHAPE
-                SHAPE.getarrofblock()[0].setX(1);
-                SHAPE.getarrofblock()[0].setY(pivot);
-                SHAPE.getarrofblock()[1].setX(1);
-                SHAPE.getarrofblock()[1].setY(pivot+1);
-                SHAPE.getarrofblock()[2].setX(2);
-                SHAPE.getarrofblock()[2].setY(pivot-1);
-                SHAPE.getarrofblock()[3].setX(2);
-                SHAPE.getarrofblock()[3].setY(pivot);
+                SHAPE.getBlockArray()[0].setXCoordinate(1);
+                SHAPE.getBlockArray()[0].setYCoordinate(pivot);
+                SHAPE.getBlockArray()[1].setXCoordinate(1);
+                SHAPE.getBlockArray()[1].setYCoordinate(pivot+1);
+                SHAPE.getBlockArray()[2].setXCoordinate(2);
+                SHAPE.getBlockArray()[2].setYCoordinate(pivot-1);
+                SHAPE.getBlockArray()[3].setXCoordinate(2);
+                SHAPE.getBlockArray()[3].setYCoordinate(pivot);
                 break;
             default:
                 System.exit(0);
         }
-        SHAPE.setcurrentstate(0);
+        SHAPE.setCurrentState(0);
         return SHAPE;
     }
 
@@ -1063,7 +1063,7 @@ public class Tetris
                             String[] parsed = string.split("[|]");
                             for(int i=0;i<COLS;i++)
                             {
-                                board.getARR()[rowCount][i] = parsed[i].charAt(0);                                  // insert data of baord from file
+                                board.getBoardArray()[rowCount][i] = parsed[i].charAt(0);                                  // insert data of baord from file
                             }
                             rowCount--;
                         }
@@ -1155,7 +1155,7 @@ public class Tetris
                     case 'w':
                         {
                             //rotation of shape
-                            int currentstate = SHAPE.getcurrentstate();                                             // get and update current state of the block
+                            int currentstate = SHAPE.getCurrentState();                                             // get and update current state of the block
                             if(currentstate >= 3)
                             {
                                 currentstate=0;
@@ -1165,14 +1165,14 @@ public class Tetris
                                 currentstate++;
                             }
 
-                            int ex = SHAPE.getarrofblock()[0].getX() + rotationArray[shapeCounter][currentstate].getarrofblock()[0].getX();
-                            int ey = SHAPE.getarrofblock()[0].getY() + rotationArray[shapeCounter][currentstate].getarrofblock()[0].getY();
-                            int fx = SHAPE.getarrofblock()[1].getX() + rotationArray[shapeCounter][currentstate].getarrofblock()[1].getX();
-                            int fy = SHAPE.getarrofblock()[1].getY() + rotationArray[shapeCounter][currentstate].getarrofblock()[1].getY();
-                            int gx = SHAPE.getarrofblock()[2].getX() + rotationArray[shapeCounter][currentstate].getarrofblock()[2].getX();
-                            int gy = SHAPE.getarrofblock()[2].getY() + rotationArray[shapeCounter][currentstate].getarrofblock()[2].getY();
-                            int hx = SHAPE.getarrofblock()[3].getX() + rotationArray[shapeCounter][currentstate].getarrofblock()[3].getX();
-                            int hy = SHAPE.getarrofblock()[3].getY() + rotationArray[shapeCounter][currentstate].getarrofblock()[3].getY();
+                            int ex = SHAPE.getBlockArray()[0].getXCoordinate() + rotationArray[shapeCounter][currentstate].getBlockArray()[0].getXCoordinate();
+                            int ey = SHAPE.getBlockArray()[0].getYCoordinate() + rotationArray[shapeCounter][currentstate].getBlockArray()[0].getYCoordinate();
+                            int fx = SHAPE.getBlockArray()[1].getXCoordinate() + rotationArray[shapeCounter][currentstate].getBlockArray()[1].getXCoordinate();
+                            int fy = SHAPE.getBlockArray()[1].getYCoordinate() + rotationArray[shapeCounter][currentstate].getBlockArray()[1].getYCoordinate();
+                            int gx = SHAPE.getBlockArray()[2].getXCoordinate() + rotationArray[shapeCounter][currentstate].getBlockArray()[2].getXCoordinate();
+                            int gy = SHAPE.getBlockArray()[2].getYCoordinate() + rotationArray[shapeCounter][currentstate].getBlockArray()[2].getYCoordinate();
+                            int hx = SHAPE.getBlockArray()[3].getXCoordinate() + rotationArray[shapeCounter][currentstate].getBlockArray()[3].getXCoordinate();
+                            int hy = SHAPE.getBlockArray()[3].getYCoordinate() + rotationArray[shapeCounter][currentstate].getBlockArray()[3].getYCoordinate();
                             Block e = null;
                             Block f = null;
                             Block g = null;
@@ -1187,14 +1187,14 @@ public class Tetris
                             }
                             else
                             {
-                                ex = SHAPE.getarrofblock()[0].getX();
-                                ey = SHAPE.getarrofblock()[0].getY();
-                                fx = SHAPE.getarrofblock()[1].getX();
-                                fy = SHAPE.getarrofblock()[1].getY();
-                                gx = SHAPE.getarrofblock()[2].getX();
-                                gy = SHAPE.getarrofblock()[2].getY();
-                                hx = SHAPE.getarrofblock()[3].getX();
-                                hy = SHAPE.getarrofblock()[3].getY();
+                                ex = SHAPE.getBlockArray()[0].getXCoordinate();
+                                ey = SHAPE.getBlockArray()[0].getYCoordinate();
+                                fx = SHAPE.getBlockArray()[1].getXCoordinate();
+                                fy = SHAPE.getBlockArray()[1].getYCoordinate();
+                                gx = SHAPE.getBlockArray()[2].getXCoordinate();
+                                gy = SHAPE.getBlockArray()[2].getYCoordinate();
+                                hx = SHAPE.getBlockArray()[3].getXCoordinate();
+                                hy = SHAPE.getBlockArray()[3].getYCoordinate();
                                 e = new Block(ex,ey);
                                 f = new Block(fx,fy);
                                 g = new Block(gx,gy);
@@ -1998,7 +1998,7 @@ public class Tetris
                         parse = str.split("[|]");
                         for(int i=0;i<cols;i++)
                         {
-                            board.getARR()[rowCount][i] = parse[i].charAt(0);                                       // insert data of board from file
+                            board.getBoardArray()[rowCount][i] = parse[i].charAt(0);                                       // insert data of board from file
                         }
                         rowCount--;
                     }

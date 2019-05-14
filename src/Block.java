@@ -1,18 +1,16 @@
-/**
- * Block class for making a block of a shape
- **/
+//Block class for making a block of a shape
 public class Block
 {
-    private int x;                  // block x coordinate
-    private int y;                  // block y coordinate
+    private int xCoordinate;                    
+    private int yCoordinate;                   
 
     /**
      * Parameterised constructor to make a new block
      **/
-    public Block(int x,int y)
+    public Block(int xCoordinate,int yCoordinate)
     {
-        this.x = x;
-        this.y = y;
+        this.xCoordinate = xCoordinate;
+        this.yCoordinate = yCoordinate;
     }
 
     /**
@@ -20,9 +18,9 @@ public class Block
      * 
      * @return int
      **/
-    public int getX()
+    public int getXCoordinate()
     {
-        return x;
+        return xCoordinate;
     }
     
     /**
@@ -30,31 +28,31 @@ public class Block
      * 
      * @return int
      **/
-    public int getY()
+    public int getYCoordinate()
     {
-        return y;
+        return yCoordinate;
     }
 
     /**
      * This function will set x coordinate of the block
      * 
-     * @param x for setting coords 
+     * @param xCoordinate for setting coords 
      * @return void
      **/
-    public void setX(int x)
+    public void setXCoordinate(int xCoordinate)
     {
-        this.x = x;
+        this.xCoordinate = xCoordinate;
     }
 
     /**
      * This function will set y coordinate of the block
      * 
-     * @param y for setting coords 
+     * @param yCoordinate for setting coords 
      * @return void
      **/
-    public void setY(int y)
+    public void setYCoordinate(int yCoordinate)
     {
-        this.y = y;
+        this.yCoordinate = yCoordinate;
     }
 
     /**
@@ -64,6 +62,6 @@ public class Block
      */
     public String toString()
     {
-        return "("+x+","+y+")";
+        return "(" + xCoordinate + "," + yCoordinate + ")";
     }
 }

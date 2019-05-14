@@ -8,9 +8,7 @@ import RAINBOW.*;
  **/
 public class Highscore
 {
-    /**
-     * This class is for storing the highscores
-     **/
+    // This class is for storing the highscores   
     class ScoreNode
     {
         private String name;            // username
@@ -22,24 +20,42 @@ public class Highscore
          **/
         public ScoreNode(String name,int userid,int score)
         {
-            this.name = name;
+            this.name   = name;
             this.userid = userid;
-            this.score = score;
+            this.score  = score;
         }
 
+        /**
+         * This function will return the username in highscore list
+         * 
+         * @return string username in highscore list
+         **/
         public String getHighScoreUserName()
         {
             return this.name;
         }
+
+        /**
+         * This function will return the userid from highscore list
+         * 
+         * @return int for userid in highscore list
+         **/
         public int getHighScoreUserId()
         {
             return this.userid;
         }
+
+        /**
+         * This function will return the user highscore
+         * 
+         * @return int for user highscore
+         **/
         public int getHighScore()
         {
             return this.score;
         }
     }
+
     private ArrayList<ScoreNode> list;                                               // list for storing highscores
 
     /**
@@ -55,10 +71,10 @@ public class Highscore
          * parse the format
          * username;userid;score
          **/
-        File file = new File("highscore.txt");                                  // create a new file structure for highscore.txt
+        File file = new File("highscore.txt");                                      // create a new file structure for highscore.txt
         try
         {
-            if(!file.createNewFile())                                           // if new file is not created
+            if(!file.createNewFile())                                               // if new file is not created
             {
                 //read the file and put data in arraylist
                 BufferedReader br = new BufferedReader(new FileReader(file));
@@ -101,11 +117,11 @@ public class Highscore
         {
             list.add(newNode);                                                  // add a new node to list
         }
-        else if(score >= list.get(0).getHighScore())                                // if score is greater than or equal to the top score
+        else if(score >= list.get(0).getHighScore())                            // if score is greater than or equal to the top score
         {
             list.add(0,newNode);                                                // add node at position 0 from front
         }
-        else if(score < list.get(list.size()-1).getHighScore())                     // if score is less than last node
+        else if(score < list.get(list.size()-1).getHighScore())                 // if score is less than last node
         {
             list.add(list.size(),newNode);                                      // add node from last
         }
@@ -179,14 +195,14 @@ public class Highscore
         int idlength = 0;                                                                               // variable maintatining tabs
         for(int i=0;i<list.size();i++)
         {   
-            System.out.print("\t"+list.get(i).getHighScoreUserName());                                          // print the username on scoreboard
+            System.out.print("\t"+list.get(i).getHighScoreUserName());                                  // print the username on scoreboard
             idlength = 24 - list.get(i).getHighScoreUserName().length();
             for(int j=0;j<idlength;j++)
             {
                 System.out.print(" ");
             }
 
-            System.out.print("|\t"+list.get(i).getHighScore());                                           // print the user highscore
+            System.out.print("|\t" + list.get(i).getHighScore());                                       // print the user highscore
             idlength = 24 - list.get(i).getHighScore();
             for(int j=0;j<idlength;j++)
             {
